@@ -1,8 +1,6 @@
-from django.http.response import HttpResponse
-
-
 # Create your views here.
+from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse("Hello, world.")
+    return render(request, 'appointment/set_doctor_free_times.html')
