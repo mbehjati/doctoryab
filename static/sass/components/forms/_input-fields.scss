@@ -138,7 +138,7 @@ textarea.materialize-textarea {
   // Gutter spacing
   &.col {
     label {
-      left: $gutter-width / 2;
+      //left: $gutter-width / 2;
     }
 
     .prefix ~ label,
@@ -154,7 +154,7 @@ textarea.materialize-textarea {
     color: $input-border-color;
     position: absolute;
     top: 0.8rem;
-    left: 0;
+    //left: 0;
     font-size: 1rem;
     cursor: text;
     transition: .2s ease-out;
@@ -228,7 +228,7 @@ textarea.materialize-textarea {
   }
 
   & + label {
-    left: 1rem;
+    //left: 1rem;
   }
 
   & ~ .mdi-navigation-close,
