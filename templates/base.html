@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>دکتریاب</title>
+    {#        <link type="text/css" rel="stylesheet" href={% static "style.min.css" %}>#}
+
+    <link type="text/css" rel="stylesheet" href={% static "base.css" %}>
+    <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href={% static "images/doctor_checkup_logo.png" %}>
+    {#    <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet" type="text/css">#}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
+    <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav class="">
+        <div class="nav-wrapper">
+            <a href="#!" class="brand-logo right">دکتریاب<i class="material-icons left">search</i></a>
+            {#            <img class="logo-img" src={% static "images/doctor_checkup_logo.png" %}>#}
+            <ul class="left hide-on-med-and-down">
+                <li><a href="#login-modal">ورود<i class="material-icons left">input</i></a></li>
+                <li><a href=""><i class="material-icons left">person</i>ثبت‌نام</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<!-- Modal Structure -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <h4>ورود به سایت</h4>
+        <p>بلا بلا بلا</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">قبول!!</a>
+    </div>
+</div>
+{% block contents %}
+
+{% endblock %}
+<footer class="page-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">دست‌رسی سریع</h5>
+                <ul>
+                    <li><a class="grey-text text-lighten-3" href="#!">ورود</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">ثبت‌نام</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">جستجو پیشرفته</a></li>
+                </ul>
+            </div>
+            <div class="col l6 s12">
+                <h5 class="white-text">دکتریاب</h5>
+                <p class="grey-text text-lighten-4">با استفاده از این برنامه پزشک نزدیک خودتان را پیدا کنید و به سادگی
+                    وقت بگیرید.</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            © تمامی حقوق متعلق به گروه دکتریاب می‌باشد.
+        </div>
+    </div>
+</footer>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+        $('.parallax').parallax();
+        console.log("parallexxxxxx");
+
+    });
+</script>
+</html>
