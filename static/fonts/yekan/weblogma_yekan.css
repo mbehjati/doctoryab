@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'yekan';
+    src: url('Weblogma_Yekan.eot');
+    src: url('Weblogma_Yekan.eot#iefix') format('embedded-opentype'),
+    url('Weblogma_Yekan.woff') format('woff'),
+    url('Weblogma_Yekan.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
