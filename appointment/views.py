@@ -8,6 +8,10 @@ def index(request):
     return render(request, 'appointment/set_doctor_free_times.html')
 
 
+def home(request):
+    return render(request, 'index.html')
+
+
 def save_doctor_free_times(form):
     pass
 

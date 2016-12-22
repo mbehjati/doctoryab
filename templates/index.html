@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block contents %}
+    <link rel="stylesheet" type="text/css" href={% static "index.css" %}>
+    {#    <div class="parallax-container" style="height: 600px;">#}
+    {#        <div class="parallax"><img src={% static "images/medical-doctor.jpg" %}></div>#}
+    {#    </div>#}
+    {#    <div class="parallax-container" style="height: 200px">#}
+    <div class="search-container">
+        <div class="row">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s4 right">
+                        {#                        <i class="material-icons prefix">mode_edit</i>#}
+                        <input id="icon_prefix2" type="text">
+                        <label for="icon_prefix2">نام پزشک یا تخصص</label>
+                    </div>
+
+                    <button class="btn-floating btn-large waves-effect waves-light" type="submit"
+                            style="vertical-align: bottom" name="action">
+                        <i class="material-icons">search</i>
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    {#    </div>#}
+
+    {#    <div class="section white">#}
+    {#        <div class="row container">#}
+    {#            <h2 class="header">وقت شما سرمایه ما</h2>#}
+    {#            <p class="grey-text text-darken-3 lighten-3">#}
+    {##}
+    {#                با دکتریاب می‌توانید پزشکان نزدیک خود را پیدا کنید و به سادگی وقت بگیرید.#}
+    {#                <br>#}
+    {#                این یک برنامه است.#}
+    {#                <br>#}
+    {#                لطفا توجه کنید#}
+    {#            </p>#}
+    {#        </div>#}
+    {#    </div>#}
+{% endblock %}

@@ -1,0 +1,26 @@
+.search-container {
+  //background-image: url("images/encontre.png");
+  //background-size: cover;
+  //opacity: 40;
+  height: 500px;
+  position: relative;
+  //form{
+  //  display: inline-block;
+  //vertical-align: middle;
+  //line-height: normal;
+  //}
+  padding-top: 100px;;
+}
+
+.search-container::after {
+  content: "";
+  background: url("images/encontre.png");
+  background-size: cover;
+  opacity: 0.4;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
