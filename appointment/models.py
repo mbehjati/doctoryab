@@ -1,10 +1,12 @@
 # Create your models here.
 from django.db import models
 
+from user.models import Doctor , MyUser
 
-class VisitTime(models.Model):
-    date = models.DateField(primary_key=True)
-    time = models.TimeField(primary_key=True)
+
+class AppointmentTime(models.Model):
+    date = models.DateField()
+    time = models.TimeField()
     duration = models.IntegerField()
-    # TODO doctor
-    # patient =
+    doctor = models.ForeignKey(Doctor)
+    patient = models.ForeignKey(MyUser)

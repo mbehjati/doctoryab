@@ -1,11 +1,10 @@
 # Create your tests here.
 from django.test import TestCase
 
-from .forms import DoctorFreeTimes
+from .views import *
 
 
 class DoctorFreeTimeFormTest(TestCase):
-
     def test_is_valid_data(self):
         test = DoctorFreeTimes()
 
@@ -52,7 +51,14 @@ class DoctorFreeTimeFormTest(TestCase):
         self.assertEqual(test.is_data_valid(), False)
 
 
+class AddDoctorFreeTime(TestCase):
+    def test_add_time(self):
+        self.assertEqual(add_time('12:15pm', 45), '1:00pm')
+        self.assertEqual(add_time('11:30am', 45), '12:15pm')
+        self.assertEqual(add_time('4:30am', 30), '5:00am')
+        self.assertEqual(add_time('5:15pm', 45), '6:00pm')
+        self.assertEqual(add_time('12:00am', 15), '12:15am')
 
-
-
-
+    def test_is_time_before(self):
+        self.assertEqual(is_time_before('12:45am' , '1:00am') , True)
+        self.assertEqual(is_time_before('12:00pm' , '1:45am') , False)

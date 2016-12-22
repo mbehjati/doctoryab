@@ -4,7 +4,7 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>دکتریاب</title>
     <link rel="stylesheet" href={% static "sass/materialize.css" %}>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet">
@@ -20,12 +20,6 @@
             $('#start_time , #end_time').timepicker({'step': 15});
 
             $('select').material_select();
-
-            edit_date_picker = function (obj) {
-                dateAndTime = obj.val()
-                date = dateAndTime.split(" ")[0]
-                obj.val(date)
-            };
 
 
             $(".datepicker1").pDatepicker({
