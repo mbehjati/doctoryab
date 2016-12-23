@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
-from user.models import MyUser, Doctor
-from user.forms import UserForm, MyUserForm, DoctorForm, LoginForm, EditMyUserForm, EditUserForm, EditMyDoctorForm
-from django.contrib.auth.models import User
+# -*- coding: UTF-8 -*-
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
+from django.shortcuts import render, redirect
+
+from user.forms import UserForm, MyUserForm, DoctorForm, LoginForm, EditMyUserForm, EditUserForm, EditMyDoctorForm
+from user.models import MyUser, Doctor
 
 
 @login_required(login_url='/user/login/')
