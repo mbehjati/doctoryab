@@ -10,4 +10,4 @@ urlpatterns = [
     url(r'^profile', views.view_profile, name='viewProfile'),
     url(r'^editProfile$', views.edit_profile, name='EditProfile'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
