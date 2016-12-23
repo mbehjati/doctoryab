@@ -1,14 +1,50 @@
 # Create your views here.
 from datetime import datetime, timedelta
 
-from django.shortcuts import render
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 
+from user.forms import LoginForm
 from .forms import DoctorFreeTimes
 from .models import *
 
 
 def home(request):
-    return render(request, 'index.html')
+    message = ''
+    if request.method == "POST":
+        message = login(request)
+    return render(request, 'index.html', {'form': LoginForm(), 'message': message})
+
+
+def django_login(request, user):
+    pass
+
+
+def login(request):
+    message = ""
+    form = LoginForm(request.POST)
+    if form.is_valid():
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password"]
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            findeduser = User.objects.get(pk=user.id)
+            my_user = MyUser.objects.get(user=findeduser)
+
+            if findeduser.is_active:
+                django_login(request, user)
+                return redirect('/user/')
+            else:
+                form = LoginForm()
+                # raise forms.ValidationError('.حساب کاربری شما غیرفعال است.')
+                message = ".حساب کاربری شما غیرفعال است."
+        else:
+            form = LoginForm()
+            # print("pass or username wrong")
+            # raise forms.ValidationError('نام کاربری یا گذرواژه شما اشتباه است..')
+            message = "نام کاربری یا گذرواژه شما اشتباه است."
+    return message
 
 
 def save_doctor_free_times(form):

@@ -20,11 +20,11 @@
 <div class="navbar-fixed">
     <nav class="">
         <div class="nav-wrapper">
-            <a href="#!" class="brand-logo right">دکتریاب<i class="material-icons left">search</i></a>
+            <a href="/" class="brand-logo right">دکتریاب<i class="material-icons left">search</i></a>
             {#            <img class="logo-img" src={% static "images/doctor_checkup_logo.png" %}>#}
             <ul class="left hide-on-med-and-down">
                 <li><a href="#login-modal">ورود<i class="material-icons left">input</i></a></li>
-                <li><a href=""><i class="material-icons left">person</i>ثبت‌نام</a></li>
+                <li><a href="/user/register"><i class="material-icons left">person</i>ثبت‌نام</a></li>
             </ul>
         </div>
     </nav>
@@ -32,13 +32,43 @@
 <!-- Modal Structure -->
 <div id="login-modal" class="modal">
     <div class="modal-content">
-        <h4>ورود به سایت</h4>
-        <p>بلا بلا بلا</p>
+        <h5 class="indigo-text"> ورود به حساب کاربری</h5>
+        <div class="divider indigo _divider"></div>
+        <div class="row">
+            <form class="col s12" method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="input-field col s10">
+                        {#                        <input id="id_username" type="text" class="validate">#}
+                        {{ form.username }}
+                        <label for="id_username">نام ‌کاربری</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10">
+                        {#                        <input id="id_password" type="password" class="validate">#}
+                        {{ form.password }}
+                        <label for="id_password">گذرواژه</label>
+                    </div>
+                </div>
+                <button class=" btn-large waves-effect waves-light btn-flat left" type="submit" name="action">ورود
+                </button>
+                <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left">گذرواژه‌ام
+                    را
+                    فراموش
+                    کرده‌ام</a>
+            </form>
+
+        </div>
     </div>
-    <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">قبول!!</a>
-    </div>
+    {#    <div class="modal-footer">#}
+
+    {#        <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">گذرواژه‌ام را فراموش#}
+    {#            کرده‌ام</a>#}
+    {#    </div>#}
 </div>
+
 {% block contents %}
 
 {% endblock %}
@@ -71,8 +101,6 @@
     $(document).ready(function () {
         // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
         $('.modal').modal();
-        $('.parallax').parallax();
-        console.log("parallexxxxxx");
 
     });
 </script>
