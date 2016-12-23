@@ -27,12 +27,12 @@ class DoctorFreeTimes(forms.Form):
 
 class AdvancedSearchForm(forms.Form):
     insurance_choices = (('همه', 'همه'),)
-    # for ins in Insurance.objects.all():
-    #     insurance_choices += ((ins, ins.name),)
+    for ins in Insurance.objects.all():
+        insurance_choices += ((ins, ins.name),)
 
     expertise_choices = (('همه', 'همه'),)
-    # for exp in Expertise.objects.all():
-    #     expertise_choices += ((exp, exp.name),)
+    for exp in Expertise.objects.all():
+        expertise_choices += ((exp, exp.name),)
 
     name = forms.CharField(label='نام پزشک', required=False)
     insurance = forms.ChoiceField(choices=insurance_choices, label= 'بیمه' )
