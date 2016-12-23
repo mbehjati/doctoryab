@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import *
+
 
 class DoctorFreeTimes(forms.Form):
     start_date = forms.DateField()
@@ -25,11 +27,18 @@ class DoctorFreeTimes(forms.Form):
 
 
 class AdvancedSearchForm(forms.Form):
-    CHOICES = (('1', 'البرز',), ('2', 'ایران',))
+    insurance_choices = (('همه', 'همه'),)
+    for ins in Insurance.objects.all():
+        insurance_choices += ((ins, ins.name),)
+
+    expertise_choices = (('همه', 'همه'),)
+    for exp in Expertise.objects.all():
+        expertise_choices += ((exp, exp.name),)
+
     name = forms.CharField(label='نام پزشک')
-    insurance = forms.ChoiceField(choices=CHOICES, label='بیمه')
-    specialist = forms.CharField(label='تخصص')
-    reception_hour = forms.DateField(label='زمان پذیرش')
+    insurance = forms.ChoiceField(choices=insurance_choices, label='بیمه')
+    expertise = forms.ChoiceField(choices=expertise_choices, label='تخصص')
+    date = forms.DateField(label='تاریخ')
     address = forms.CharField(label='آدرس')
 
     def clean(self):

@@ -9,10 +9,21 @@ class AppointmentTime(models.Model):
     time = models.TimeField()
     duration = models.IntegerField()
     doctor = models.ForeignKey(Doctor)
-    patient = models.ForeignKey(MyUser , null=True)
+    patient = models.ForeignKey(MyUser, null=True)
+
+    def __str__(self):
+        return "doctor " + str(self.doctor.user.user.last_name) + " " + str(self.date) + " " + str(self.time)
+
 
 class Insurance (models.Model):
-    name  = models.TextField(primary_key=True)
+    name = models.TextField(primary_key=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Expertise(models.Model):
     name = models.TextField(primary_key=True)
+
+    def __str__(self):
+        return self.name

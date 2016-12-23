@@ -6,17 +6,48 @@
 
         $(document).ready(function () {
             $('select').material_select();
+
+
+
+            $(".datepicker").pDatepicker({
+                observer: true,
+                justSelectOnDate: true,
+                onSelect: function () {
+                    $('.datepicker').val($('.datepicker').val().split(" ")[0])
+                },
+                onShow: function () {
+                    $('.datepicker').val($('.datepicker').val().split(" ")[0])
+                }
+
+            });
+
+            $(".datepicker").val(' ');
+
         });
+
+
 
     </script>
     <div class="row">
         <form class="col s12" method="post">
             {% csrf_token %}
             {% for field in form %}
-                <div class="input-field col s4">
+                {% if field.label == 'تاریخ' %}
+
+                    <div class="input-field col s4">
+                    <label for={{ field.id_for_label }}>{{ field.label }}</label>
+                    <input type="text" class="datepicker" name="end_date"/>
+                    </div>
+
+                    {% else %}
+
+                    <div class="input-field col s4">
                     {{ field }}
                     <label for={{ field.id_for_label }}>{{ field.label }}</label>
-                </div>
+                    </div>
+
+                {% endif %}
+
             {% endfor %}
             <button class=" btn-large waves-effect waves-light left" type="submit" name="action">جست‌وجو
             </button>

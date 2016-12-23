@@ -130,7 +130,39 @@ def search(request):
     result = None
     if request.method == 'POST':
         # TODO: find results
+        form = AdvancedSearchForm(request.POST)
+        do_advanced_search(form)
         pass
         # form = AdvancedSearchForm(request.POST)
         # print(form.clean())
     return render(request, 'appointment/advanced-search.html', {'form': form, 'result': result})
+
+
+def do_advanced_search(form):
+    doctors = search_by_name(Doctor.objects.all())
+    doctors = search_by_expertise(doctors)
+    doctors = search_by_date(doctors)
+    doctors = search_by_address(doctors)
+    doctors = search_by_insurance(doctors)
+    return doctors
+
+
+def search_by_name(doctors):
+    pass
+
+
+
+def search_by_expertise(doctors):
+    pass
+
+
+def search_by_date(doctors):
+    pass
+
+
+def search_by_address(doctors):
+    pass
+
+
+def search_by_insurance(doctors):
+    pass
