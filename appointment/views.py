@@ -1,4 +1,5 @@
 # Create your views here.
+# -*- coding: UTF-8 -*-
 from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate
