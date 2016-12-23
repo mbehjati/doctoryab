@@ -48,13 +48,13 @@ def login(request):
     return message
 
 
-def save_doctor_free_times(doctor , form):
+def save_doctor_free_times(doctor, form):
     start_date = datetime.strptime(form.start_date, '%Y-%m-%d')
     end_date = datetime.strptime(form.end_date, '%Y-%m-%d')
     day = timedelta(days=1)
 
     while start_date <= end_date:
-        save_visit_times_for_a_day(doctor , start_date, form.start_time, form.end_time, form.visit_duration)
+        save_visit_times_for_a_day(doctor, start_date, form.start_time, form.end_time, form.visit_duration)
         start_date = start_date + day
 
 
@@ -79,30 +79,29 @@ def add_time(start_time, duration):
     duration = int(duration)
     hour = int(start_time.split(':')[0])
     minute = int(start_time.split(':')[1][0:len(start_time.split(':')[1]) - 2])
-    postfix = start_time[len(start_time)-2:len(start_time)]
-    print(hour , minute , postfix)
+    postfix = start_time[len(start_time) - 2:len(start_time)]
+    print(hour, minute, postfix)
     minute += duration
     if minute >= 60:
         minute %= 60
         hour = (hour + 1) % 12
-    if hour == 0 :
+    if hour == 0:
         hour = 12
         postfix = 'pm'
     return str(hour) + ':' + str(minute).zfill(2) + postfix
 
 
-def save_visit_times_for_a_day(doctor , day, start_time, end_time, duration):
+def save_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
     if not is_time_before(add_time(start_time, duration), end_time):
         return
     while is_time_before(start_time, end_time):
-        add_appointment_time(doctor , day, start_time, duration)
+        add_appointment_time(doctor, day, start_time, duration)
         start_time = add_time(start_time, duration)
 
 
 def doctor_free_time(request):
     message = ''
     response = False
-
 
     if request.method == 'POST':
         user = request.user.id
@@ -131,7 +130,7 @@ def search(request):
     if request.method == 'POST':
         # TODO: find results
         form = AdvancedSearchForm(request.POST)
-        do_advanced_search(form)
+        print(do_advanced_search(form))
         pass
         # form = AdvancedSearchForm(request.POST)
         # print(form.clean())
@@ -139,30 +138,47 @@ def search(request):
 
 
 def do_advanced_search(form):
-    doctors = search_by_name(Doctor.objects.all())
-    doctors = search_by_expertise(doctors)
-    doctors = search_by_date(doctors)
-    doctors = search_by_address(doctors)
-    doctors = search_by_insurance(doctors)
+
+    if form.is_valid():
+        doctors = search_by_name(Doctor.objects.all(), form.cleaned_data['name'])
+        doctors = search_by_expertise(doctors, form.cleaned_data['expertise'])
+        doctors = search_by_date(doctors, form.cleaned_data['date'])
+        doctors = search_by_address(doctors, form.cleaned_data['address'])
+        doctors = search_by_insurance(doctors, form.cleaned_data['insurance'])
+        return doctors
+
+
+def search_by_name(doctors, name):
+    ans = []
+    for doc in doctors:
+        if name in doc.user.user.username:
+            ans.append(doc)
+    return ans
+
+
+def search_by_expertise(doctors , expertise):
+    # TODO
     return doctors
 
 
-def search_by_name(doctors):
-    pass
+def search_by_date(doctors, date):
+    ans = []
+    if date == '':
+        return doctors
+    for app_time in AppointmentTime.objects.all():
+        if app_time.date == date and app_time.doctor not in ans:
+            ans.append(app_time.doctor)
+    return ans
 
 
-
-def search_by_expertise(doctors):
-    pass
-
-
-def search_by_date(doctors):
-    pass
-
-
-def search_by_address(doctors):
-    pass
+def search_by_address(doctors, address):
+    ans = []
+    for doc in doctors:
+        if address in doc.office_address:
+            ans.append(doc)
+    return ans
 
 
-def search_by_insurance(doctors):
-    pass
+def search_by_insurance(doctors , insurance):
+    # TODO
+    return doctors

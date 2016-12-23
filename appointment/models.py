@@ -5,14 +5,14 @@ from user.models import Doctor , MyUser
 
 
 class AppointmentTime(models.Model):
-    date = models.DateField()
-    time = models.TimeField()
+    date = models.CharField(max_length=20)
+    time = models.CharField(max_length=8)
     duration = models.IntegerField()
     doctor = models.ForeignKey(Doctor)
     patient = models.ForeignKey(MyUser, null=True)
 
     def __str__(self):
-        return "doctor " + str(self.doctor.user.user.last_name) + " " + str(self.date) + " " + str(self.time)
+        return "doctor " + str(self.doctor.user.user.username) + " " + str(self.date) + " " + str(self.time)
 
 
 class Insurance (models.Model):

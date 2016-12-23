@@ -35,11 +35,11 @@ class AdvancedSearchForm(forms.Form):
     for exp in Expertise.objects.all():
         expertise_choices += ((exp, exp.name),)
 
-    name = forms.CharField(label='نام پزشک')
-    insurance = forms.ChoiceField(choices=insurance_choices, label='بیمه')
+    name = forms.CharField(label='نام پزشک', required=False)
+    insurance = forms.ChoiceField(choices=insurance_choices, label= 'بیمه' )
     expertise = forms.ChoiceField(choices=expertise_choices, label='تخصص')
-    date = forms.DateField(label='تاریخ')
-    address = forms.CharField(label='آدرس')
+    date = forms.CharField(label='تاریخ' ,required=False)
+    address = forms.CharField(label='آدرس' , required=False)
 
     def clean(self):
         cleaned_data = super(AdvancedSearchForm, self).clean()
