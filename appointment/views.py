@@ -72,9 +72,9 @@ def doctor_free_time(request):
         form.visit_duration = request.POST['visit_duration']
         if form.is_data_valid():
             save_doctor_free_times(form)
-            message = 'اطلاعات شما با موفقیت ثبت شد. '
+            # message = 'اطلاعات شما با موفقیت ثبت شد. '
             response = True
-        else:
-            message = '*اطلاعات واردشده مجاز نمی‌باشد. '
+        # else:
+            # message = '*اطلاعات واردشده مجاز نمی‌باشد. '
 
     return render(request, 'appointment/set_doctor_free_times.html', {'message': message, 'response': response})
