@@ -71,14 +71,16 @@ def is_time_before(first, second):
 
 
 def add_appointment_time(doctor, day, start_time, duration):
-    appointment_time = AppointmentTime(date=day, start_time=start_time, duration=duration, doctor=doctor)
+    appointment_time = AppointmentTime(date=day, time=start_time, duration=duration, doctor=doctor)
     appointment_time.save()
 
 
 def add_time(start_time, duration):
+    duration = int(duration)
     hour = int(start_time.split(':')[0])
     minute = int(start_time.split(':')[1][0:len(start_time.split(':')[1]) - 2])
     postfix = start_time[len(start_time)-2:len(start_time)]
+    print(hour , minute , postfix)
     minute += duration
     if minute >= 60:
         minute %= 60
@@ -106,7 +108,7 @@ def doctor_free_time(request):
         user = request.user.id
         user_obj = User.objects.get(pk=user)
         myuser = MyUser.objects.get(user=user_obj)
-        doctor = Doctor.objects(user=myuser)
+        doctor = Doctor.objects.get(user=myuser)
         form = DoctorFreeTimes()
         form.start_date = request.POST['start_date']
         form.end_date = request.POST['end_date']

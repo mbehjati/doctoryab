@@ -115,7 +115,7 @@ def register(request):
                 userprofile.save()
                 # print(userprofile.is_doctor)
                 doctorprofile.save()
-            return render(request, '/user/')
+            return render(request, '/appointment/')
     else:
         uf = UserForm(prefix='user')
         upf = MyUserForm(prefix='userprofile')

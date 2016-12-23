@@ -9,4 +9,4 @@ class AppointmentTime(models.Model):
     time = models.TimeField()
     duration = models.IntegerField()
     doctor = models.ForeignKey(Doctor)
-    patient = models.ForeignKey(MyUser)
+    patient = models.ForeignKey(MyUser , null=True)
