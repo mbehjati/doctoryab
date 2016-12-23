@@ -48,15 +48,20 @@ def login(request):
     return message
 
 
-def save_doctor_free_times(doctor, form):
+def save_doctor_free_times(doctor , form):
+    for obj in calc_doctor_free_times(doctor , form):
+        obj.save()
+
+def calc_doctor_free_times(doctor, form):
     start_date = datetime.strptime(form.start_date, '%Y-%m-%d')
     end_date = datetime.strptime(form.end_date, '%Y-%m-%d')
     day = timedelta(days=1)
+    ans = []
 
     while start_date <= end_date:
-        save_visit_times_for_a_day(doctor, start_date, form.start_time, form.end_time, form.visit_duration)
+        ans.extend(calc_visit_times_for_a_day(doctor, str(start_date.date()), form.start_time, form.end_time, form.visit_duration))
         start_date = start_date + day
-
+    return ans
 
 def is_time_before(first, second):
     if 'pm' in first and 'am' in second:
@@ -65,14 +70,14 @@ def is_time_before(first, second):
         return True
     if '12:' in first and '12:' not in second:
         return True
-    if first >= second:
+    if first > second:
         return False
     return True
 
 
 def add_appointment_time(doctor, day, start_time, duration):
-    appointment_time = AppointmentTime(date=day, time=start_time, duration=duration, doctor=doctor)
-    appointment_time.save()
+    return AppointmentTime(date=day, time=start_time, duration=duration, doctor=doctor)
+    # appointment_time.save()
 
 
 def add_time(start_time, duration):
@@ -80,7 +85,6 @@ def add_time(start_time, duration):
     hour = int(start_time.split(':')[0])
     minute = int(start_time.split(':')[1][0:len(start_time.split(':')[1]) - 2])
     postfix = start_time[len(start_time) - 2:len(start_time)]
-    print(hour, minute, postfix)
     minute += duration
     if minute >= 60:
         minute %= 60
@@ -91,12 +95,14 @@ def add_time(start_time, duration):
     return str(hour) + ':' + str(minute).zfill(2) + postfix
 
 
-def save_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
+def calc_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
     if not is_time_before(add_time(start_time, duration), end_time):
-        return
-    while is_time_before(start_time, end_time):
-        add_appointment_time(doctor, day, start_time, duration)
+        return []
+    ans = []
+    while is_time_before(add_time(start_time, duration), end_time):
+        ans.append(add_appointment_time(doctor, day, start_time, duration))
         start_time = add_time(start_time, duration)
+    return ans
 
 
 def doctor_free_time(request):
@@ -142,7 +148,7 @@ def do_advanced_search(form):
     if form.is_valid():
         doctors = search_by_name(Doctor.objects.all(), form.cleaned_data['name'])
         doctors = search_by_expertise(doctors, form.cleaned_data['expertise'])
-        doctors = search_by_date(doctors, form.cleaned_data['date'])
+        doctors = search_by_date(doctors, form.cleaned_data['date'] , AppointmentTime.objects.all())
         doctors = search_by_address(doctors, form.cleaned_data['address'])
         doctors = search_by_insurance(doctors, form.cleaned_data['insurance'])
         return doctors
@@ -161,11 +167,11 @@ def search_by_expertise(doctors , expertise):
     return doctors
 
 
-def search_by_date(doctors, date):
+def search_by_date(doctors, date , app_times):
     ans = []
     if date == '':
         return doctors
-    for app_time in AppointmentTime.objects.all():
+    for app_time in app_times:
         if app_time.date == date and app_time.doctor not in ans:
             ans.append(app_time.doctor)
     return ans
