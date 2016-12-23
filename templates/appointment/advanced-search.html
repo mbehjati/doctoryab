@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% block contents %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('select').material_select();
+        });
+
+    </script>
+    <div class="row">
+        <form class="col s12" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="input-field col s4">
+                    {{ field }}
+                    <label for={{ field.id_for_label }}>{{ field.label }}</label>
+                </div>
+            {% endfor %}
+            <button class=" btn-large waves-effect waves-light left" type="submit" name="action">جست‌وجو
+            </button>
+        </form>
+    </div>
+
+
+{% endblock %}

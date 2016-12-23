@@ -22,3 +22,15 @@ class DoctorFreeTimes(forms.Form):
         if self.start_time >= self.end_time:
             return False
         return True
+
+
+class AdvancedSearchForm(forms.Form):
+    CHOICES = (('1', 'البرز',), ('2', 'ایران',))
+    name = forms.CharField(label='نام پزشک')
+    insurance = forms.ChoiceField(choices=CHOICES, label='بیمه')
+    specialist = forms.CharField(label='تخصص')
+    reception_hour = forms.DateField(label='زمان پذیرش')
+    address = forms.CharField(label='آدرس')
+
+    def clean(self):
+        cleaned_data = super(AdvancedSearchForm, self).clean()

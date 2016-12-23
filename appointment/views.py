@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 from user.forms import LoginForm
-from .forms import DoctorFreeTimes
+from .forms import DoctorFreeTimes, AdvancedSearchForm
 from .models import *
 
 
@@ -77,12 +77,12 @@ def add_appointment_time(doctor, day, start_time, duration):
 def add_time(start_time, duration):
     hour = int(start_time.split(':')[0])
     minute = int(start_time.split(':')[1][0:len(start_time.split(':')[1]) - 2])
-    postfix = start_time[len(start_time)-2:len(start_time)]
+    postfix = start_time[len(start_time) - 2:len(start_time)]
     minute += duration
     if minute >= 60:
         minute %= 60
         hour = (hour + 1) % 12
-    if hour == 0 :
+    if hour == 0:
         hour = 12
         postfix = 'pm'
     return str(hour) + ':' + str(minute).zfill(2) + postfix
@@ -110,7 +110,18 @@ def doctor_free_time(request):
             save_doctor_free_times(form)
             # message = 'اطلاعات شما با موفقیت ثبت شد. '
             response = True
-        # else:
+            # else:
             # message = '*اطلاعات واردشده مجاز نمی‌باشد. '
 
     return render(request, 'appointment/set_doctor_free_times.html', {'message': message, 'response': response})
+
+
+def search(request):
+    form = AdvancedSearchForm()
+    result = None
+    if request.method == 'POST':
+        # TODO: find results
+        pass
+        # form = AdvancedSearchForm(request.POST)
+        # print(form.clean())
+    return render(request, 'appointment/advanced-search.html', {'form': form, 'result': result})
