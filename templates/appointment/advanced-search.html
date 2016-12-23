@@ -2,11 +2,11 @@
 
 {% load staticfiles %}
 {% block contents %}
+    <link rel="stylesheet" type="text/css" href={% static 'advanced-search.css' %}>
     <script type="text/javascript">
 
         $(document).ready(function () {
             $('select').material_select();
-
 
 
             $(".datepicker").pDatepicker({
@@ -26,33 +26,68 @@
         });
 
 
-
     </script>
-    <div class="row">
-        <form class="col s12" method="post">
-            {% csrf_token %}
-            {% for field in form %}
-                {% if field.label == 'تاریخ' %}
+    <div class=" _search-box">
 
-                    <div class="input-field col s4">
-                    <label for={{ field.id_for_label }}>{{ field.label }}</label>
-                    <input type="text" class="datepicker" name="date"/>
-                    </div>
+
+        <div class="row">
+
+            <form class="col offset-s6" method="post">
+
+                {% csrf_token %}
+                {% for field in form %}
+                    {% if field.label == 'تاریخ' %}
+
+                        <div class="input-field col s6 right">
+                            <label for={{ field.id_for_label }}>{{ field.label }}</label>
+                            <input type="text" class="datepicker" name="date"/>
+                        </div>
 
                     {% else %}
 
-                    <div class="input-field col s4">
-                    {{ field }}
-                    <label for={{ field.id_for_label }}>{{ field.label }}</label>
-                    </div>
+                        <div class="input-field col s6 right">
+                            {{ field }}
+                            <label for={{ field.id_for_label }}>{{ field.label }}</label>
+                        </div>
 
-                {% endif %}
+                    {% endif %}
 
-            {% endfor %}
-            <button class=" btn-large waves-effect waves-light left" type="submit" name="action">جست‌وجو
-            </button>
-        </form>
+                {% endfor %}
+                <button class=" btn-large waves-effect waves-light left col s2" type="submit" name="action">جست‌وجو
+                </button>
+
+            </form>
+        </div>
+
     </div>
+    {% if result != None %}
+        <div class="row _result-box">
+
+            {% if result %}
+                <table class="bordered">
+                    <thead>
+                    <tr>
+                        <th data-field="id">نام</th>
+                        <th data-field="name">تخصص</th>
+                        <th data-field="price">آدرس مطب</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for res in result %}
+                        <tr>
+                            <td>{{ res.user.user.first_name }} {{ res.user.user.last_name }}</td>
+                            <td>{{ res.expertise }}</td>
+                            <td>{{ res.office_address }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>موردی یافت نشد.</p>
+            {% endif %}
+        </div>
+
+    {% endif %}
 
 
 {% endblock %}

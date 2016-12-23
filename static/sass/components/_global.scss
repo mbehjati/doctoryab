@@ -358,7 +358,7 @@ ul.staggered-list li {
 
 // Footer
 footer.page-footer {
-  margin-top: 20px;
+  margin-top: 0;
   padding-top: 20px;
   background-color: $footer-bg-color;
 
@@ -418,7 +418,7 @@ thead {
 td, th {
   padding: 15px 5px;
   display: table-cell;
-  text-align: left;
+  text-align: right;
   vertical-align: middle;
   border-radius: 2px;
 }
@@ -478,7 +478,7 @@ td, th {
     td {
       display: block;
       min-height: 1.25em;
-      text-align: left;
+      text-align: right;
     }
     tr {
       padding: 0 10px;

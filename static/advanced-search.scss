@@ -1,0 +1,31 @@
+._search-box {
+  padding: 50px;
+  //margin: 10px;
+  //border-radius: 5px;
+  //border: solid lightgray;
+  height: 60vh;
+  background-image: url("images/encontre.png");
+  background-size: cover;
+
+}
+
+//._search-box::after {
+//  content: "";
+//  background: url("images/encontre.png");
+//  background-size: cover;
+//  opacity: 0.5;
+//  top: 0;
+//  left: 0;
+//  bottom: 0;
+//  right: 0;
+//  position: absolute;
+//  z-index: -1;
+//  padding: 50px;
+//  margin: 10px;
+//  height: 300px;
+//}
+
+._result-box {
+  padding: 50px;
+  margin: 10px;
+}
