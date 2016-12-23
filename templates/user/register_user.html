@@ -1,79 +1,3 @@
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Title</title>#}
-{#</head>#}
-{#<body>#}
-{#register#}
-{#</body>#}
-{#</html>#}
-
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Title</title>#}
-{#</head>#}
-{#<body>#}
-{#register#}
-{#</body>#}
-{#</html>#}
-{##}
-{#<!DOCTYPE html>#}
-{#<html lang="en">#}
-{#{% load static %}#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <title>Title</title>#}
-{#    <link rel="stylesheet" href={% static "style.min.css" %}>#}
-{#    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>#}
-{#    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>#}
-{#</head>#}
-{#<body>#}
-{#<div class="row">#}
-{#    <form class="col s12">#}
-{#        <div class="row">#}
-{#            <div class="input-field col s6">#}
-{#                <input placeholder="Placeholder" id="first_name" type="text" class="validate">#}
-{#                <label for="first_name">First Name</label>#}
-{#            </div>#}
-{#            <div class="input-field col s6">#}
-{#                <input id="last_name" type="text" class="validate">#}
-{#                <label for="last_name">Last Name</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="row">#}
-{#            <div class="input-field col s12">#}
-{#                <input disabled value="I am not editable" id="disabled" type="text" class="validate">#}
-{#                <label for="disabled">Disabled</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="row">#}
-{#            <div class="input-field col s12">#}
-{#                <input id="password" type="password" class="validate">#}
-{#                <label for="password">Password</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="row">#}
-{#            <div class="input-field col s12">#}
-{#                <input id="email" type="email" class="validate">#}
-{#                <label for="email">Email</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="row">#}
-{#            <div class="col s12">#}
-{#                This is an inline input field:#}
-{#                <div class="input-field inline">#}
-{#                    <input id="email" type="email" class="validate">#}
-{#                    <label for="email" data-error="wrong" data-success="right">Email</label>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </form>#}
-{#</div>#}
-{#</body>#}
-{#</html>#}
 {% load staticfiles %}
 
 <!DOCTYPE html>
@@ -97,8 +21,49 @@
         }
         //-->
         $(document).ready(function () {
+
             $(":input").addClass("validate");
 
+            {% if userprofileform.errors %}
+                {% for field in userprofileform %}
+                    {% for error in field.errors %}
+                        $('#{{ field.id_for_label }}').prop('required', true);
+                        $('#{{ field.id_for_label }}').removeClass('validate');
+                        $('#{{ field.id_for_label }}').addClass('invalid');
+                        $('label[for=' + '{{ field.id_for_label }}' + ']').attr('data-error', '{{ error }}');
+
+                    {% endfor %}
+                {% endfor %}
+                {% for error in userprofileform.non_field_errors %}
+
+                {% endfor %}
+            {% endif %}
+            {% if userform.errors %}
+                {% for field in userform %}
+                    {% for error in field.errors %}
+                        $('#{{ field.id_for_label }}').removeClass('validate');
+                        $('#{{ field.id_for_label }}').addClass('invalid');
+                        $('label[for=' + '{{ field.id_for_label }}' + ']').attr('data-error', '{{ error }}');
+
+                    {% endfor %}
+                {% endfor %}
+                {% for error in userform.non_field_errors %}
+
+                {% endfor %}
+            {% endif %}
+            {% if doctorprofile.errors %}
+                {% for field in doctorprofile %}
+                    {% for error in field.errors %}
+                        $('#{{ field.id_for_label }}').addClass('invalid');
+                        $('label[for=' + '{{ field.id_for_label }}' + ']').attr('data-error', '{{ error }}');
+                        $('label[for=' + '{{ field.id_for_label }}' + ']').addClass('active');
+
+                    {% endfor %}
+                {% endfor %}
+                {% for error in doctorprofile.non_field_errors %}
+
+                {% endfor %}
+            {% endif %}
         });
     </script>
 
@@ -113,6 +78,11 @@
 </div>
 
 <div class="row _register-form">
+    {% if userform.errors %}
+        {% for error in userform.non_field_errors %}
+            <p class="right red-text">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
     <form class="col s12" action="" method="post">
         {% csrf_token %}
         {% for f in userform %}
@@ -143,7 +113,7 @@
                     <div class="file-field input-field">
                         <div class="btn right grey">
                             <span>قرارداد</span>
-                            <input type="file">
+                            {{ f }}
                         </div>
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
