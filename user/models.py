@@ -27,13 +27,11 @@ class Doctor(models.Model):
                                         message="year must be 4 digits")
     year_diploma = models.CharField(validators=[year_diploma_regex], blank=True, max_length=4)
     diploma = models.CharField(max_length=50)
-    office_address = models.CharField(max_length=200)
+    office_address = models.CharField(max_length=300)
     phone_regex = RegexValidator(regex=r'^([0]{1})([0-9]{10})$',
                                  message="Phone number must be entered in the format: '09999999999'.")
     office_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=11)
-    contract = models.FileField(
-        # upload_to='files'
-    )
+    # contract = models.FileField(upload_to='files')
 
     def __str__(self):
-        return str(self.user.user.usernam)
+        return str(self.user.user.username)

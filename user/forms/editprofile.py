@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from user.models import MyUser
+from user.models import MyUser, Doctor
 
 
 class EditUserForm(forms.ModelForm):
@@ -15,4 +15,11 @@ class EditUserForm(forms.ModelForm):
 class EditMyUserForm(forms.ModelForm):
     class Meta:
         model = MyUser
+        exclude = ['user', 'is_doctor']
+
+
+class EditMyDoctorForm(forms.ModelForm):
+    class Meta:
+        model = Doctor
         exclude = ['user']
+# , 'contract']
