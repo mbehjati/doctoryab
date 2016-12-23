@@ -1,10 +1,110 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{#<body>#}
+{#register#}
+{#</body>#}
+{#</html>#}
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{#<body>#}
+{#register#}
+{#</body>#}
+{#</html>#}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#{% load static %}#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#    <link rel="stylesheet" href={% static "style.min.css" %}>#}
+{#    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>#}
+{#    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>#}
+{#</head>#}
+{#<body>#}
+{#<div class="row">#}
+{#    <form class="col s12">#}
+{#        <div class="row">#}
+{#            <div class="input-field col s6">#}
+{#                <input placeholder="Placeholder" id="first_name" type="text" class="validate">#}
+{#                <label for="first_name">First Name</label>#}
+{#            </div>#}
+{#            <div class="input-field col s6">#}
+{#                <input id="last_name" type="text" class="validate">#}
+{#                <label for="last_name">Last Name</label>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#            <div class="input-field col s12">#}
+{#                <input disabled value="I am not editable" id="disabled" type="text" class="validate">#}
+{#                <label for="disabled">Disabled</label>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#            <div class="input-field col s12">#}
+{#                <input id="password" type="password" class="validate">#}
+{#                <label for="password">Password</label>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#            <div class="input-field col s12">#}
+{#                <input id="email" type="email" class="validate">#}
+{#                <label for="email">Email</label>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="row">#}
+{#            <div class="col s12">#}
+{#                This is an inline input field:#}
+{#                <div class="input-field inline">#}
+{#                    <input id="email" type="email" class="validate">#}
+{#                    <label for="email" data-error="wrong" data-success="right">Email</label>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </form>#}
+{#</div>#}
+{#</body>#}
+{#</html>#}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title></title>
+    <script type="text/javascript">
+        <!--
+        function showForm(it, box) {
+            var vis = (box.checked) ? "block" : "none";
+            document.getElementById(it).style.display = vis;
+        }
+        //-->
+    </script>
+
 </head>
 <body>
-register
+{% load staticfiles %}
+
+<div class="row">
+    <form class="col s12" action="" method="post">
+        {% csrf_token %}
+        {{ userform }}
+        {{ userprofileform }}
+        <input type="checkbox" name="c1" onclick="showForm('div', this)">Do u wanna register as a doctor??
+
+        <div id="div" style="display:none">
+            {{ doctorprofile }}
+        </div>
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
 </body>
 </html>

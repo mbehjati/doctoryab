@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from user.models import MyUser
-from user.forms import UserForm, MyUserForm, LoginForm, EditMyUserForm, EditUserForm
+from user.models import MyUser, Doctor
+from user.forms import UserForm, MyUserForm, LoginForm, EditMyUserForm, EditUserForm, DoctorForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -54,6 +54,7 @@ def register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST, prefix='user')
         upf = MyUserForm(request.POST, prefix='userprofile')
+        df = DoctorForm(request.POST, prefix='doctorprofile')
         if uf.is_valid() * upf.is_valid():
             user = User.objects.create_user(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'],
                                             first_name=uf.cleaned_data['first_name'],
@@ -66,11 +67,22 @@ def register(request):
                                  # address=upf.cleaned_data['address']
                                  )
             userprofile.save()
-            return render(request, 'user/')
+            if df.is_valid():
+                doctorprofile = Doctor(user=userprofile, university=df.cleaned_data['university'],
+                                       year_diploma=df.cleaned_data['year_diploma'],
+                                       diploma=df.cleaned_data['diploma'],
+                                       office_address=df.cleaned_data['office_address'],
+                                       office_phone_number=df.cleaned_data['office_phone_number'],
+                                       contract=df.cleaned_data["contract"]
+                                       )
+                userprofile.is_doctor = True
+                doctorprofile.save()
+            return render(request, '/user/')
     else:
         uf = UserForm(prefix='user')
         upf = MyUserForm(prefix='userprofile')
-    return render(request, 'user/register_user.html', {'userform': uf, 'userprofileform': upf})
+        df = DoctorForm(prefix='doctorprofile')
+    return render(request, 'user/register_user.html', {'userform': uf, 'userprofileform': upf, 'doctorprofile': df})
 
 
 def login(request):
