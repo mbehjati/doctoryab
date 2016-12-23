@@ -10,3 +10,9 @@ class AppointmentTime(models.Model):
     duration = models.IntegerField()
     doctor = models.ForeignKey(Doctor)
     patient = models.ForeignKey(MyUser , null=True)
+
+class Insurance (models.Model):
+    name  = models.TextField(primary_key=True)
+
+class Expertise(models.Model):
+    name = models.TextField(primary_key=True)
