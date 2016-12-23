@@ -95,6 +95,16 @@ class AddDoctorFreeTime(TestCase):
         app6 = AppointmentTime(time='11:30am', date='1395-07-02', doctor=self.doc1, duration=30)
         self.assertEqual(calc_doctor_free_times(self.doc1 ,test) , [app5,app1,app2,app6,app3,app4])
 
+    def test_calc_visit_times_for_a_day(self):
+        app1 = AppointmentTime(time='12:00pm', date='1395-07-01', doctor=self.doc1, duration=30)
+        app2 = AppointmentTime(time='12:30pm', date='1395-07-01', doctor=self.doc1, duration=30)
+        app5 = AppointmentTime(time='11:30am', date='1395-07-01', doctor=self.doc1, duration=30)
+        start_time = '11:30am'
+        end_time = '1:15pm'
+        duration= 30
+
+        self.assertEqual(calc_visit_times_for_a_day(self.doc1,'1395-07-01',start_time,end_time,duration) , [app5,app1,app2])
+
 
 class SearchDoctor(TestCase):
     user = User(username='doc1', password='12345678')
