@@ -9,9 +9,10 @@ from user.forms import UserForm, MyUserForm, DoctorForm, LoginForm, EditMyUserFo
 from user.models import MyUser, Doctor
 
 
-@login_required(login_url='/user/login/')
+@login_required(login_url='/')
 def view_profile(request):
     user_id = request.user.id
+    print('here')
     try:
         user1 = User.objects.get(pk=user_id)
         myuser = MyUser.objects.get(user=user1)
@@ -115,7 +116,7 @@ def register(request):
                 userprofile.save()
                 # print(userprofile.is_doctor)
                 doctorprofile.save()
-            return render(request, '/')
+            return render(request, 'index.html')
     else:
         uf = UserForm(prefix='user')
         upf = MyUserForm(prefix='userprofile')
@@ -158,4 +159,4 @@ def login(request):
 
 def logout(request):
     django_logout(request)
-    return redirect('/user/')
+    return redirect('/')

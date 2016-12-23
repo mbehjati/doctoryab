@@ -2,9 +2,9 @@
 # -*- coding: UTF-8 -*-
 from datetime import datetime, timedelta
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import login as django_login, authenticate
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from user.forms import LoginForm
 from .forms import DoctorFreeTimes, AdvancedSearchForm
@@ -18,12 +18,8 @@ def home(request):
     return render(request, 'index.html', {'form': LoginForm(), 'message': message})
 
 
-def django_login(request, user):
-    pass
-
-
 def login(request):
-    message = ""
+    message = ''
     form = LoginForm(request.POST)
     if form.is_valid():
         username = form.cleaned_data["username"]
@@ -35,7 +31,8 @@ def login(request):
 
             if findeduser.is_active:
                 django_login(request, user)
-                return redirect('/user/')
+                # return redirect('/user/')
+                return "کاربر عزیز خوش آمدید."
             else:
                 form = LoginForm()
                 # raise forms.ValidationError('.حساب کاربری شما غیرفعال است.')
@@ -136,7 +133,7 @@ def search(request):
     if request.method == 'POST':
         # TODO: find results
         form = AdvancedSearchForm(request.POST)
-        print(do_advanced_search(form))
+        result = do_advanced_search(form)
         pass
         # form = AdvancedSearchForm(request.POST)
         # print(form.clean())
@@ -144,7 +141,6 @@ def search(request):
 
 
 def do_advanced_search(form):
-
     if form.is_valid():
         doctors = search_by_name(Doctor.objects.all(), form.cleaned_data['name'])
         doctors = search_by_expertise(doctors, form.cleaned_data['expertise'])
@@ -162,7 +158,7 @@ def search_by_name(doctors, name):
     return ans
 
 
-def search_by_expertise(doctors , expertise):
+def search_by_expertise(doctors, expertise):
     # TODO
     return doctors
 
@@ -185,6 +181,6 @@ def search_by_address(doctors, address):
     return ans
 
 
-def search_by_insurance(doctors , insurance):
+def search_by_insurance(doctors, insurance):
     # TODO
     return doctors

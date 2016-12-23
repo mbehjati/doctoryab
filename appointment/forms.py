@@ -37,9 +37,9 @@ class AdvancedSearchForm(forms.Form):
         expertise_choices += ((exp, exp.name),)
 
     name = forms.CharField(label='نام پزشک', required=False)
-    insurance = forms.ChoiceField(choices=insurance_choices, label= 'بیمه' )
     expertise = forms.ChoiceField(choices=expertise_choices, label='تخصص')
     date = forms.CharField(label='تاریخ' ,required=False)
+    insurance = forms.ChoiceField(choices=insurance_choices, label='بیمه')
     address = forms.CharField(label='آدرس' , required=False)
 
     def clean(self):

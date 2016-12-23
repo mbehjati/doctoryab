@@ -1,0 +1,10 @@
+{#{{ form }}!#}
+{% for f in form %}
+    <div class="row">
+
+        <div class="input-field">
+            {{ f }}
+            <label for={{ f.id_for_label }}>{{ f.label }}</label>
+        </div>
+    </div>
+{% endfor %}
