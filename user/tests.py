@@ -1,6 +1,8 @@
+from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.test import TestCase
 from .models import MyUser, User, Doctor
-from .forms import UserForm, MyUserForm, DoctorForm
+from .forms import *
+# UserForm, MyUserForm, DoctorForm, L
 from .views import register
 
 
@@ -9,7 +11,7 @@ class UserModelsTest(TestCase):
     def add_new_users(self):
         self.user1 = User.objects.create(username='user1', password='12345', email='m.soleimani73.z@gmail.com')
         self.myuser1 = MyUser.objects.create(user=self.user1, phone_number='09109999999', national_code='1200153374')
-        self.doc1 = Doctor.objects.create(user=self.myuser1, university='tehran', year_diploma='1995')
+        # self.doc1 = Doctor.objects.create(user=self.myuser1, university='tehran', year_diploma='1995', expertise='')
 
     def test_new_users_activation(self):
         self.add_new_users()
@@ -21,7 +23,7 @@ class UserModelsTest(TestCase):
         self.add_new_users()
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(MyUser.objects.count(), 1)
-        self.assertEqual(Doctor.objects.count(), 1)
+        self.assertEqual(Doctor.objects.count(), 0)
 
 
 class UserRegistrationForm(UserModelsTest):
@@ -71,6 +73,15 @@ class UserRegistrationForm(UserModelsTest):
                                })
         self.assertEqual(form4.is_valid(), False)
 
+    def test_not_duplicate_username(self):
+        UserModelsTest.add_new_users(self)
+        form1 = UserForm(data={'username': 'user1',
+                               'password': '12345',
+                               'password2': '12345',
+                               'email': 'm.solieimani73.z@gmail.com'
+                               })
+        self.assertEqual(form1.is_valid(), False)
+
 
 # class UserRegistrationView(TestCase):
 #
@@ -88,3 +99,22 @@ class UserRegistrationForm(UserModelsTest):
 #         # _code = response.redirect_chain[-1]
 #         print(response.url)
 #         # last_url)
+
+class UserLogin(UserModelsTest):
+
+    def test_valid_user_login(self):
+        UserModelsTest.add_new_users(self)
+        form1 = LoginForm(data={'username': 'user1',
+                                'password': '12345'})
+        self.assertEqual(form1.is_valid(), True)
+
+    # def test_valid_user_login_view(self):
+    #     UserModelsTest.add_new_users(self)
+    #     # self.user = authenticate(username='user1', password='12345')
+    #     # self.assertTrue(self.user)
+    #     self.client.login(username='user1', password='12345')
+    #     response = self.client.get('/manufacturers/', follow=True)
+    #     user = User.objects.get(username='temporary')
+    #     self.assertEqual(response.context['email'], 'temporary@gmail.com')
+
+
