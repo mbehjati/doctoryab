@@ -29,18 +29,20 @@ class DoctorFreeTimes(forms.Form):
 
 class AdvancedSearchForm(forms.Form):
     insurance_choices = (('همه', 'همه'),)
-    for ins in Insurance.objects.all():
-        insurance_choices += ((ins, ins.name),)
+    if Insurance.objects:
+        for ins in Insurance.objects.all():
+            insurance_choices += ((ins, ins.name),)
 
     expertise_choices = (('همه', 'همه'),)
-    for exp in Expertise.objects.all():
-        expertise_choices += ((exp, exp.name),)
+    if Expertise.objects:
+        for exp in Expertise.objects.all():
+            expertise_choices += ((exp, exp.name),)
 
     name = forms.CharField(label='نام پزشک', required=False)
     expertise = forms.ChoiceField(choices=expertise_choices, label='تخصص')
-    date = forms.CharField(label='تاریخ' ,required=False)
+    date = forms.CharField(label='تاریخ', required=False)
     insurance = forms.ChoiceField(choices=insurance_choices, label='بیمه')
-    address = forms.CharField(label='آدرس' , required=False)
+    address = forms.CharField(label='آدرس', required=False)
 
     def clean(self):
         cleaned_data = super(AdvancedSearchForm, self).clean()
