@@ -2019,7 +2019,7 @@ a {
 blockquote {
   margin: 20px 0;
   padding-left: 1.5rem;
-    border-left: 5px solid #ff8a65;
+  border-left: 5px solid #ff8a65;
 }
 
 i {
@@ -2059,7 +2059,7 @@ video.responsive-video {
   .pagination li.active a {
     color: #fff; }
   .pagination li.active {
-      background-color: #ff8a65;
+    background-color: #ff8a65;
   }
   .pagination li.disabled a {
     cursor: default;
@@ -2194,7 +2194,7 @@ ul.staggered-list li {
 footer.page-footer {
   margin-top: 20px;
   padding-top: 20px;
-    background-color: #ff8a65;
+  background-color: #ff8a65;
 }
   footer.page-footer .footer-copyright {
     overflow: hidden;
@@ -2330,14 +2330,14 @@ td, th {
       border-bottom: none; }
     .collection .collection-item.active {
       background-color: #5c6bc0;
-        color: white;
+      color: white;
     }
       .collection .collection-item.active .secondary-content {
         color: #fff; }
   .collection a.collection-item {
     display: block;
     transition: .25s;
-      color: #5c6bc0;
+    color: #5c6bc0;
   }
     .collection a.collection-item:not(.active):hover {
       background-color: #ddd; }
@@ -2352,7 +2352,7 @@ td, th {
 
 .secondary-content {
   float: right;
-    color: #5c6bc0;
+  color: #5c6bc0;
 }
 
 .collapsible .collection {
@@ -2435,7 +2435,7 @@ nav ul a span.badge {
     background-color: #5c6bc0;
     transition: width .3s linear; }
   .progress .indeterminate {
-      background-color: #5c6bc0;
+    background-color: #5c6bc0;
   }
     .progress .indeterminate:before {
       content: '';
@@ -3123,7 +3123,7 @@ a {
 
 html {
   line-height: 1.5;
-    font-family: "X Yekan", "yekan", "Roboto", sans-serif;
+  font-family: "X Yekan", "yekan", "Roboto", sans-serif;
   font-weight: normal;
   color: rgba(0, 0, 0, 0.87); }
   @media only screen and (min-width: 0) {
@@ -3476,7 +3476,7 @@ small {
       transition: color .28s ease; }
       .tabs .tab a:hover, .tabs .tab a.active {
         background-color: transparent;
-          color: #ff8a65;
+        color: #ff8a65;
       }
     .tabs .tab.disabled a, .tabs .tab.disabled a:hover {
       color: rgba(255, 138, 101, 0.7);
@@ -3591,7 +3591,7 @@ small {
 
 .btn:focus, .btn-large:focus,
 .btn-floating:focus {
-    background-color: #4150a8;
+  background-color: #4150a8;
 }
 
 .btn, .btn-large {
@@ -3603,7 +3603,7 @@ small {
   transition: .2s ease-out;
   cursor: pointer; }
   .btn:hover, .btn-large:hover {
-      background-color: #6e7cc7;
+    background-color: #6e7cc7;
   }
 
 .btn-floating {
@@ -3629,7 +3629,7 @@ small {
     font-size: 1.6rem;
     line-height: 40px; }
   .btn-floating:hover {
-      background-color: #5c6bc0;
+    background-color: #5c6bc0;
   }
   .btn-floating:before {
     border-radius: 0; }
@@ -4120,12 +4120,12 @@ button.btn-floating {
   -webkit-font-smoothing: antialiased; }
 
 select:focus {
-    outline: 1px solid white;
+  outline: 1px solid white;
 }
 
 button:focus {
   outline: none;
-    background-color: #6b78c6;
+  background-color: #6b78c6;
 }
 
 label {
@@ -4243,7 +4243,7 @@ textarea.materialize-textarea {
   input[type=search]:focus:not([readonly]),
   textarea.materialize-textarea:focus:not([readonly]) {
     border-bottom: 1px solid #5c6bc0;
-      box-shadow: 0 1px 0 0 #5c6bc0;
+    box-shadow: 0 1px 0 0 #5c6bc0;
   }
   input:not([type]):focus:not([readonly]) + label,
   input[type=text]:focus:not([readonly]) + label,
@@ -4258,7 +4258,7 @@ textarea.materialize-textarea {
   input[type=number]:focus:not([readonly]) + label,
   input[type=search]:focus:not([readonly]) + label,
   textarea.materialize-textarea:focus:not([readonly]) + label {
-      color: #5c6bc0;
+    color: #5c6bc0;
   }
   input:not([type]).valid, input:not([type]):focus.valid,
   input[type=text].valid,
@@ -4434,7 +4434,7 @@ textarea.materialize-textarea {
     font-size: 2rem;
     transition: color .2s; }
     .input-field .prefix.active {
-        color: #5c6bc0;
+      color: #5c6bc0;
     }
   .input-field .prefix ~ input,
   .input-field .prefix ~ textarea,
@@ -4569,12 +4569,12 @@ textarea {
 [type="radio"]:checked + label:after,
 [type="radio"].with-gap:checked + label:before,
 [type="radio"].with-gap:checked + label:after {
-    border: 2px solid #5c6bc0;
+  border: 2px solid #5c6bc0;
 }
 
 [type="radio"]:checked + label:after,
 [type="radio"].with-gap:checked + label:after {
-    background-color: #5c6bc0;
+  background-color: #5c6bc0;
 }
 
 [type="radio"]:checked + label:after {
@@ -4617,7 +4617,8 @@ textarea {
 /* CUSTOM CSS CHECKBOXES */
 form p {
   margin-bottom: 10px;
-  text-align: left; }
+  text-align: right;
+}
 
 form p:last-child {
   margin-bottom: 0; }
@@ -4626,7 +4627,7 @@ form p:last-child {
 [type="checkbox"]:not(:checked),
 [type="checkbox"]:checked {
   position: absolute;
-  left: -9999px;
+  right: -9999px;
   opacity: 0; }
 
 [type="checkbox"] {
@@ -4759,7 +4760,7 @@ form p:last-child {
 [type="checkbox"].filled-in.tabbed:checked:focus + label:after {
   border-radius: 2px;
   background-color: #5c6bc0;
-    border-color: #5c6bc0;
+  border-color: #5c6bc0;
 }
 [type="checkbox"].filled-in:disabled:not(:checked) + label:before {
   background-color: transparent;
@@ -4790,7 +4791,7 @@ form p:last-child {
   width: 0;
   height: 0; }
   .switch label input[type=checkbox]:checked + .lever {
-      background-color: #c4c7d7;
+    background-color: #c4c7d7;
   }
     .switch label input[type=checkbox]:checked + .lever:after {
       background-color: #5c6bc0;
@@ -4823,7 +4824,7 @@ form p:last-child {
 
 input[type=checkbox]:checked:not(:disabled) ~ .lever:active::after,
 input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::after {
-    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(92, 107, 192, 0.1);
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(92, 107, 192, 0.1);
 }
 
 input[type=checkbox]:not(:disabled) ~ .lever:active:after,
@@ -5076,7 +5077,7 @@ input[type=range]::-ms-thumb {
   height: 14px;
   width: 14px;
   border-radius: 50%;
-    background: #5c6bc0;
+  background: #5c6bc0;
 }
 
 input[type=range]:focus::-ms-fill-lower {
@@ -5156,10 +5157,10 @@ input[type=range]:focus::-ms-fill-upper {
     .side-nav a.btn-flat {
       color: #343434; }
     .side-nav a.btn:hover, .side-nav a.btn-large:hover, .side-nav a.btn-large:hover {
-        background-color: #6e7cc7;
+      background-color: #6e7cc7;
     }
     .side-nav a.btn-floating:hover {
-        background-color: #5c6bc0;
+      background-color: #5c6bc0;
     }
   .side-nav li > a > i,
   .side-nav li > a > [class^="mdi-"], .side-nav li > a > [class*="mdi-"],
@@ -5240,7 +5241,7 @@ input[type=range]:focus::-ms-fill-upper {
     padding: 16px 16px 0; } }
 .side-nav .collapsible-body > ul:not(.collapsible) > li.active,
 .side-nav.fixed .collapsible-body > ul:not(.collapsible) > li.active {
-    background-color: #ff8a65;
+  background-color: #ff8a65;
 }
   .side-nav .collapsible-body > ul:not(.collapsible) > li.active a,
   .side-nav.fixed .collapsible-body > ul:not(.collapsible) > li.active a {
@@ -5308,7 +5309,7 @@ input[type=range]:focus::-ms-fill-upper {
   width: 100%;
   height: 100%;
   opacity: 0;
-    border-color: #5c6bc0;
+  border-color: #5c6bc0;
 }
 
 .spinner-blue,
@@ -6167,7 +6168,7 @@ input[type=range]:focus::-ms-fill-upper {
 .picker__nav--next:hover {
   cursor: pointer;
   color: #000000;
-    background: #e0e2ee;
+  background: #e0e2ee;
 }
 
 .picker__weekday-display {
@@ -6210,7 +6211,7 @@ input[type=range]:focus::-ms-fill-upper {
   border: 1px solid transparent; }
 
 .picker__day.picker__day--today {
-    color: #5c6bc0;
+  color: #5c6bc0;
 }
 
 .picker__day.picker__day--today.picker__day--selected {
@@ -6229,7 +6230,7 @@ input[type=range]:focus::-ms-fill-upper {
   .picker__day--selected.picker__day--outfocus,
   .picker__day--selected:hover.picker__day--outfocus,
   .picker--focused .picker__day--selected.picker__day--outfocus {
-      background-color: #e0e2ee;
+    background-color: #e0e2ee;
   }
 
 .picker__footer {
@@ -6239,7 +6240,7 @@ input[type=range]:focus::-ms-fill-upper {
 .picker__close, .picker__today {
   font-size: 1.1rem;
   padding: 0 1rem;
-    color: #5c6bc0;
+  color: #5c6bc0;
 }
 
 .picker__nav--prev:before,
@@ -6258,7 +6259,7 @@ input[type=range]:focus::-ms-fill-upper {
   border-left: 0.75em solid #676767; }
 
 button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
-    background-color: #e0e2ee;
+  background-color: #e0e2ee;
 }
 
 /* ==========================================================================

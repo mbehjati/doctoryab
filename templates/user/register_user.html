@@ -74,36 +74,93 @@
 {#</div>#}
 {#</body>#}
 {#</html>#}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>ثبت‌نام</title>
+    <link type="text/css" rel="stylesheet" href={% static "register.css" %}>
+    <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
+    <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href={% static "images/doctor_checkup_logo.png" %}>
+    {#    <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet" type="text/css">#}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
     <script type="text/javascript">
         <!--
-        function showForm(it, box) {
-            var vis = (box.checked) ? "block" : "none";
-            document.getElementById(it).style.display = vis;
+        function showForm() {
+            var doctorForm = $("#doctor-form");
+            ($("#is-doctor:checked").length == 1) ? doctorForm.show() : doctorForm.hide();
         }
         //-->
+        $(document).ready(function () {
+            $(":input").addClass("validate");
+
+        });
     </script>
 
 </head>
 <body>
-{% load staticfiles %}
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <a href="/" class="brand-logo center">دکتریاب</a>
+        </div>
+    </nav>
+</div>
 
-<div class="row">
+<div class="row _register-form">
     <form class="col s12" action="" method="post">
         {% csrf_token %}
-        {{ userform }}
-        {{ userprofileform }}
-        <input type="checkbox" name="c1" onclick="showForm('div', this)">Do u wanna register as a doctor??
+        {% for f in userform %}
+            <div class="row">
+                <div class="input-field">
+                    {{ f }}
+                    <label for={{ f.id_for_label }}>{{ f.label }}</label>
+                </div>
+            </div>
+        {% endfor %}
 
-        <div id="div" style="display:none">
-            {{ doctorprofile }}
+        {% for f in userprofileform %}
+            <div class="row">
+
+                <div class="input-field">
+                    {{ f }}
+                    <label for={{ f.id_for_label }}>{{ f.label }}</label>
+                </div>
+            </div>
+        {% endfor %}
+        <p>
+            <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
+            <label for="is-doctor">پزشک هستم</label>
+        </p>
+        <div id="doctor-form" style="display:none">
+            {% for f in doctorprofile %}
+                {% if f.name == 'contract' %}
+                    <div class="file-field input-field">
+                        <div class="btn right grey">
+                            <span>قرارداد</span>
+                            <input type="file">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="input-field">
+                            {{ f }}
+                            <label for={{ f.id_for_label }}>{{ f.label }}</label>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
-        <input type="submit" value="Submit"/>
+        <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت‌نام
+        </button>
     </form>
 </div>
 </body>

@@ -4,7 +4,7 @@
 /* CUSTOM CSS CHECKBOXES */
 form p {
   margin-bottom: 10px;
-  text-align: left;
+  text-align: right;
 }
 
 form p:last-child {
@@ -15,7 +15,7 @@ form p:last-child {
 [type="checkbox"]:not(:checked),
 [type="checkbox"]:checked {
   position: absolute;
-  left: -9999px;
+  right: -9999px;
   opacity: 0;
 }
 
