@@ -17,16 +17,3 @@ class AppointmentTime(models.Model):
     def __eq__(self, other):
         return self.date == other.date and self.time == other.time and self.duration == other.duration and self.doctor == other.doctor and self.patient == other.patient
 
-
-class Insurance(models.Model):
-    name = models.TextField(primary_key=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Expertise(models.Model):
-    name = models.TextField(primary_key=True)
-
-    def __str__(self):
-        return self.name

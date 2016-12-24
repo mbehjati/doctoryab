@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 from django import forms
 
-from .models import *
+from user.models import Insurance, Expertise
 
 
 class DoctorFreeTimes(forms.Form):

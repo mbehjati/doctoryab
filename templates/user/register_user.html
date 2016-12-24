@@ -24,6 +24,9 @@
 
             $(":input").addClass("validate");
 
+            $('#id_doctorprofile-expertise').show();
+            {#            $('#id_doctorprofile-insurance').show();#}
+
             {% if userprofileform.errors %}
                 {% for field in userprofileform %}
                     {% for error in field.errors %}

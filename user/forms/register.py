@@ -50,10 +50,17 @@ class DoctorForm(forms.ModelForm):
     class Meta:
         model = Doctor
         exclude = ['user']
+
         labels = {
             'diploma': 'مدرک',
             'year_diploma': 'سال اخذ مدرک',
             'office_address': 'آدرس مطب',
             'office_phone_number': 'شماره تلفن مطب',
-            'university': 'دانشگاه'
+            'university': 'دانشگاه',
+            'expertise': 'تخصص'
+        }
+
+        widgets = {
+            'expertise': forms.Select,
+            # 'insurance':forms.SelectMultiple
         }

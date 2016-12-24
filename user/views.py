@@ -108,8 +108,8 @@ def register(request):
                                        year_diploma=df.cleaned_data['year_diploma'],
                                        diploma=df.cleaned_data['diploma'],
                                        office_address=df.cleaned_data['office_address'],
-                                       office_phone_number=df.cleaned_data['office_phone_number']
-                                       # contract=df.cleaned_data["contract"]
+                                       office_phone_number=df.cleaned_data['office_phone_number'],
+                                       expertise=df.cleaned_data["expertise"]
                                        )
                 # print(doctorprofile.year_diploma)
                 userprofile.is_doctor = True

@@ -1,6 +1,20 @@
 from django.contrib.auth.models import User
-from django.db import models
 from django.core.validators import RegexValidator
+from django.db import models
+
+
+class Insurance(models.Model):
+    name = models.TextField(primary_key=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Expertise(models.Model):
+    name = models.TextField(primary_key=True)
+
+    def __str__(self):
+        return self.name
 
 
 class MyUser(models.Model):
@@ -31,8 +45,9 @@ class Doctor(models.Model):
     phone_regex = RegexValidator(regex=r'^([0]{1})([0-9]{10})$',
                                  message="Phone number must be entered in the format: '09999999999'.")
     office_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=11)
-    # insurance = models.ManyToManyField('appointment.Insurance')
-    expertise = models.ForeignKey('appointment.Expertise')
+    # insurance = models.ManyToManyField(Insurance)
+    expertise = models.ForeignKey(Expertise)
+
     # contract = models.FileField(upload_to='files')
 
     def __str__(self):

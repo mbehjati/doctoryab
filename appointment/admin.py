@@ -8,14 +8,6 @@ from .models import *
 class AdminAppointmentTime(admin.ModelAdmin):
     pass
 
-@admin.register(Insurance)
-class AdminInsurance(admin.ModelAdmin):
-    pass
-
-@admin.register(Expertise)
-class AdminExpertise(admin.ModelAdmin):
-    pass
-
 
 
 
