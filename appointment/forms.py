@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from django import forms
+from django.db import OperationalError
 
 from user.models import Insurance, Expertise
 
@@ -29,14 +30,15 @@ class DoctorFreeTimes(forms.Form):
 
 class AdvancedSearchForm(forms.Form):
     insurance_choices = (('همه', 'همه'),)
-    if Insurance.objects:
+    expertise_choices = (('همه', 'همه'),)
+    try:
         for ins in Insurance.objects.all():
             insurance_choices += ((ins, ins.name),)
 
-    expertise_choices = (('همه', 'همه'),)
-    if Expertise.objects:
         for exp in Expertise.objects.all():
             expertise_choices += ((exp, exp.name),)
+    except OperationalError:
+        pass
 
     name = forms.CharField(label='نام پزشک', required=False)
     expertise = forms.ChoiceField(choices=expertise_choices, label='تخصص')
