@@ -2189,7 +2189,7 @@ ul.staggered-list li {
     text-align: center; } }
 
 footer.page-footer {
-  margin-top: 20px;
+  margin-top: 0;
   padding-top: 20px;
   background-color: #ff8a65; }
   footer.page-footer .footer-copyright {
@@ -2224,7 +2224,7 @@ thead {
 td, th {
   padding: 15px 5px;
   display: table-cell;
-  text-align: left;
+  text-align: right;
   vertical-align: middle;
   border-radius: 2px; }
 
@@ -2267,7 +2267,7 @@ td, th {
     table.responsive-table td {
       display: block;
       min-height: 1.25em;
-      text-align: left; }
+      text-align: right; }
     table.responsive-table tr {
       padding: 0 10px; }
     table.responsive-table thead {
@@ -4408,6 +4408,7 @@ textarea.materialize-textarea {
     top: 0.8rem;
     font-size: 1rem;
     cursor: text;
+    width: 100%;
     transition: .2s ease-out; }
   .input-field label.active {
     font-size: 0.8rem;

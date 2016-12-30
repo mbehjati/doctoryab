@@ -107,17 +107,17 @@ class AddDoctorFreeTime(TestCase):
 
 
 class SearchDoctor(TestCase):
-    user = User(username='doc1', password='12345678')
+    user = User(username='doc1', password='12345678' , first_name='doc1 f' , last_name='doc1 l')
     myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
     doc1 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr',
                   office_phone_number='09123456789')
 
-    user = User(username='doc2', password='12345678')
+    user = User(username='doc2', password='12345678', first_name='doc2 f' , last_name='doc2 l')
     myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
     doc2 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr teh',
                   office_phone_number='09123456789')
 
-    user = User(username='doc2', password='12345678')
+    user = User(username='doc2', password='12345678' , first_name='doc3 f' , last_name='doc3 l')
     myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
     doc3 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr2',
                   office_phone_number='09123456789')
