@@ -153,14 +153,19 @@ def do_advanced_search(form):
 def search_by_name(doctors, name):
     ans = []
     for doc in doctors:
-        if name in doc.user.user.username:
+        if name.replace(' ','') in (doc.user.user.first_name+doc.user.user.last_name).replace(' ',''):
             ans.append(doc)
     return ans
 
 
 def search_by_expertise(doctors, expertise):
-    # TODO
-    return doctors
+    ans = []
+    if expertise == 'همه':
+        return  doctors
+    for doc in doctors:
+        if doc.expertise.name == expertise:
+            ans.append(doc)
+    return ans
 
 
 def search_by_date(doctors, date , app_times):
@@ -168,7 +173,7 @@ def search_by_date(doctors, date , app_times):
     if date == '':
         return doctors
     for app_time in app_times:
-        if app_time.date == date and app_time.doctor not in ans:
+        if app_time.date == date and app_time.doctor not in ans and app_time.doctor in doctors:
             ans.append(app_time.doctor)
     return ans
 
