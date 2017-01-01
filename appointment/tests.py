@@ -1,4 +1,5 @@
 # Create your tests here.
+# -*- coding: UTF-8 -*-
 from django.test import TestCase
 
 from user.models import Expertise, Insurance
