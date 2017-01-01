@@ -47,7 +47,7 @@ def login(request):
 
 def save_doctor_free_times_in_db(doctor, form):
     for obj in calc_doctor_free_times(doctor, form):
-        if not has_appointment_conflict(obj , AppointmentTime.objects.all()):
+        if not has_appointment_conflict(obj, AppointmentTime.objects.all()):
             obj.save()
 
 
@@ -76,14 +76,14 @@ def is_time_before(first, second):
     return True
 
 
-def has_appointment_conflict(appointment , all_apps):
+def has_appointment_conflict(appointment, all_apps):
     for app in all_apps:
         if app.doctor == appointment.doctor:
             if app.date == appointment.date:
                 if not ((is_time_before(appointment.start_time, app.start_time) and is_time_before(appointment.end_time,
                                                                                                    app.start_time)) or (
-                    is_time_before(app.end_time, appointment.start_time) and is_time_before(app.end_time,
-                                                                                            appointment.end_time))):
+                            is_time_before(app.end_time, appointment.start_time) and is_time_before(app.end_time,
+                                                                                                    appointment.end_time))):
                     return True
     return False
 
@@ -198,5 +198,11 @@ def search_by_address(doctors, address):
 
 
 def search_by_insurance(doctors, insurance):
-    # TODO
-    return doctors
+    if insurance == 'همه':
+        return doctors
+    ans = []
+    for doc in doctors:
+        for ins in doc.insurance.all():
+            if ins.name == insurance:
+                ans.append(doc)
+    return ans

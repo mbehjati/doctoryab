@@ -1,6 +1,7 @@
 # Create your tests here.
 from django.test import TestCase
 
+from user.models import Expertise, Insurance
 from .views import *
 
 
@@ -152,40 +153,77 @@ class AddDoctorFreeTime(TestCase):
 
 
 class SearchDoctor(TestCase):
-    user = User(username='doc1', password='12345678', first_name='doc1 f', last_name='doc1 l')
-    myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
-    doc1 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr',
-                  office_phone_number='09123456789')
+    def add_objs_to_db(self):
+        self.exp1 = Expertise.objects.create(name='exp1')
+        self.exp2 = Expertise.objects.create(name='exp2')
 
-    user = User(username='doc2', password='12345678', first_name='doc2 f', last_name='doc2 l')
-    myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
-    doc2 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr teh',
-                  office_phone_number='09123456789')
+        self.user = User.objects.create(username='test_doc1', password='12345678', first_name='doc1 f',
+                                        last_name='doc1 l')
+        self.myuser = MyUser.objects.create(user=self.user, phone_number='09361827280', national_code='1234567890')
+        self.doc1 = Doctor.objects.create(user=self.myuser, university='teh', year_diploma='1390', diploma='tajrobi',
+                                          office_address='addr',
+                                          office_phone_number='09123456789', expertise=self.exp1)
 
-    user = User(username='doc2', password='12345678', first_name='doc3 f', last_name='doc3 l')
-    myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
-    doc3 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr2',
-                  office_phone_number='09123456789')
+        self.user = User.objects.create(username='test_doc2', password='12345678', first_name='doc2 f',
+                                        last_name='doc2 l')
+        self.myuser = MyUser.objects.create(user=self.user, phone_number='09361827280', national_code='1234567890')
+        self.doc2 = Doctor.objects.create(user=self.myuser, university='teh', year_diploma='1390', diploma='tajrobi',
+                                          office_address='addr teh',
+                                          office_phone_number='09123456789', expertise=self.exp2)
 
-    app1 = AppointmentTime(start_time='12:00pm', end_time='12:30pm', date='1395-07-01', doctor=doc1, duration=30)
-    app2 = AppointmentTime(start_time='12:00pm', end_time='12:30pm', date='1395-07-01', doctor=doc2, duration=30)
-    app3 = AppointmentTime(start_time='12:00pm', end_time='12:30pm', date='1395-07-02', doctor=doc1, duration=30)
+        self.user = User.objects.create(username='test_doc3', password='12345678', first_name='doc3 f',
+                                        last_name='doc3 l')
+        self.myuser = MyUser.objects.create(user=self.user, phone_number='09361827280', national_code='1234567890')
+        self.doc3 = Doctor.objects.create(user=self.myuser, university='teh', year_diploma='1390', diploma='tajrobi',
+                                          office_address='addr2',
+                                          office_phone_number='09123456789', expertise=self.exp1)
+
+        self.app1 = AppointmentTime.objects.create(start_time='12:00pm', end_time='12:30pm', date='1395-07-01',
+                                                   doctor=self.doc1, duration=30)
+        self.app2 = AppointmentTime.objects.create(start_time='12:00pm', end_time='12:30pm', date='1395-07-01',
+                                                   doctor=self.doc2, duration=30)
+        self.app3 = AppointmentTime.objects.create(start_time='12:00pm', end_time='12:30pm', date='1395-07-02',
+                                                   doctor=self.doc1, duration=30)
+
+        self.ins1 = Insurance.objects.create(name='ins1')
+        self.ins2 = Insurance.objects.create(name='ins2')
+
+        self.doc1.insurance.add(self.ins1)
+        self.doc2.insurance.add(self.ins2)
+        self.doc3.insurance.add(self.ins1, self.ins2)
 
     def test_search_by_name(self):
+        self.add_objs_to_db()
         self.assertEqual(search_by_name([self.doc1, self.doc2, self.doc3], 'doc'), [self.doc1, self.doc2, self.doc3])
         self.assertEqual(search_by_name([self.doc1, self.doc2, self.doc3], 'doc1'), [self.doc1])
         self.assertEqual(search_by_name([self.doc1, self.doc2, self.doc3], 'doc4'), [])
 
     def test_search_by_address(self):
+        self.add_objs_to_db()
         self.assertEqual(search_by_address([self.doc1, self.doc2, self.doc3], 'teh'), [self.doc2])
         self.assertEqual(search_by_address([self.doc1, self.doc2, self.doc3], 'addr'),
                          [self.doc1, self.doc2, self.doc3])
         self.assertEqual(search_by_address([self.doc1, self.doc2, self.doc3], 'doc'), [])
 
     def test_search_by_date(self):
+        self.add_objs_to_db()
         self.assertEqual(
             search_by_date([self.doc1, self.doc2, self.doc3], '1395-07-01', [self.app1, self.app2, self.app3]),
             [self.doc1, self.doc2])
         self.assertEqual(
             search_by_date([self.doc1, self.doc2, self.doc3], '1395-07-02', [self.app1, self.app2, self.app3]),
             [self.doc1])
+
+    def test_search_by_expertise(self):
+        self.add_objs_to_db()
+        self.assertEqual(search_by_expertise([self.doc1, self.doc2, self.doc3], 'exp1'), [self.doc1, self.doc3])
+        self.assertEqual(search_by_expertise([self.doc1, self.doc2, self.doc3], 'exp3'), [])
+        self.assertEqual(search_by_expertise([self.doc1, self.doc2, self.doc3], 'همه'),
+                         [self.doc1, self.doc2, self.doc3])
+        self.assertEqual(search_by_expertise([self.doc1, self.doc2], 'exp1'), [self.doc1])
+
+    def test_search_by_insurance(self):
+        self.add_objs_to_db()
+        self.assertEqual(search_by_insurance([self.doc1, self.doc2, self.doc3], 'ins1'), [self.doc1, self.doc3])
+        self.assertEqual(search_by_insurance([self.doc1, self.doc2, self.doc3], 'همه'),
+                         [self.doc1, self.doc2, self.doc3])
