@@ -86,9 +86,10 @@ def register(request):
         upf = MyUserForm(request.POST, prefix='userprofile')
         df = DoctorForm(request.POST
                         # , request.POST, request.POST, request.POST, request.POST, request.POST,
-                        # request.FILES
+                        ,request.FILES
                         , prefix='doctorprofile'
                         )
+        print(df.errors)
         if uf.is_valid() * upf.is_valid():
             user = User.objects.create_user(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'],
                                             first_name=uf.cleaned_data['first_name'],

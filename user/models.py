@@ -45,10 +45,10 @@ class Doctor(models.Model):
     phone_regex = RegexValidator(regex=r'^([0]{1})([0-9]{10})$',
                                  message="Phone number must be entered in the format: '09999999999'.")
     office_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=11)
-    # insurance = models.ManyToManyField(Insurance)
+    insurance = models.ManyToManyField(Insurance)
     expertise = models.ForeignKey(Expertise)
 
-    # contract = models.FileField(upload_to='files')
+    contract = models.FileField(upload_to='files')
 
     def __str__(self):
         return str(self.user.user.username)
