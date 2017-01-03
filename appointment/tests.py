@@ -2,6 +2,8 @@
 # -*- coding: UTF-8 -*-
 from django.test import TestCase
 
+from appointment.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
+    search_by_insurance
 from user.models import Expertise, Insurance
 from .views import *
 
@@ -228,3 +230,40 @@ class SearchDoctor(TestCase):
         self.assertEqual(search_by_insurance([self.doc1, self.doc2, self.doc3], 'ins1'), [self.doc1, self.doc3])
         self.assertEqual(search_by_insurance([self.doc1, self.doc2, self.doc3], 'همه'),
                          [self.doc1, self.doc2, self.doc3])
+
+
+class DoctorPlan(TestCase):
+    def add_objects(self):
+        self.user = User.objects.create(username='t doc1', password='12345678')
+        self.myuser = MyUser.objects.create(user=self.user, phone_number='09361827280', national_code='1234567890')
+        self.exp1 = Expertise.objects.create(name='exp1')
+        self.doc1 = Doctor.objects.create(user=self.myuser, university='teh', year_diploma='1390', diploma='tajrobi',
+                                          office_address='addr',
+                                          office_phone_number='09123456789', expertise=self.exp1)
+
+        self.app1 = AppointmentTime.objects.create(start_time='12:00pm', end_time='12:30pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+        self.app2 = AppointmentTime.objects.create(start_time='12:15pm', end_time='12:345pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+        self.app3 = AppointmentTime.objects.create(start_time='12:30pm', end_time='13:0pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+        self.app4 = AppointmentTime.objects.create(start_time='12:45pm', end_time='13:15pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+
+    def test_sort_appointment_times(self):
+        self.add_objects()
+        self.assertEqual(sort_appointment_times([self.app3, self.app1, self.app4, self.app2]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times([self.app4, self.app3, self.app2, self.app1]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times([self.app3, self.app1, self.app2, self.app4]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times([self.app2, self.app1, self.app4, self.app3]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times([self.app1, self.app3, self.app4, self.app2]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        pass

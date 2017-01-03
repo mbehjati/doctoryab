@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    ورود برنامه
+{% endblock %}
+{% block contents %}
+    {#<!DOCTYPE html>#}
+    {#<html lang="en">#}
+    {#{% load static %}#}
+    {#<head>#}
+    {#    <meta charset="UTF-8">#}
+    {#    <title>دکتریاب</title>#}
+    <link rel="stylesheet" href={% static "sass/materialize.css" %}>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet">
+    <link href={% static "datepicker/persian-datepicker-0.4.5.min.css" %} rel="stylesheet">
+    <script type="text/javascript" src={% static "jQuery/jquery-2.1.1.min.js" %}></script>
+    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
+    <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
+    <script type="text/javascript" src={% static "datepicker/persian-date-0.1.8a.min.js" %}></script>
+    <script type="text/javascript" src={% static "datepicker/persian-datepicker-0.4.5.min.js" %}></script>
+    <script type="text/javascript" src={% static "persianNumber/persianumber.min.js" %}></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#demo').persiaNumber();
+
+            $(".datepicker1").pDatepicker({
+                observer: true,
+                justSelectOnDate: true,
+                onSelect: function () {
+                    $('.datepicker1').val($('.datepicker1').val().split(" ")[0])
+                    $("#plan-form").submit();
+                },
+                onShow: function () {
+                    $('.datepicker1').val($('.datepicker1').val().split(" ")[0])
+                }
+
+            });
+            $(".datepicker1").val("{{ date }}")
+
+
+        })
+
+    </script>
+    {#</head>#}
+    {#<body  id="demo">#}
+
+    <div id="demo" style=" width:50% ; margin: auto ;  padding: 10px ; margin-top: 10px">
+
+
+        <form style="direction: rtl ; width: 60%;; margin: auto" method="post" id="plan-form">
+
+            {% csrf_token %}
+
+            <label for="date"> تاریخ مورد نظر را انتخاب نمایید. </label>
+            <input type="text" class="datepicker1" name="date"/>
+            <button class="btn waves-effect waves-light" style="display: none" type="submit" name="action">نمایش
+            </button>
+
+        </form>
+
+        <div style="direction: rtl ; padding-top: 20px ; width: 80% ; margin: auto">
+            {% if apps == None %}
+                <div style="color: red">
+                    برنامه‌ای برای این تاریخ ثبت نشده است.
+                </div>
+
+            {% endif %}
+            {% for app in apps %}
+                <div class="row"
+                     style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %}; margin: 10px ">
+
+                    <div class="col s8" style="padding: 5px ; padding-right: 10px">
+                        {% if app.patient != None %}
+
+                            نام بیمار : {{ app.patient.user.first_name }} {{ app.patient.user.last_name }}
+                            <br>
+                            شماره تماس :   {{ app.patient.phone_number }}
+                        {% else %}
+                            وقت آزاد
+                        {% endif %}
+
+
+                    </div>
+
+                    <div class="col s4"
+                         style="border-left: double; border-color:#3a3a3a  ; border-bottom-width:1px ;padding: 5px ">
+
+                        {{ app.start_time }} تا {{ app.end_time }}
+                        <br>
+                        {{ app.date }}
+
+
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+{% endblock %}
+{##}
+{#</body>#}
+{#</html>#}

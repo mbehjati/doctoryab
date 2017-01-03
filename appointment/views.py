@@ -7,6 +7,7 @@ from django.contrib.auth import login as django_login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
+from appointment.search import do_advanced_search
 from user.forms import LoginForm
 from .forms import DoctorFreeTimes, AdvancedSearchForm
 from .models import *
@@ -85,13 +86,14 @@ def add_time(start_time, duration):
     hour = int(start_time.split(':')[0])
     minute = int(start_time.split(':')[1][0:len(start_time.split(':')[1]) - 2])
     postfix = start_time[len(start_time) - 2:len(start_time)]
+
     minute += duration
-    if minute >= 60:
-        minute %= 60
-        hour = (hour + 1) % 12
+    hour = (hour + 1) % 12 if minute >= 60 else hour
+    minute %= 60
     if hour == 0:
         hour = 12
         postfix = 'pm'
+
     return str(hour) + ':' + str(minute).zfill(2) + postfix
 
 
@@ -112,18 +114,23 @@ def get_doctor_from_req(request):
     return Doctor.objects.get(user=my_user)
 
 
+def get_doctor_free_times_form_from_req(request):
+    form = DoctorFreeTimes()
+    form.start_date = request.POST['start_date']
+    form.end_date = request.POST['end_date']
+    form.start_time = request.POST['start_time']
+    form.end_time = request.POST['end_time']
+    form.visit_duration = request.POST['visit_duration']
+    return form
+
+
 def doctor_free_time(request):
     message = ''
     response = False
 
     if request.method == 'POST':
         doctor = get_doctor_from_req(request)
-        form = DoctorFreeTimes()
-        form.start_date = request.POST['start_date']
-        form.end_date = request.POST['end_date']
-        form.start_time = request.POST['start_time']
-        form.end_time = request.POST['end_time']
-        form.visit_duration = request.POST['visit_duration']
+        form = get_doctor_free_times_form_from_req(request)
         if form.is_data_valid():
             save_doctor_free_times_in_db(doctor, form)
             message = 'اطلاعات شما با موفقیت ثبت شد. '
@@ -143,58 +150,26 @@ def search(request):
     return render(request, 'appointment/advanced-search.html', {'form': form, 'result': result})
 
 
-def do_advanced_search(form):
-    if form.is_valid():
-        doctors = search_by_name(Doctor.objects.all(), form.cleaned_data['name'])
-        doctors = search_by_expertise(doctors, form.cleaned_data['expertise'])
-        doctors = search_by_date(doctors, form.cleaned_data['date'], AppointmentTime.objects.all())
-        doctors = search_by_address(doctors, form.cleaned_data['address'])
-        doctors = search_by_insurance(doctors, form.cleaned_data['insurance'])
-        return doctors
+def doctor_plan(request):
+    apps = None
+    date = ''
+    if request.method == 'POST':
+        date = request.POST['date']
+        doctor = get_doctor_from_req(request)
+        apps = get_doctor_day_plan(date, doctor)
+        apps = None if len(apps) == 0 else apps
+
+    return render(request, 'appointment/doctor_plan.html', {'apps': apps, 'date': date})
 
 
-def search_by_name(doctors, name):
-    ans = []
-    for doc in doctors:
-        if name.replace(' ', '') in (doc.user.user.first_name + doc.user.user.last_name).replace(' ', ''):
-            ans.append(doc)
-    return ans
+def sort_appointment_times(apps):
+    for i in range(len(apps)):
+        for j in range(len(apps)):
+            if is_time_before(apps[i].start_time, apps[j].start_time):
+                apps[i], apps[j] = apps[j], apps[i]
+    print(apps)
+    return apps
 
 
-def search_by_expertise(doctors, expertise):
-    ans = []
-    if expertise == 'همه':
-        return doctors
-    for doc in doctors:
-        if doc.expertise.name == expertise:
-            ans.append(doc)
-    return ans
-
-
-def search_by_date(doctors, date, app_times):
-    ans = []
-    if date == '':
-        return doctors
-    for app_time in app_times:
-        if app_time.date == date and app_time.doctor not in ans and app_time.doctor in doctors:
-            ans.append(app_time.doctor)
-    return ans
-
-
-def search_by_address(doctors, address):
-    ans = []
-    for doc in doctors:
-        if address in doc.office_address:
-            ans.append(doc)
-    return ans
-
-
-def search_by_insurance(doctors, insurance):
-    if insurance == 'همه':
-        return doctors
-    ans = []
-    for doc in doctors:
-        for ins in doc.insurance.all():
-            if ins.name == insurance:
-                ans.append(doc)
-    return ans
+def get_doctor_day_plan(date, doctor):
+    return sort_appointment_times(list(AppointmentTime.objects.filter(doctor=doctor, date=date)))
