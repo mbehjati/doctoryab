@@ -152,7 +152,7 @@ def search(request):
 
 def doctor_plan(request):
     apps = None
-    now = datetime.datetime.now()
+    now = datetime.now()
     date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
     if request.method == 'POST':
         date = request.POST['date']
