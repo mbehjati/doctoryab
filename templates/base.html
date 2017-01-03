@@ -44,26 +44,33 @@
     <div class="modal-content">
         <h5 class="indigo-text"> ورود به حساب کاربری</h5>
         <div class="divider indigo _divider"></div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'warning' %}
+                    <span class="red-text">{{ message }}</span>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
         <div class="row">
-            <form class="col s12" method="post">
+            <form class="col s12" method="post" action="/login/">
                 {% csrf_token %}
 
                 <div class="row">
                     <div class="input-field col s10">
-                        {#                        <input id="id_username" type="text" class="validate">#}
-                        {{ form.username }}
+                        {{ login_form.username }}
                         <label for="id_username">نام ‌کاربری</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s10">
-                        {#                        <input id="id_password" type="password" class="validate">#}
-                        {{ form.password }}
+                        {{ login_form.password }}
                         <label for="id_password">گذرواژه</label>
                     </div>
                 </div>
                 <button class=" btn-large waves-effect waves-light btn-flat left" type="submit" name="action">ورود
                 </button>
+                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+
                 <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left">گذرواژه‌ام
                     را
                     فراموش
@@ -72,11 +79,6 @@
 
         </div>
     </div>
-    {#    <div class="modal-footer">#}
-
-    {#        <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">گذرواژه‌ام را فراموش#}
-    {#            کرده‌ام</a>#}
-    {#    </div>#}
 </div>
 
 {% block contents %}
@@ -110,9 +112,16 @@
 </body>
 <script type="text/javascript">
     $(document).ready(function () {
-        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
         $('.modal').modal();
-        Materialize.toast('{{ message }}', 4000, 'rounded');
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    Materialize.toast('{{ message }}', 3000, 'rounded');
+                {% else %}
+                    $('.modal').modal('open');
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     });
 </script>
 </html>
