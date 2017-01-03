@@ -1,8 +1,6 @@
+# -*- coding: UTF-8 -*-
 from appointment.models import AppointmentTime
 from user.models import Doctor
-
-
-# -*- coding: UTF-8 -*-
 
 
 def do_advanced_search(form):
