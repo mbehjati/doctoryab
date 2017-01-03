@@ -4,8 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>دکتریاب</title>
-    {#        <link type="text/css" rel="stylesheet" href={% static "style.min.css" %}>#}
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
     <link type="text/css" rel="stylesheet" href={% static "base.css" %}>
     <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
@@ -25,11 +24,11 @@
         <div class="nav-wrapper">
             <a href="/" class="brand-logo right">دکتریاب<i class="material-icons left">search</i></a>
             {#            <img class="logo-img" src={% static "images/doctor_checkup_logo.png" %}>#}
-            <ul class="left hide-on-med-and-down">
+            <ul class="left">
                 {% if request.user.is_authenticated %}
-                    <li><a href="/user/logout"><i class="material-icons left">power_settings_new</i>خروج</a></li>
-
-                    <li><a href="/user/edit-profile"><i class="material-icons left">person</i>صفحه کاربری</a></li>
+                    <li><a href="#" data-activates="slide-out" class="button-collapse"><i
+                            class="material-icons">person</i></a></li>
+                    <li>{{ request.user.username }}</li>
 
                 {% else %}
                     <li><a href="#login-modal">ورود<i class="material-icons left">input</i></a></li>
@@ -39,7 +38,33 @@
         </div>
     </nav>
 </div>
-<!-- Modal Structure -->
+<ul id="slide-out" class="side-nav" style="padding: 0;direction: ltr;text-align:left">
+    <li>
+        <div class="userView">
+            <div class="background">
+                <img class="_image" src={% static 'images/bg2.png' %}>
+            </div>
+            <a href="#!user"><img class="circle" src={% static 'images/silhouette.png' %}></a>
+            <a href="#!name"><span
+                    class="white-text name">{{ request.user.first_name }} {{ request.user.last_name }}</span></a>
+            <a href="#!email"><span class="white-text email">{{ request.user.email }}</span></a>
+        </div>
+    </li>
+    <li><a href="/user/edit-profile"><i class="material-icons">person</i>صفحه کاربری</a></li>
+    <li><a href="/user/edit-password"><i class="material-icons">edit</i>تغییر رمز عبور</a></li>
+    {% if request.user.myuser.is_doctor %}
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a href="/appointment/"><i class="material-icons">schedule</i>ورود برنامه</a></li>
+        <li><a href="#"><i class="material-icons">event_note</i>مشاهده برنامه</a></li>
+    {% endif %}
+    <li>
+        <div class="divider"></div>
+    </li>
+    <li><a class="waves-effect" href="/user/logout"><i class="material-icons left">power_settings_new</i>خروج</a></li>
+</ul>
+
 <div id="login-modal" class="modal">
     <div class="modal-content">
         <h5 class="indigo-text"> ورود به حساب کاربری</h5>
@@ -122,6 +147,9 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
+        $(".button-collapse").sideNav();
+
+
     });
 </script>
 </html>
