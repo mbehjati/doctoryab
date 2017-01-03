@@ -10,8 +10,8 @@ from django.shortcuts import render, redirect
 from appointment.search import do_advanced_search
 from user.forms import LoginForm
 from .forms import DoctorFreeTimes, AdvancedSearchForm
+from .jalali import *
 from .models import *
-
 
 def home(request):
     message = ''
@@ -152,7 +152,8 @@ def search(request):
 
 def doctor_plan(request):
     apps = None
-    date = ''
+    now = datetime.datetime.now()
+    date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
     if request.method == 'POST':
         date = request.POST['date']
         doctor = get_doctor_from_req(request)
