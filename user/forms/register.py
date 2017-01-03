@@ -57,10 +57,6 @@ class DoctorForm(forms.ModelForm):
             'office_address': 'آدرس مطب',
             'office_phone_number': 'شماره تلفن مطب',
             'university': 'دانشگاه',
-            'expertise': 'تخصص'
-        }
-
-        widgets = {
-            'expertise': forms.Select,
-            # 'insurance':forms.SelectMultiple
+            'expertise': 'تخصص',
+            'insurance': 'بیمه',
         }

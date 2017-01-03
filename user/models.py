@@ -49,7 +49,7 @@ class Doctor(models.Model):
     insurance = models.ManyToManyField(Insurance)
     expertise = models.ForeignKey(Expertise)
 
-    contract = models.FileField(upload_to='files')
+    contract = models.FileField(upload_to='contracts')
 
     def __str__(self):
         return str(self.user.user.username)

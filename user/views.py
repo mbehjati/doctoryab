@@ -48,7 +48,8 @@ def edit_profile(request):
                 myuser.user = user
                 myuser.save()
             return HttpResponseRedirect('/user/profile')
-        return render(request, 'user/edit_profile_user.html', {"form_user": form_user, "form_myuser": form_myuser, "myuser": myuser})
+        return render(request, 'user/edit_profile_user.html',
+                      {"form_user": form_user, "form_myuser": form_myuser, "myuser": myuser})
     else:
         doctor = Doctor.objects.get(user=myuser)
         form_doctor = EditMyDoctorForm(request.POST or None, initial={'university': doctor.university,
@@ -84,12 +85,13 @@ def register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST, prefix='user')
         upf = MyUserForm(request.POST, prefix='userprofile')
-        df = DoctorForm(request.POST
+        df = DoctorForm(request.POST, request.FILES
                         # , request.POST, request.POST, request.POST, request.POST, request.POST,
-                        ,request.FILES
+                        # request.FILES
                         , prefix='doctorprofile'
                         )
-        print(df.errors)
+        for err in df.errors:
+            print(err)
         if uf.is_valid() * upf.is_valid():
             user = User.objects.create_user(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'],
                                             first_name=uf.cleaned_data['first_name'],
@@ -110,14 +112,16 @@ def register(request):
                                        diploma=df.cleaned_data['diploma'],
                                        office_address=df.cleaned_data['office_address'],
                                        office_phone_number=df.cleaned_data['office_phone_number'],
-                                       expertise=df.cleaned_data["expertise"]
+                                       expertise=df.cleaned_data["expertise"],
+                                       contract=df.cleaned_data['contract']
                                        )
                 # print(doctorprofile.year_diploma)
                 userprofile.is_doctor = True
                 userprofile.save()
                 # print(userprofile.is_doctor)
                 doctorprofile.save()
-            return render(request, 'index.html')
+            # TODO: go to user profile
+            return redirect('/')
     else:
         uf = UserForm(prefix='user')
         upf = MyUserForm(prefix='userprofile')
@@ -160,4 +164,5 @@ def login(request):
 
 def logout(request):
     django_logout(request)
+    # return redirect(request.META.get('HTTP_REFERER'))
     return redirect('/')

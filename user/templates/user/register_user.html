@@ -10,9 +10,9 @@
     <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href={% static "images/doctor_checkup_logo.png" %}>
-    {#    <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet" type="text/css">#}
+    <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet" type="text/css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
+    <script type="text/javascript" src={% static "js/bin/materialize.js" %}></script>
     <script type="text/javascript">
         <!--
         function showForm() {
@@ -23,9 +23,7 @@
         $(document).ready(function () {
 
             $(":input").addClass("validate");
-
-            $('#id_doctorprofile-expertise').show();
-            {#            $('#id_doctorprofile-insurance').show();#}
+            $('select').material_select();
 
             {% if userprofileform.errors %}
                 {% for field in userprofileform %}
@@ -33,7 +31,8 @@
                         $('#{{ field.id_for_label }}').prop('required', true);
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
-                        $('label[for=' + '{{ field.id_for_label }}' + ']').attr('data-error', '{{ error }}');
+                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+                        $label.attr('data-error', '{{ error }}');
 
                     {% endfor %}
                 {% endfor %}
@@ -46,7 +45,7 @@
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
-                        $('label[for=' + '{{ field.id_for_label }}' + ']').attr('data-error', '{{ error }}');
+                        $label.attr('data-error', '{{ error }}');
 
                     {% endfor %}
                 {% endfor %}
@@ -58,8 +57,8 @@
                 {% for field in doctorprofile %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').addClass('invalid');
-                        $('label[for=' + '{{ field.id_for_label }}' + ']').attr('data-error', '{{ error }}');
-                        $('label[for=' + '{{ field.id_for_label }}' + ']').addClass('active');
+                        $label.attr('data-error', '{{ error }}');
+                        $label.addClass('active');
 
                     {% endfor %}
                 {% endfor %}
@@ -86,26 +85,11 @@
             <p class="right red-text">{{ error }}</p>
         {% endfor %}
     {% endif %}
-    <form class="col s12" action="" method="post">
+    <form enctype="multipart/form-data" class="col s12" action="" method="post">
         {% csrf_token %}
-        {% for f in userform %}
-            <div class="row">
-                <div class="input-field">
-                    {{ f }}
-                    <label for={{ f.id_for_label }}>{{ f.label }}</label>
-                </div>
-            </div>
-        {% endfor %}
 
-        {% for f in userprofileform %}
-            <div class="row">
-
-                <div class="input-field">
-                    {{ f }}
-                    <label for={{ f.id_for_label }}>{{ f.label }}</label>
-                </div>
-            </div>
-        {% endfor %}
+        {% include "user/form.html" with form=userform %}
+        {% include "user/form.html" with form=userprofileform %}
         <p>
             <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
             <label for="is-doctor">پزشک هستم</label>
@@ -132,9 +116,12 @@
                 {% endif %}
             {% endfor %}
         </div>
+        <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+
         <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت‌نام
         </button>
     </form>
+
 </div>
 </body>
 </html>
