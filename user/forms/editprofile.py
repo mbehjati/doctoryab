@@ -35,14 +35,12 @@ class EditMyDoctorForm(forms.ModelForm):
         model = Doctor
         exclude = ['user', 'contract']
 
-    labels = {
-        'diploma': 'مدرک',
-        'year_diploma': 'سال اخذ مدرک',
-        'office_address': 'آدرس مطب',
-        'office_phone_number': 'شماره تلفن مطب',
-        'university': 'دانشگاه',
-        'expertise': 'تخصص',
-        'insurance': 'بیمه'
-    }
-
-# , 'contract']
+        labels = {
+            'diploma': 'مدرک',
+            'year_diploma': 'سال اخذ مدرک',
+            'office_address': 'آدرس مطب',
+            'office_phone_number': 'شماره تلفن مطب',
+            'university': 'دانشگاه',
+            'expertise': 'تخصص',
+            'insurance': 'بیمه'
+        }

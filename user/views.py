@@ -1,9 +1,8 @@
 # -*- coding: UTF-8 -*-
+from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from user.forms import *
@@ -36,6 +35,7 @@ def edit_password(request):
             user.set_password(form.cleaned_data['new_pass'])
             user.save()
             update_session_auth_hash(request, request.user)
+            messages.success(request, 'رمز شما با موفقیت تغییر یافت.')
             return redirect('EditProfile')
     return render(request, 'user/edit_password.html', {"form": form, "user": user})
 
@@ -60,6 +60,9 @@ def edit_profile(request):
                                                                       'office_phone_number': doctor.office_phone_number,
                                                                       'insurance': doctor.insurance.all(),
                                                                       'expertise': doctor.expertise})
+    print(form_myuser.errors)
+    print(form_user.errors)
+    print(form_doctor.errors)
     if request.method == 'POST':
         if form_user.is_valid() * form_myuser.is_valid():
             user.first_name = form_user.cleaned_data['first_name']
@@ -82,8 +85,9 @@ def edit_profile(request):
                     doctor.expertise = form_doctor.cleaned_data['expertise']
                     doctor.user = myuser
                     doctor.save()
-        return redirect('EditProfile')
-    return render(request, 'user/edit_profile_doctor.html',
+            return redirect('EditProfile')
+
+    return render(request, 'user/profile.html',
                   {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
                    "myuser": myuser, "doctor": doctor})
 
@@ -138,7 +142,7 @@ def edit_profile(request):
 #                 doctor.user = myuser
 #                 doctor.save()
 #             return HttpResponseRedirect('/user/profile')
-#         return render(request, 'user/edit_profile_doctor.html',
+#         return render(request, 'user/profile.html',
 #                       {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
 #                        "myuser": myuser, "doctor": doctor})
 

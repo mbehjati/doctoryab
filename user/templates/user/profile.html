@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    پروفایل
+{% endblock %}
+{% block contents %}
+
+    <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
+
+    <script type="text/javascript">
+        <!--
+        function showForm() {
+            var doctorForm = $("#doctor-form");
+            ($("#is-doctor:checked").length == 1) ? doctorForm.show() : doctorForm.hide();
+        }
+        //-->
+        $(document).ready(function () {
+
+            $(":input").addClass("validate");
+            $('select').material_select();
+            {% if form_user.errors %}
+                {% for field in form_user %}
+                    {% for error in field.errors %}
+                        console.log('{{ error }}');
+                        $('#{{ field.id_for_label }}').prop('required', true);
+                        $('#{{ field.id_for_label }}').removeClass('validate');
+                        $('#{{ field.id_for_label }}').addClass('invalid');
+                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+                        $label.attr('data-error', '{{ error }}');
+
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            {% if form_myuser.errors %}
+                {% for field in form_myuser %}
+                    {% for error in field.errors %}
+                        $('#{{ field.id_for_label }}').removeClass('validate');
+                        $('#{{ field.id_for_label }}').addClass('invalid');
+                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+                        $label.attr('data-error', '{{ error }}');
+
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            {% if form_doctor.errors %}
+                {% for field in form_doctor %}
+                    {% for error in field.errors %}
+                        $('#{{ field.id_for_label }}').addClass('invalid');
+                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+                        $label.attr('data-error', '{{ error }}');
+                        $label.addClass('active');
+
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+
+        });
+    </script>
+    <div class="row _register-form">
+
+        <div class="input-field col s12">
+            <input disabled value={{ myuser.user.username }} id="disabled" type="text" class="validate">
+            <label for="disabled">نام کاربری</label>
+        </div>
+        <form class="col s12" action="" method="post">
+            {% csrf_token %}
+            {% include "user/form.html" with form=form_user %}
+            {% include "user/form.html" with form=form_myuser %}
+            {% include "user/form.html" with form=form_doctor %}
+            <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت تغییرات
+            </button>
+            <a href="/user/edit-password" class=" btn-large waves-effect waves-light _submit-btn"> تغییر رمز عبور </a>
+        </form>
+    </div>
+{% endblock %}
