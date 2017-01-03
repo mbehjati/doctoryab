@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from appointment.search import do_advanced_search
 from user.forms import LoginForm
 from .forms import DoctorFreeTimes, AdvancedSearchForm
-from .jalali import *
+from .jalali import Gregorian
 from .models import *
 
 def home(request):
@@ -168,7 +168,6 @@ def sort_appointment_times(apps):
         for j in range(len(apps)):
             if is_time_before(apps[i].start_time, apps[j].start_time):
                 apps[i], apps[j] = apps[j], apps[i]
-    print(apps)
     return apps
 
 
