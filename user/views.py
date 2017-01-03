@@ -196,40 +196,58 @@ def register(request):
     return render(request, 'user/register_user.html', {'userform': uf, 'userprofileform': upf, 'doctorprofile': df})
 
 
-def login(request):
-    message = ""
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password"]
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                findeduser = User.objects.get(pk=user.id)
-                my_user = MyUser.objects.get(user=findeduser)
-
-                if findeduser.is_active:
-                    if Doctor.objects.filter(user=my_user).count() > 0:
-                        doc = Doctor.objects.get(user=my_user)
-                        django_login(request, user)
-                    else:
-                        django_login(request, user)
-                    return redirect('/user/')
-                else:
-                    form = LoginForm()
-                    # raise forms.ValidationError('.حساب کاربری شما غیرفعال است.')
-                    message = ".حساب کاربری شما غیرفعال است."
-            else:
-                form = LoginForm()
-                # print("pass or username wrong")
-                # raise forms.ValidationError('نام کاربری یا گذرواژه شما اشتباه است..')
-                message = "نام کاربری یا گذرواژه شما اشتباه است."
-    else:
-        form = LoginForm()
-    return render(request, "user/login_user.html", {'form': form, 'message': message})
+# def login(request):
+#     message = ""
+#     if request.method == "POST":
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data["username"]
+#             password = form.cleaned_data["password"]
+#             user = authenticate(username=username, password=password)
+#             if user is not None:
+#                 findeduser = User.objects.get(pk=user.id)
+#                 my_user = MyUser.objects.get(user=findeduser)
+#
+#                 if findeduser.is_active:
+#                     if Doctor.objects.filter(user=my_user).count() > 0:
+#                         doc = Doctor.objects.get(user=my_user)
+#                         django_login(request, user)
+#                     else:
+#                         django_login(request, user)
+#                     return redirect('/user/')
+#                 else:
+#                     form = LoginForm()
+#                     # raise forms.ValidationError('.حساب کاربری شما غیرفعال است.')
+#                     message = ".حساب کاربری شما غیرفعال است."
+#             else:
+#                 form = LoginForm()
+#                 # print("pass or username wrong")
+#                 # raise forms.ValidationError('نام کاربری یا گذرواژه شما اشتباه است..')
+#                 message = "نام کاربری یا گذرواژه شما اشتباه است."
+#     else:
+#         form = LoginForm()
+#     return render(request, "user/login_user.html", {'form': form, 'message': message})
 
 
 def logout(request):
     django_logout(request)
     # return redirect(request.META.get('HTTP_REFERER'))
     return redirect('/')
+
+
+def login(request):
+    form = LoginForm(request.POST)
+    if form.is_valid():
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password"]
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            findeduser = User.objects.get(pk=user.id)
+            my_user = MyUser.objects.get(user=findeduser)
+            if findeduser.is_active:
+                django_login(request, user)
+                messages.success(request, 'کاربر عزیز خوش آمدید.')
+        else:
+            messages.warning(request, 'نام کاربری یا گذرواژه شما اشتباه است.')
+
+    return redirect(request.META.get('HTTP_REFERER'))

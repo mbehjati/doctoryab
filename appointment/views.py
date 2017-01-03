@@ -2,40 +2,17 @@
 # -*- coding: UTF-8 -*-
 from datetime import datetime, timedelta
 
-from django.contrib import messages
-from django.contrib.auth import login as django_login, authenticate
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from appointment.search import do_advanced_search
-from user.forms import LoginForm
 from .forms import DoctorFreeTimes, AdvancedSearchForm
 from .jalali import Gregorian
 from .models import *
 
+
 def home(request):
-    message = ''
-    if request.method == "POST":
-        message = login(request)
-    return render(request, 'index.html', {})  # , {'form': LoginForm(), 'message': message})
-
-
-def login(request):
-    form = LoginForm(request.POST)
-    if form.is_valid():
-        username = form.cleaned_data["username"]
-        password = form.cleaned_data["password"]
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            findeduser = User.objects.get(pk=user.id)
-            my_user = MyUser.objects.get(user=findeduser)
-            if findeduser.is_active:
-                django_login(request, user)
-                messages.success(request, 'کاربر عزیز خوش آمدید.')
-        else:
-            messages.warning(request, 'نام کاربری یا گذرواژه شما اشتباه است.')
-
-    return redirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'index.html', {})
 
 
 def save_doctor_free_times_in_db(doctor, form):
