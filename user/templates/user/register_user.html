@@ -1,18 +1,12 @@
+{% extends 'base.html' %}
 {% load staticfiles %}
+{% block title %}
+    ثبت نام
+{% endblock %}
+{% block contents %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ثبت‌نام</title>
     <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
-    <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" href={% static "images/doctor_checkup_logo.png" %}>
-    <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src={% static "js/bin/materialize.js" %}></script>
+
     <script type="text/javascript">
         <!--
         function showForm() {
@@ -32,6 +26,7 @@
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
                         var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+
                         $label.attr('data-error', '{{ error }}');
 
                     {% endfor %}
@@ -45,6 +40,8 @@
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
+                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+
                         $label.attr('data-error', '{{ error }}');
 
                     {% endfor %}
@@ -57,6 +54,7 @@
                 {% for field in doctorprofile %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').addClass('invalid');
+                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
                         $label.attr('data-error', '{{ error }}');
                         $label.addClass('active');
 
@@ -68,60 +66,49 @@
             {% endif %}
         });
     </script>
-
-</head>
-<body>
-<div class="navbar-fixed">
-    <nav>
-        <div class="nav-wrapper">
-            <a href="/" class="brand-logo center">دکتریاب</a>
-        </div>
-    </nav>
-</div>
-
-<div class="row _register-form">
-    {% if userform.errors %}
-        {% for error in userform.non_field_errors %}
-            <p class="right red-text">{{ error }}</p>
-        {% endfor %}
-    {% endif %}
-    <form enctype="multipart/form-data" class="col s12" action="" method="post">
-        {% csrf_token %}
-
-        {% include "user/form.html" with form=userform %}
-        {% include "user/form.html" with form=userprofileform %}
-        <p>
-            <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
-            <label for="is-doctor">پزشک هستم</label>
-        </p>
-        <div id="doctor-form" style="display:none">
-            {% for f in doctorprofile %}
-                {% if f.name == 'contract' %}
-                    <div class="file-field input-field">
-                        <div class="btn right grey">
-                            <span>قرارداد</span>
-                            {{ f }}
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text">
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="row">
-                        <div class="input-field">
-                            {{ f }}
-                            <label for={{ f.id_for_label }}>{{ f.label }}</label>
-                        </div>
-                    </div>
-                {% endif %}
+    <div class="row _register-form">
+        {% if userform.errors %}
+            {% for error in userform.non_field_errors %}
+                <p class="right red-text">{{ error }}</p>
             {% endfor %}
-        </div>
-        <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+        {% endif %}
+        <form enctype="multipart/form-data" class="col s12" action="" method="post">
+            {% csrf_token %}
 
-        <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت‌نام
-        </button>
-    </form>
+            {% include "user/form.html" with form=userform %}
+            {% include "user/form.html" with form=userprofileform %}
+            <p>
+                <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
+                <label for="is-doctor">پزشک هستم</label>
+            </p>
+            <div id="doctor-form" style="display:none">
+                {% for f in doctorprofile %}
+                    {% if f.name == 'contract' %}
+                        <div class="file-field input-field">
+                            <div class="btn right grey">
+                                <span>قرارداد</span>
+                                {{ f }}
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="input-field">
+                                {{ f }}
+                                <label for={{ f.id_for_label }}>{{ f.label }}</label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
-</div>
-</body>
-</html>
+            <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت‌نام
+            </button>
+        </form>
+
+    </div>
+
+{% endblock %}

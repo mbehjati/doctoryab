@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load static %}
-<head>
-    <meta charset="UTF-8">
-    <title>دکتریاب</title>
-    <link rel="stylesheet" href={% static "sass/materialize.css" %}>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    ورود برنامه
+{% endblock %}
+{% block contents %}
+    {#<!DOCTYPE html>#}
+    {#<html lang="en">#}
+    {#{% load static %}#}
+    {#<head>#}
+    {#    <meta charset="UTF-8">#}
+    {#    <title>دکتریاب</title>#}
+    {#    <link rel="stylesheet" href={% static "sass/materialize.css" %}>#}
+    {#    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">#}
+    <link rel="stylesheet" href={% static 'appointment/scss/set_doctor_free_times.css' %}>
     <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet">
     <link href={% static "datepicker/persian-datepicker-0.4.5.min.css" %} rel="stylesheet">
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
+    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>#}
+    {#    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>#}
     <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-date-0.1.8a.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-datepicker-0.4.5.min.js" %}></script>
@@ -51,89 +58,68 @@
         })
 
     </script>
-</head>
-<body>
 
-<div class="navbar-fixed">
-    <nav>
-        <div class="nav-wrapper">
-            <a href="/" class="brand-logo right">دکتریاب</a>
-            <ul class="left hide-on-med-and-down">
-                <li><a href="/user/logout"><i class="material-icons left">power_settings_new</i>خروج</a></li>
+    <div class="row">
+        <form class="col s12" method="post">
 
-                <li><a href="/appointment"><i class="material-icons left">edit</i>ورود برنامه</a></li>
-                <li><a href="/user/edit-profile"><i class="material-icons left">person</i>صفحه کاربری</a></li>
+            {% csrf_token %}
 
-            </ul>
-        </div>
+            <div class="card _free-times-card">
+                <div class="card-content black-text _content">
+                    <i class=" material-icons prefix ">today</i>
+                    <span class="_span"> تاریخ </span>
+                    <hr>
+                    <div class="row" dir="rtl">
+                        <div class="col s6">
+                            <label for="end_date"> تا </label>
+                            <input type="text" class="datepicker1" name="end_date"/>
 
-    </nav>
-</div>
-<div class="row">
-    <form class="col s12" method="post">
+                        </div>
 
-        {% csrf_token %}
-
-        <div class="card " style=" direction: rtl ;position:fixed; top: 10%; left: 25% ;width: 50% ">
-            <div class="card-content black-text">
-                <i class=" material-icons prefix ">today</i>
-                <span style="font-size:larger "> تاریخ </span>
-                <hr>
-                <div class="row" dir="rtl">
-                    <div class="col s6">
-                        <label for="end_date"> تا </label>
-                        <input type="text" class="datepicker1" name="end_date"/>
-
+                        <div class="col s6">
+                            <label for="start_date">از </label>
+                            <input type="text" class="datepicker2" name="start_date"/>
+                        </div>
                     </div>
 
-                    <div class="col s6">
-                        <label for="start_date">از </label>
-                        <input type="text" class="datepicker2" name="start_date"/>
+                    <i class=" material-icons prefix">schedule</i>
+                    <span class="_span">ساعت </span>
+                    <hr>
+                    <div class="row" dir="rtl">
+                        <div class="col s6">
+                            <label for="end_time"> تا </label>
+                            <input class="stepTimePicker" id="end_time" name="end_time"/>
+                        </div>
+
+                        <div class="col s6">
+                            <label for="start_time">از </label>
+                            <input class="stepTimePicker" id="start_time" name="start_time">
+                        </div>
                     </div>
-                </div>
 
-                <i class=" material-icons prefix">schedule</i>
-                <span style="font-size: larger">ساعت </span>
-                <hr>
-                <div class="row" dir="rtl">
-                    <div class="col s6">
-                        <label for="end_time"> تا </label>
-                        <input class=stepTimePicker" id="end_time" name="end_time"/>
+                    <i class=" material-icons prefix">watch</i>
+                    <span class="_span">مدت زمان هر نوبت </span>
+                    <hr>
+                    <div class="input-field col s12">
+                        <select name="visit_duration">
+                            <option value="15"> ۱۵ دقیقه</option>
+                            <option value="30"> ۳۰ دقیقه</option>
+                            <option value="45"> ۴۵ دقیقه</option>
+                            <option value="60"> ۱ ساعت</option>
+                        </select>
                     </div>
-
-                    <div class="col s6">
-                        <label for="start_time">از </label>
-                        <input class=stepTimePicker" id="start_time" name="start_time">
-                    </div>
-                </div>
-
-                <i class=" material-icons prefix">watch</i>
-                <span style="font-size: larger ; direction: rtl">مدت زمان هر نوبت </span>
-                <hr>
-                <div class="input-field col s12">
-                    <select name="visit_duration">
-                        <option value="15"> ۱۵ دقیقه</option>
-                        <option value="30"> ۳۰ دقیقه</option>
-                        <option value="45"> ۴۵ دقیقه</option>
-                        <option value="60"> ۱ ساعت</option>
-                    </select>
-                </div>
-
-                <div dir="ltr">
-                    <button class="btn waves-effect waves-light" type="submit" name="action">ثبت
+                    <button class="btn waves-effect waves-light left" type="submit" name="action">ثبت
                     </button>
+                    <span style="color: {% if response == True %} green {% else %} red {% endif %} ; display: block; margin:auto ;  ">
+                        {{ message }}
+                    </span>
+
                 </div>
-            <span style="color: {% if response == True %} green {% else %} red {% endif %} ; display: block; margin:auto ;  ">
-                    {{ message }}
-            </span>
+
 
             </div>
 
 
-        </div>
-
-
-    </form>
-</div>
-</body>
-</html>
+        </form>
+    </div>
+{% endblock %}
