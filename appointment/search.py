@@ -2,6 +2,9 @@ from appointment.models import AppointmentTime
 from user.models import Doctor
 
 
+# -*- coding: UTF-8 -*-
+
+
 def do_advanced_search(form):
     if form.is_valid():
         doctors = search_by_name(Doctor.objects.all(), form.cleaned_data['name'])
