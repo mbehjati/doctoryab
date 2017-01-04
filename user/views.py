@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
@@ -34,6 +35,7 @@ def edit_password(request):
         if form.is_valid():
             user.set_password(form.cleaned_data['new_pass'])
             user.save()
+            update_session_auth_hash(request, request.user)
             return redirect('EditProfile')
     return render(request, 'user/edit_password.html', {"form": form, "user": user})
 
