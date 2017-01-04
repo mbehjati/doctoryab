@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
-from user.forms import UserForm, MyUserForm, DoctorForm, LoginForm, EditMyUserForm, EditUserForm, EditMyDoctorForm
-from user.models import MyUser, Doctor
+from user.forms import *
+from user.models import *
 
 
 @login_required(login_url='/')
@@ -24,6 +24,18 @@ def view_profile(request):
 
     except User.DoesNotExist:
         redirect("/")
+
+
+@login_required()
+def edit_password(request):
+    user = request.user
+    form = EditPasswordForm(request.POST or None, username=user.username)
+    if request.method == 'POST':
+        if form.is_valid():
+            user.set_password(form.cleaned_data['new_pass'])
+            user.save()
+            return redirect('EditProfile')
+    return render(request, 'user/edit_password.html', {"form": form, "user": user})
 
 
 @login_required()
@@ -120,8 +132,9 @@ def register(request):
                 userprofile.save()
                 # print(userprofile.is_doctor)
                 doctorprofile.save()
-            # TODO: go to user profile
-            return redirect('/')
+            new_user = authenticate(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'])
+            django_login(request, new_user)
+            return redirect('EditProfile')
     else:
         uf = UserForm(prefix='user')
         upf = MyUserForm(prefix='userprofile')
