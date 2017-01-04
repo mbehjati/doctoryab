@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ویرایش</title>
-    <link type="text/css" rel="stylesheet" href={% static "register.css" %}>
+    <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
     <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
     <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -32,9 +32,11 @@
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper">
-            <a href="/" class="brand-logo center">دکتریاب</a>
+            <a href="/" class="brand-logo right">دکتریاب</a>
             <ul class="left hide-on-med-and-down">
                 <li><a href="/user/logout"><i class="material-icons left">power_settings_new</i>خروج</a></li>
+
+                <li><a href="/appointment"><i class="material-icons left">edit</i>ورود برنامه</a></li>
             </ul>
         </div>
 
@@ -47,10 +49,9 @@
         {% csrf_token %}
         {% include "user/form.html" with form=form_user %}
         {% include "user/form.html" with form=form_myuser %}
-
+        {% include "user/form.html" with form=form_doctor %}
         <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت تغییرات
         </button>
-        <a href="/user/edit-password" class=" btn-large waves-effect waves-light _submit-btn"> تغییر رمز عبور </a>
     </form>
 </div>
 </body>

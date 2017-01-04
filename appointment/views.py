@@ -2,9 +2,10 @@
 # -*- coding: UTF-8 -*-
 from datetime import datetime, timedelta
 
+from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from user.forms import LoginForm
 from .forms import DoctorFreeTimes, AdvancedSearchForm
@@ -15,11 +16,10 @@ def home(request):
     message = ''
     if request.method == "POST":
         message = login(request)
-    return render(request, 'index.html', {'form': LoginForm(), 'message': message})
+    return render(request, 'index.html', {})  # , {'form': LoginForm(), 'message': message})
 
 
 def login(request):
-    message = ''
     form = LoginForm(request.POST)
     if form.is_valid():
         username = form.cleaned_data["username"]
@@ -28,21 +28,13 @@ def login(request):
         if user is not None:
             findeduser = User.objects.get(pk=user.id)
             my_user = MyUser.objects.get(user=findeduser)
-
             if findeduser.is_active:
                 django_login(request, user)
-                # return redirect('/user/')
-                return "کاربر عزیز خوش آمدید."
-            else:
-                form = LoginForm()
-                # raise forms.ValidationError('.حساب کاربری شما غیرفعال است.')
-                message = ".حساب کاربری شما غیرفعال است."
+                messages.success(request, 'کاربر عزیز خوش آمدید.')
         else:
-            form = LoginForm()
-            # print("pass or username wrong")
-            # raise forms.ValidationError('نام کاربری یا گذرواژه شما اشتباه است..')
-            message = "نام کاربری یا گذرواژه شما اشتباه است."
-    return message
+            messages.warning(request, 'نام کاربری یا گذرواژه شما اشتباه است.')
+
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def save_doctor_free_times_in_db(doctor, form):
