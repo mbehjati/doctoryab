@@ -5,7 +5,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.shortcuts import render
 
-from appointment.logic.doctor_plan import save_doctor_free_times_in_db, get_doctor_day_plan
+from appointment.logic.doctor_plan import save_doctor_free_times_in_db, get_doctor_day_plan, get_doctor_all_plan
 from appointment.logic.search import do_advanced_search
 from .forms import DoctorFreeTimes, AdvancedSearchForm
 from .jalali import Gregorian
@@ -73,3 +73,8 @@ def doctor_plan(request):
     return render(request, 'appointment/doctor_plan.html', {'apps': apps, 'date': date})
 
 
+def doctor_free_times_for_patient(request):
+    now = datetime.now()
+    date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
+    apps = get_doctor_all_plan(date, Doctor.objects.get(user__user__username__exact='mina'))
+    return render(request, 'appointment/reserve_time.html', {'apps': apps})

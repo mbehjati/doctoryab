@@ -12,12 +12,39 @@ def is_time_before(first, second):
     return True
 
 
-def sort_appointment_times(apps):
+def sort_appointment_times_in_day(apps):
     for i in range(len(apps)):
         for j in range(len(apps)):
             if is_time_before(apps[i].start_time, apps[j].start_time):
                 apps[i], apps[j] = apps[j], apps[i]
     return apps
+
+
+def sort_appointment_times(apps):
+    for i in range(len(apps)):
+        for j in range(len(apps)):
+            if apps[i].date == apps[j].date:
+                if is_time_before(apps[i].start_time, apps[j].start_time):
+                    apps[i], apps[j] = apps[j], apps[i]
+            elif apps[i].date < apps[j].date:
+                apps[i], apps[j] = apps[j], apps[i]
+    return apps
+
+
+def cluster_appointment_times(apps):
+    ans = []
+    if apps == []:
+        return None
+    date = apps[0].date
+    app_date = [apps[0]]
+    for i in range(1, len(apps)):
+        if apps[i].date == date:
+            app_date.append(apps[i])
+        else:
+            ans.append({'date': date, 'apps': app_date})
+            date = apps[i].date
+            app_date = [apps[i]]
+    return ans
 
 
 def add_time(start_time, duration):

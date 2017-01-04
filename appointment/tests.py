@@ -2,7 +2,8 @@
 # -*- coding: UTF-8 -*-
 from django.test import TestCase
 
-from appointment.logic.appointment_time import sort_appointment_times, is_time_before, add_time
+from appointment.logic.appointment_time import sort_appointment_times_in_day, is_time_before, add_time, \
+    sort_appointment_times
 from appointment.logic.doctor_plan import calc_doctor_free_times, has_appointment_conflict, calc_visit_times_for_a_day
 from appointment.logic.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
     search_by_insurance
@@ -255,17 +256,35 @@ class DoctorPlan(TestCase):
         self.app4 = AppointmentTime.objects.create(start_time='12:45pm', end_time='13:15pm', date='1395-07-01',
                                                    doctor=self.doc1,
                                                    duration=30)
+        self.app5 = AppointmentTime.objects.create(start_time='12:00pm', end_time='12:30pm', date='1395-07-03',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+
+        self.app6 = AppointmentTime.objects.create(start_time='12:15pm', end_time='12:345pm', date='1395-07-02',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+        self.app7 = AppointmentTime.objects.create(start_time='12:30pm', end_time='13:0pm', date='1395-07-02',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+        self.app8 = AppointmentTime.objects.create(start_time='13:45pm', end_time='13:15pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+
+    def test_sort_appointment_times_in_day(self):
+        self.add_objects()
+        self.assertEqual(sort_appointment_times_in_day([self.app3, self.app1, self.app4, self.app2]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times_in_day([self.app4, self.app3, self.app2, self.app1]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times_in_day([self.app3, self.app1, self.app2, self.app4]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times_in_day([self.app2, self.app1, self.app4, self.app3]),
+                         [self.app1, self.app2, self.app3, self.app4])
+        self.assertEqual(sort_appointment_times_in_day([self.app1, self.app3, self.app4, self.app2]),
+                         [self.app1, self.app2, self.app3, self.app4])
 
     def test_sort_appointment_times(self):
         self.add_objects()
-        self.assertEqual(sort_appointment_times([self.app3, self.app1, self.app4, self.app2]),
-                         [self.app1, self.app2, self.app3, self.app4])
-        self.assertEqual(sort_appointment_times([self.app4, self.app3, self.app2, self.app1]),
-                         [self.app1, self.app2, self.app3, self.app4])
-        self.assertEqual(sort_appointment_times([self.app3, self.app1, self.app2, self.app4]),
-                         [self.app1, self.app2, self.app3, self.app4])
-        self.assertEqual(sort_appointment_times([self.app2, self.app1, self.app4, self.app3]),
-                         [self.app1, self.app2, self.app3, self.app4])
-        self.assertEqual(sort_appointment_times([self.app1, self.app3, self.app4, self.app2]),
-                         [self.app1, self.app2, self.app3, self.app4])
-        pass
+        self.assertEqual(sort_appointment_times(
+            [self.app3, self.app1, self.app4, self.app2, self.app7, self.app5, self.app8, self.app6]),
+                         [self.app1, self.app2, self.app3, self.app4, self.app8, self.app6, self.app7, self.app5])

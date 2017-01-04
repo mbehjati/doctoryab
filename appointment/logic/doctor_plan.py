@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta
 
-from appointment.logic.appointment_time import is_time_before, add_time, sort_appointment_times
+from appointment.logic.appointment_time import *
 from appointment.models import AppointmentTime
 
 
@@ -48,4 +48,13 @@ def calc_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
 
 
 def get_doctor_day_plan(date, doctor):
-    return sort_appointment_times(list(AppointmentTime.objects.filter(doctor=doctor, date=date)))
+    return sort_appointment_times_in_day(list(AppointmentTime.objects.filter(doctor=doctor, date=date)))
+
+
+def get_doctor_all_plan(start_date, doctor):
+    apps = []
+    for app in AppointmentTime.objects.filter(doctor=doctor):
+        if app.date >= start_date:
+            apps.append(app)
+    apps = sort_appointment_times(apps)
+    return cluster_appointment_times(apps)
