@@ -60,15 +60,16 @@ def search(request):
 
 
 def doctor_plan(request):
-    apps = None
+    doctor = get_doctor_from_req(request)
     now = datetime.now()
     date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
+    apps = get_doctor_day_plan(date, doctor)
+
     if request.method == 'POST':
         date = request.POST['date']
-        doctor = get_doctor_from_req(request)
         apps = get_doctor_day_plan(date, doctor)
-        apps = None if len(apps) == 0 else apps
 
+    apps = None if len(apps) == 0 else apps
     return render(request, 'appointment/doctor_plan.html', {'apps': apps, 'date': date})
 
 
