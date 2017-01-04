@@ -33,7 +33,7 @@ class EditMyUserForm(forms.ModelForm):
 class EditMyDoctorForm(forms.ModelForm):
     class Meta:
         model = Doctor
-        exclude = ['user']
+        exclude = ['user', 'contract']
 
     labels = {
         'diploma': 'مدرک',
@@ -41,7 +41,8 @@ class EditMyDoctorForm(forms.ModelForm):
         'office_address': 'آدرس مطب',
         'office_phone_number': 'شماره تلفن مطب',
         'university': 'دانشگاه',
-        'expertise': 'تخصص'
+        'expertise': 'تخصص',
+        'insurance': 'بیمه'
     }
 
 # , 'contract']

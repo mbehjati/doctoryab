@@ -35,8 +35,9 @@
             <a href="/" class="brand-logo right">دکتریاب</a>
             <ul class="left hide-on-med-and-down">
                 <li><a href="/user/logout"><i class="material-icons left">power_settings_new</i>خروج</a></li>
-
-                <li><a href="/appointment"><i class="material-icons left">edit</i>ورود برنامه</a></li>
+                {% if myuser.is_doctor %}
+                    <li><a href="/appointment"><i class="material-icons left">edit</i>ورود برنامه</a></li>
+                {% endif %}
             </ul>
         </div>
 
@@ -45,6 +46,10 @@
 
 <div class="row _register-form">
 
+    <div class="input-field col s12">
+        <input disabled value={{ myuser.user.username }} id="disabled" type="text" class="validate">
+        <label for="disabled">نام کاربری</label>
+    </div>
     <form class="col s12" action="" method="post">
         {% csrf_token %}
         {% include "user/form.html" with form=form_user %}
@@ -52,6 +57,7 @@
         {% include "user/form.html" with form=form_doctor %}
         <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت تغییرات
         </button>
+        <a href="/user/edit-password" class=" btn-large waves-effect waves-light _submit-btn"> تغییر رمز عبور </a>
     </form>
 </div>
 </body>

@@ -49,50 +49,98 @@ def edit_profile(request):
                                                             'email': myuser.user.email})
     form_myuser = EditMyUserForm(request.POST or None, initial={'phone_number': myuser.phone_number,
                                                                 'national_code': myuser.national_code})
-    if not myuser.is_doctor:
-        if request.method == 'POST':
-            # form = EditProfileForm(request.POST)
-            if form_user.is_valid() * form_myuser.is_valid():
-                user.first_name = form_user.cleaned_data['first_name']
-                user.last_name = form_user.cleaned_data['last_name']
-                user.email = form_user.cleaned_data['email']
-                myuser.phone_number = form_myuser.cleaned_data['phone_number']
-                myuser.national_code = form_myuser.cleaned_data['national_code']
-                user.save()
-                myuser.user = user
-                myuser.save()
-            return HttpResponseRedirect('/user/profile')
-        return render(request, 'user/edit_profile_user.html',
-                      {"form_user": form_user, "form_myuser": form_myuser, "myuser": myuser})
-    else:
+    doctor = None
+    form_doctor = None
+    if myuser.is_doctor:
         doctor = Doctor.objects.get(user=myuser)
         form_doctor = EditMyDoctorForm(request.POST or None, initial={'university': doctor.university,
                                                                       'year_diploma': doctor.year_diploma,
                                                                       'diploma': doctor.diploma,
                                                                       'office_address': doctor.office_address,
-                                                                      'office_phone_number': doctor.office_phone_number})
-        if request.method == 'POST':
-            if form_user.is_valid() * form_myuser.is_valid():
-                user.first_name = form_user.cleaned_data['first_name']
-                user.last_name = form_user.cleaned_data['last_name']
-                user.email = form_user.cleaned_data['email']
-                myuser.phone_number = form_myuser.cleaned_data['phone_number']
-                myuser.national_code = form_myuser.cleaned_data['national_code']
-                user.save()
-                myuser.user = user
-                myuser.save()
-            if form_doctor.is_valid():
-                doctor.university = form_doctor.cleaned_data['university']
-                doctor.year_diploma = form_doctor.cleaned_data['year_diploma']
-                doctor.diploma = form_doctor.cleaned_data['diploma']
-                doctor.office_address = form_doctor.cleaned_data['office_address']
-                doctor.office_phone_number = form_doctor.cleaned_data['office_phone_number']
-                doctor.user = myuser
-                doctor.save()
-            return HttpResponseRedirect('/user/profile')
-        return render(request, 'user/edit_profile_doctor.html',
-                      {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
-                       "myuser": myuser, "doctor": doctor})
+                                                                      'office_phone_number': doctor.office_phone_number,
+                                                                      'insurance': doctor.insurance.all(),
+                                                                      'expertise': doctor.expertise})
+    if request.method == 'POST':
+        if form_user.is_valid() * form_myuser.is_valid():
+            user.first_name = form_user.cleaned_data['first_name']
+            user.last_name = form_user.cleaned_data['last_name']
+            user.email = form_user.cleaned_data['email']
+            myuser.phone_number = form_myuser.cleaned_data['phone_number']
+            myuser.national_code = form_myuser.cleaned_data['national_code']
+            user.save()
+            myuser.user = user
+            myuser.save()
+            if myuser.is_doctor:
+                print(form_doctor.errors)
+                if form_doctor.is_valid():
+                    doctor.university = form_doctor.cleaned_data['university']
+                    doctor.year_diploma = form_doctor.cleaned_data['year_diploma']
+                    doctor.diploma = form_doctor.cleaned_data['diploma']
+                    doctor.office_address = form_doctor.cleaned_data['office_address']
+                    doctor.office_phone_number = form_doctor.cleaned_data['office_phone_number']
+                    doctor.insurance = form_doctor.cleaned_data['insurance']
+                    doctor.expertise = form_doctor.cleaned_data['expertise']
+                    doctor.user = myuser
+                    doctor.save()
+        return redirect('EditProfile')
+    return render(request, 'user/edit_profile_doctor.html',
+                  {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
+                   "myuser": myuser, "doctor": doctor})
+
+
+# @login_required()
+# def edit_profile(request):
+#     user = request.user
+#     myuser = MyUser.objects.get(user=user)
+#     form_user = EditUserForm(request.POST or None, initial={'first_name': myuser.user.first_name,
+#                                                             'last_name': myuser.user.last_name,
+#                                                             'email': myuser.user.email})
+#     form_myuser = EditMyUserForm(request.POST or None, initial={'phone_number': myuser.phone_number,
+#                                                                 'national_code': myuser.national_code})
+#     if not myuser.is_doctor:
+#         if request.method == 'POST':
+#             # form = EditProfileForm(request.POST)
+#             if form_user.is_valid() * form_myuser.is_valid():
+#                 user.first_name = form_user.cleaned_data['first_name']
+#                 user.last_name = form_user.cleaned_data['last_name']
+#                 user.email = form_user.cleaned_data['email']
+#                 myuser.phone_number = form_myuser.cleaned_data['phone_number']
+#                 myuser.national_code = form_myuser.cleaned_data['national_code']
+#                 user.save()
+#                 myuser.user = user
+#                 myuser.save()
+#             return HttpResponseRedirect('/user/profile')
+#         return render(request, 'user/edit_profile_user.html',
+#                       {"form_user": form_user, "form_myuser": form_myuser, "myuser": myuser})
+#     else:
+#         doctor = Doctor.objects.get(user=myuser)
+#         form_doctor = EditMyDoctorForm(request.POST or None, initial={'university': doctor.university,
+#                                                                       'year_diploma': doctor.year_diploma,
+#                                                                       'diploma': doctor.diploma,
+#                                                                       'office_address': doctor.office_address,
+#                                                                       'office_phone_number': doctor.office_phone_number})
+#         if request.method == 'POST':
+#             if form_user.is_valid() * form_myuser.is_valid():
+#                 user.first_name = form_user.cleaned_data['first_name']
+#                 user.last_name = form_user.cleaned_data['last_name']
+#                 user.email = form_user.cleaned_data['email']
+#                 myuser.phone_number = form_myuser.cleaned_data['phone_number']
+#                 myuser.national_code = form_myuser.cleaned_data['national_code']
+#                 user.save()
+#                 myuser.user = user
+#                 myuser.save()
+#             if form_doctor.is_valid():
+#                 doctor.university = form_doctor.cleaned_data['university']
+#                 doctor.year_diploma = form_doctor.cleaned_data['year_diploma']
+#                 doctor.diploma = form_doctor.cleaned_data['diploma']
+#                 doctor.office_address = form_doctor.cleaned_data['office_address']
+#                 doctor.office_phone_number = form_doctor.cleaned_data['office_phone_number']
+#                 doctor.user = myuser
+#                 doctor.save()
+#             return HttpResponseRedirect('/user/profile')
+#         return render(request, 'user/edit_profile_doctor.html',
+#                       {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
+#                        "myuser": myuser, "doctor": doctor})
 
 
 def register(request):
