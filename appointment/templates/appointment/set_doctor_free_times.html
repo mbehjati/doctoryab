@@ -17,8 +17,6 @@
     <link href={% static "datepicker/persian-datepicker-0.4.5.min.css" %} rel="stylesheet">
     <script type="text/javascript" src={% static "jQuery/jquery-3.1.1.min.js" %}></script>
     <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
-    {#    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>#}
-    {#    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>#}
     <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-date-0.1.8a.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-datepicker-0.4.5.min.js" %}></script>
@@ -29,30 +27,27 @@
 
             $('select').material_select();
 
+            function clean_date(str) {
+                $(str).val($(str).val().split(" ")[0])
+            }
 
-            $(".datepicker1").pDatepicker({
-                observer: true,
-                justSelectOnDate: true,
-                onSelect: function () {
-                    $('.datepicker1').val($('.datepicker1').val().split(" ")[0])
-                },
-                onShow: function () {
-                    $('.datepicker1').val($('.datepicker1').val().split(" ")[0])
-                }
+            function custom_date_picker(str) {
+                $(str).pDatepicker({
+                    observer: true,
+                    justSelectOnDate: true,
+                    onSelect: function () {
+                        clean_date(str)
+                    },
+                    onShow: function () {
+                        clean_date(str)
+                    }
 
-            });
+                });
+            }
 
-            $(".datepicker2").pDatepicker({
-                observer: true,
-                justSelectOnDate: true,
-                onSelect: function () {
-                    $('.datepicker2').val($('.datepicker2').val().split(" ")[0])
-                },
-                onShow: function () {
-                    $('.datepicker2').val($('.datepicker2').val().split(" ")[0])
-                }
+            custom_date_picker(".datepicker1")
+            custom_date_picker(".datepicker2")
 
-            });
 
             $(".datepicker1").val(' ');
             $(".datepicker2").val(' ');
