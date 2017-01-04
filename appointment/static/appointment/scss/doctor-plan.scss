@@ -1,0 +1,40 @@
+
+._doctor-plan {
+
+  width: 50%;
+  margin: auto;
+  adding: 10px;
+  margin-top: 10px;
+
+  ._date-picker {
+    direction: rtl;
+    width: 60%;
+    margin: auto;
+  }
+
+  ._plan-box {
+    direction: rtl;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 80%;
+    margin: auto;
+
+    ._no-plan {
+      color: red;
+    }
+
+    ._left-box {
+      padding: 5px;
+      padding-right: 10px;
+    }
+
+    ._right-box {
+      border-left: double;
+      border-color: #3a3a3a;
+      border-bottom-width: 1px;
+      padding: 5px;
+    }
+
+  }
+
+}

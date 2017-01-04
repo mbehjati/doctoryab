@@ -2,7 +2,9 @@
 # -*- coding: UTF-8 -*-
 from django.test import TestCase
 
-from appointment.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
+from appointment.logic.appointment_time import sort_appointment_times, is_time_before, add_time
+from appointment.logic.doctor_plan import calc_doctor_free_times, has_appointment_conflict, calc_visit_times_for_a_day
+from appointment.logic.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
     search_by_insurance
 from user.models import Expertise, Insurance
 from .views import *
