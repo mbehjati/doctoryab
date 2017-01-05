@@ -3,10 +3,18 @@ from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 
 from user.forms import *
 from user.models import *
+
+
+def generate_pdf(request):
+    file = open('user/static/user/contract/contract.pdf', "rb")
+    file.seek(0)
+    pdf = file.read()
+    file.close()
+    return HttpResponse(pdf, 'application/pdf')
 
 
 @login_required(login_url='/')

@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^profile', views.view_profile, name='viewProfile'),
     url(r'^edit-profile$', views.edit_profile, name='EditProfile'),
     url(r'^edit-password$', views.edit_password, name='EditPassword'),
+    url(r'^static/user/contract/contract.pdf$', views.generate_pdf),
 ]
