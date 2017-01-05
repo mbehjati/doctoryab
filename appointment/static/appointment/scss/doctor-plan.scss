@@ -3,8 +3,13 @@
 
   width: 50%;
   margin: auto;
-  adding: 10px;
+  padding: 10px;
   margin-top: 10px;
+  margin-bottom: 10px;
+  border: solid lightgray 1.5px;
+  border-radius: 10px;
+  min-height: 20vw;
+  background-color: white;
 
   ._date-picker {
     direction: rtl;
