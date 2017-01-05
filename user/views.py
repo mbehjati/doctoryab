@@ -97,6 +97,7 @@ def edit_profile(request):
                     doctor.expertise = form_doctor.cleaned_data['expertise']
                     doctor.user = myuser
                     doctor.save()
+            messages.success(request, 'مشخصات ویرایش شد.')
             return redirect('/user/edit-profile')
 
     return render(request, 'user/profile.html',
