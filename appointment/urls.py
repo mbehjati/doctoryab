@@ -2,9 +2,9 @@ from django.conf.urls import url
 
 from . import views
 
+app_name = 'appointment'
 urlpatterns = [
     url(r'^$', views.doctor_free_time, name='index'),
-    url(r'^plan$', views.doctor_plan, name='index'),
-    url(r'^doctor$', views.doctor_free_times_for_patient, name='index'),
-
+    url(r'^plan$', views.doctor_plan, name='plan'),
+    url(r'^doctor/(?P<doctor_id>[0-9]+)/$', views.doctor_datail, name='detail'),
 ]

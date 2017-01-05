@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}مشخصات پزشک {% endblock %}
+{% block contents %}
+    <link rel="stylesheet" href={% static 'appointment/scss/doctor_detail.css' %}>
+    <div class="row _doctor-detail">
+        <div class="col s3 right _image">
+            {% if doctor.user.image %}
+                <img class="circle" src={{ doctor.user.image }}>
+            {% else %}
+                <img class="circle" src={% static 'images/doctor.png' %}>
+            {% endif %}
+        </div>
+        <div class="_alaki">
+            <div class="col s9  _details">
+                <h5>دکتر {{ doctor.user.user.first_name }} {{ doctor.user.user.last_name }}</h5>
+                <p class="_expertise">متخصص {{ doctor.expertise }}</p>
+                <div class="divider"></div>
+                <p class="_title">
+                    <span>   آدرس مطب:</span>
+                    {{ doctor.office_address }}
+                </p>
+                <p class="_title">شماره تلفن مطب: {{ doctor.office_phone_number }}</p>
+            </div>
+        </div>
+        <div class="_reserve-title white-text indigo center right">نوبت‌دهی آنلاین</div>
+        <div class=" _reserve-time">
+            {% for date in apps %}
+                <span class="_date">{{ date.date }}</span>
+                <hr class="grey">
+                {#                            <div class="divider"></div>#}
+                <ul class="_plan-box">
+                    {% for app in date.apps %}
+                        <li class="_date-box z-depth-2"
+                            style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %};
+                                    cursor: {% if app.patient == None %} pointer {% else %} default {% endif %} ;"
+                        >
+                            {{ app.start_time }}
+
+                            تا
+
+                            {{ app.end_time }}
+                            <br>
+                            {% if app.patient == None %}
+                                خالی
+                            {% else %}
+                                رزرو شده
+                            {% endif %}
+
+                        </li>
+                    {% endfor %}
+                </ul>
+
+
+                <br>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('._reserve-time').persiaNumber()
+        })
+
+    </script>
+
+{% endblock %}

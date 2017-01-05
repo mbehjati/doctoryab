@@ -1,0 +1,86 @@
+._doctor-detail {
+  padding: 30px;
+  background-color: rgb(250, 250, 250);
+  margin-bottom: 0;
+
+  ._alaki {
+    border: solid lightgray 1.5px;
+    border-radius: 10px;
+    margin-right: 5vw;
+    margin-left: 5vw;
+    margin-top: 5vw;
+    min-height: 20vw;
+    background-color: white;
+  }
+  ._image {
+    img {
+      height: 20vw;
+      width: 20vw;
+      object-fit: contain;
+    }
+  }
+
+  ._details {
+    padding-right: 0;
+    padding-top: 20px;
+    //height: 20vw;
+    ._expertise {
+      font-size: large;
+      font-weight: bold;
+    }
+    ._title {
+      font-size: larger;
+    }
+  }
+
+  ._reserve-title {
+    border-radius: 15px;
+    width: 15vw;
+    //height: 5vw;
+    //background-color: #039be5;
+    font-size: 1.6rem;
+    padding: 10px;
+    margin-top: 4vw;
+  }
+
+  ._reserve-time {
+    background-color: white;
+    margin: auto 5vw;
+    margin-top: 5vw;
+    border: solid lightgray 1.5px;
+    border-radius: 10px;
+    padding: 5vw 20px 20px;
+
+    ._date {
+      font-size: large
+    }
+    ._plan-box {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+
+      -webkit-flex-flow: row wrap;
+      justify-content: flex-start;
+
+      ._date-box {
+        padding: 10px;
+        //width: 130px;
+        //height: 60px;
+        margin: 10px;
+        border-radius: 10px;
+        text-align: center;
+        cursor: cell;
+      }
+
+    }
+
+  }
+
+}
+

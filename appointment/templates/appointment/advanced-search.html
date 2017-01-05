@@ -74,10 +74,15 @@
                     </thead>
                     <tbody>
                     {% for res in result %}
+
                         <tr>
-                            <td>{{ res.user.user.first_name }} {{ res.user.user.last_name }}</td>
+                            <td>
+                                <a href={% url 'appointment:detail' res.id %}>
+                                    {{ res.user.user.first_name }} {{ res.user.user.last_name }}                                                        </a>
+                            </td>
                             <td>{{ res.expertise }}</td>
                             <td>{{ res.office_address }}</td>
+
                         </tr>
                     {% endfor %}
                     </tbody>

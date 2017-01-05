@@ -1,9 +1,8 @@
-# Create your views here.
 # -*- coding: UTF-8 -*-
 from datetime import datetime
 
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from appointment.logic.doctor_plan import save_doctor_free_times_in_db, get_doctor_day_plan, get_doctor_all_plan
 from appointment.logic.search import do_advanced_search
@@ -13,7 +12,7 @@ from .models import *
 
 
 def home(request):
-    return render(request, 'index.html', {})
+    return render(request, 'index.html')
 
 
 def get_doctor_from_req(request):
@@ -73,8 +72,9 @@ def doctor_plan(request):
     return render(request, 'appointment/doctor_plan.html', {'apps': apps, 'date': date})
 
 
-def doctor_free_times_for_patient(request):
+def doctor_datail(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
     now = datetime.now()
     date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
-    apps = get_doctor_all_plan(date, Doctor.objects.get(user__user__username__exact='mina'))
-    return render(request, 'appointment/reserve_time.html', {'apps': apps})
+    apps = get_doctor_all_plan(date, doctor)
+    return render(request, 'appointment/doctor_detail.html', {'doctor': doctor, 'apps': apps})
