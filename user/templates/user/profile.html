@@ -62,7 +62,7 @@
             <input disabled value={{ myuser.user.username }} id="disabled" type="text" class="validate">
             <label for="disabled">نام کاربری</label>
         </div>
-        <form class="col s12" action="" method="post">
+        <form enctype="multipart/form-data" class="col s12" action="" method="post">
             {% csrf_token %}
             {% include "user/form.html" with form=form_user %}
             {% include "user/form.html" with form=form_myuser %}

@@ -27,6 +27,7 @@ class MyUser(models.Model):
     national_code_regex = RegexValidator(regex=r'^([0-9]{10})$',
                                          message="کدملی وارد شده باید 10 رقمی و با ارقام انگلیسی باشد.")
     national_code = models.CharField(validators=[national_code_regex], blank=True, max_length=10)
+    image = models.ImageField(upload_to='images', blank=True)
 
     is_active = True
     is_doctor = models.BooleanField(default=False)

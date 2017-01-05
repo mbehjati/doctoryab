@@ -47,8 +47,11 @@ def edit_profile(request):
     form_user = EditUserForm(request.POST or None, initial={'first_name': myuser.user.first_name,
                                                             'last_name': myuser.user.last_name,
                                                             'email': myuser.user.email})
-    form_myuser = EditMyUserForm(request.POST or None, initial={'phone_number': myuser.phone_number,
-                                                                'national_code': myuser.national_code})
+    form_myuser = EditMyUserForm(request.POST or None, request.FILES or None,
+                                 initial={'phone_number': myuser.phone_number,
+                                          'national_code': myuser.national_code,
+                                          'image': myuser.image})
+    # print(form_myuser.errors)
     doctor = None
     form_doctor = None
     if myuser.is_doctor:
@@ -60,9 +63,9 @@ def edit_profile(request):
                                                                       'office_phone_number': doctor.office_phone_number,
                                                                       'insurance': doctor.insurance.all(),
                                                                       'expertise': doctor.expertise})
-    print(form_myuser.errors)
-    print(form_user.errors)
-    print(form_doctor.errors)
+    # print(form_myuser.image)
+    # print(form_user.errors)
+    # print(form_doctor.errors)
     if request.method == 'POST':
         if form_user.is_valid() * form_myuser.is_valid():
             user.first_name = form_user.cleaned_data['first_name']
@@ -70,6 +73,7 @@ def edit_profile(request):
             user.email = form_user.cleaned_data['email']
             myuser.phone_number = form_myuser.cleaned_data['phone_number']
             myuser.national_code = form_myuser.cleaned_data['national_code']
+            myuser.image = form_myuser.cleaned_data['image']
             user.save()
             myuser.user = user
             myuser.save()
@@ -150,7 +154,7 @@ def edit_profile(request):
 def register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST, prefix='user')
-        upf = MyUserForm(request.POST, prefix='userprofile')
+        upf = MyUserForm(request.POST, request.FILES, prefix='userprofile')
         df = DoctorForm(request.POST, request.FILES
                         # , request.POST, request.POST, request.POST, request.POST, request.POST,
                         # request.FILES
@@ -166,8 +170,8 @@ def register(request):
             user.is_active = True
             user.save()
             userprofile = MyUser(user=user, phone_number=upf.cleaned_data['phone_number'],
-                                 national_code=upf.cleaned_data['national_code']
-                                 # address=upf.cleaned_data['address']
+                                 national_code=upf.cleaned_data['national_code'],
+                                 image=upf.cleaned_data['image']
                                  )
             userprofile.save()
             # print("is df valid:", df.is_valid(), "\n")
