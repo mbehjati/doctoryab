@@ -44,7 +44,7 @@ def edit_password(request):
             user.save()
             update_session_auth_hash(request, request.user)
             messages.success(request, 'رمز شما با موفقیت تغییر یافت.')
-            return redirect('EditProfile')
+            return redirect('/user/edit-profile')
     return render(request, 'user/edit_password.html', {"form": form, "user": user})
 
 
@@ -97,7 +97,7 @@ def edit_profile(request):
                     doctor.expertise = form_doctor.cleaned_data['expertise']
                     doctor.user = myuser
                     doctor.save()
-            return redirect('EditProfile')
+            return redirect('/user/edit-profile')
 
     return render(request, 'user/profile.html',
                   {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
@@ -200,7 +200,7 @@ def register(request):
                 doctorprofile.save()
             new_user = authenticate(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'])
             django_login(request, new_user)
-            return redirect('EditProfile')
+            return redirect('/user/edit-profile')
     else:
         uf = UserForm(prefix='user')
         upf = MyUserForm(prefix='userprofile')

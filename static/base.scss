@@ -19,7 +19,9 @@ body {
   }
 }
 
-._image {
-  object-fit: cover;
-  height: 200px;
+#slide-out {
+  ._image {
+    object-fit: cover;
+    height: 200px;
+  }
 }

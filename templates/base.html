@@ -17,7 +17,7 @@
     <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-date-0.1.8a.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-datepicker-0.4.5.min.js" %}></script>
-    {#    <script type="text/javascript" src={% static "persianNumber/persianumber.min.js" %}></script>#}
+    <script type="text/javascript" src={% static "persianNumber/persianumber.min.js" %}></script>
 
 </head>
 
@@ -35,7 +35,7 @@
 
                 {% else %}
                     <li><a href="#login-modal">ورود<i class="material-icons left">input</i></a></li>
-                    <li><a href="/user/register"><i class="material-icons left">person</i>ثبت‌نام</a></li>
+                    <li><a href={% url 'user:register' %}><i class="material-icons left">person</i>ثبت‌نام</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -47,14 +47,20 @@
             <div class="background">
                 <img class="_image" src={% static 'images/bg2.png' %}>
             </div>
-            <a href="#!user"><img class="circle" src={% static 'images/silhouette.png' %}></a>
+            <a href="#!user">
+                {% if  request.user.myuser.image %}
+                    <img class="circle" src='{{ request.user.myuser.image.url }}'>
+                {% else %}
+                    <img class="circle" src={% static 'images/silhouette.png' %}>
+                {% endif %}
+            </a>
             <a href="#!name"><span
                     class="white-text name">{{ request.user.first_name }} {{ request.user.last_name }}</span></a>
             <a href="#!email"><span class="white-text email">{{ request.user.email }}</span></a>
         </div>
     </li>
-    <li><a href="/user/edit-profile"><i class="material-icons">person</i>صفحه کاربری</a></li>
-    <li><a href="/user/edit-password"><i class="material-icons">edit</i>تغییر رمز عبور</a></li>
+    <li><a href={% url 'user:EditProfile' %}><i class="material-icons">person</i>صفحه کاربری</a></li>
+    <li><a href={% url 'user:EditPassword' %}><i class="material-icons">edit</i>تغییر رمز عبور</a></li>
     {% if request.user.myuser.is_doctor %}
         <li>
             <div class="divider"></div>
@@ -65,7 +71,8 @@
     <li>
         <div class="divider"></div>
     </li>
-    <li><a class="waves-effect" href="/user/logout"><i class="material-icons left">power_settings_new</i>خروج</a></li>
+    <li><a class="waves-effect" href={% url 'user:logout' %}><i
+            class="material-icons left">power_settings_new</i>خروج</a></li>
 </ul>
 
 <div id="login-modal" class="modal">
@@ -80,7 +87,7 @@
             {% endfor %}
         {% endif %}
         <div class="row">
-            <form class="col s12" method="post" action="/user/login">
+            <form class="col s12" method="post" action={% url 'user:login' %}>
                 {% csrf_token %}
 
                 <div class="row">
@@ -142,7 +149,7 @@
 </body>
 <script type="text/javascript">
     $(document).ready(function () {
-        {#        $("#persian-body").persiaNumber();#}
+        $("#persian-body").persiaNumber();
         $('.modal').modal();
         {% if messages %}
             {% for message in messages %}
