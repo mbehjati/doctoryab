@@ -28,10 +28,10 @@
             {% for date in apps %}
                 <span class="_date">{{ date.date }}</span>
                 <hr class="grey">
-                {#                            <div class="divider"></div>#}
+
                 <ul class="_plan-box">
                     {% for app in date.apps %}
-                        <li class="_date-box z-depth-2"
+                        <li class="_date-box  {% if app.patient == None %} z-depth-2 {% endif %}"
                             style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %};
                                     cursor: {% if app.patient == None %} pointer {% else %} default {% endif %} ;"
                         >
