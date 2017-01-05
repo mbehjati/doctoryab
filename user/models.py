@@ -35,6 +35,15 @@ class MyUser(models.Model):
     def __str__(self):
         return self.user.username
 
+    def save(self, *args, **kwargs):
+        try:
+            this = MyUser.objects.get(id=self.id)
+            if this.image != self.image:
+                this.image.delete(save=False)
+        except:
+            pass
+        super(MyUser, self).save(*args, **kwargs)
+
 
 class Doctor(models.Model):
     user = models.OneToOneField(MyUser, default='1')
