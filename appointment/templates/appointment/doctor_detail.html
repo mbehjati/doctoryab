@@ -6,7 +6,7 @@
     <div class="row _doctor-detail">
         <div class="col s3 right _image">
             {% if doctor.user.image %}
-                <img class="circle" src={{ doctor.user.image }}>
+                <img class="circle" src={{ doctor.user.image.url }}>
             {% else %}
                 <img class="circle" src={% static 'images/doctor.png' %}>
             {% endif %}
@@ -25,36 +25,39 @@
         </div>
         <div class="_reserve-title white-text indigo center right">نوبت‌دهی آنلاین</div>
         <div class=" _reserve-time">
-            {% for date in apps %}
-                <span class="_date">{{ date.date }}</span>
-                <hr class="grey">
+            {% if apps %}
+                {% for date in apps %}
+                    <span class="_date">{{ date.date }}</span>
+                    <hr class="grey">
 
-                <ul class="_plan-box">
-                    {% for app in date.apps %}
-                        <li class="_date-box  {% if app.patient == None %} z-depth-2 {% endif %}"
-                            style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %};
-                                    cursor: {% if app.patient == None %} pointer {% else %} default {% endif %} ;"
-                        >
-                            {{ app.start_time }}
+                    <ul class="_plan-box">
+                        {% for app in date.apps %}
+                            <li class="_date-box  {% if app.patient == None %} z-depth-2 {% endif %}"
+                                style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %};
+                                        cursor: {% if app.patient == None %} pointer {% else %} default {% endif %} ;"
+                            >
+                                {{ app.start_time }}
 
-                            تا
+                                تا
 
-                            {{ app.end_time }}
-                            <br>
-                            {% if app.patient == None %}
-                                خالی
-                            {% else %}
-                                رزرو شده
-                            {% endif %}
+                                {{ app.end_time }}
+                                <br>
+                                {% if app.patient == None %}
+                                    خالی
+                                {% else %}
+                                    رزرو شده
+                                {% endif %}
 
-                        </li>
-                    {% endfor %}
-                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
 
 
-                <br>
-            {% endfor %}
-
+                    <br>
+                {% endfor %}
+            {% else %}
+                <p>زمانی برای نوبت‌دهی مشخص نشده است.</p>
+            {% endif %}
         </div>
     </div>
 
