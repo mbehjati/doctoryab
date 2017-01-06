@@ -1,12 +1,18 @@
 # -*- coding: UTF-8 -*-
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse
 
+from appointment.logic.doctor_plan import get_doctor_day_plan
+from appointment.logic.jalali import Gregorian
 from user.forms import *
 from user.models import *
+from .doctor_plan import save_doctor_free_times_in_db
+from .forms.doctorplan import DoctorFreeTimes
 
 
 def generate_pdf(request):
@@ -264,3 +270,51 @@ def login(request):
             messages.warning(request, 'نام کاربری یا گذرواژه شما اشتباه است.')
 
     return redirect(request.META.get('HTTP_REFERER'))
+
+
+def get_doctor_from_req(request):
+    user = request.user.id
+    user_obj = User.objects.get(pk=user)
+    my_user = MyUser.objects.get(user=user_obj)
+    return Doctor.objects.get(user=my_user)
+
+
+def get_doctor_free_times_form_from_req(request):
+    form = DoctorFreeTimes()
+    form.start_date = request.POST['start_date']
+    form.end_date = request.POST['end_date']
+    form.start_time = request.POST['start_time']
+    form.end_time = request.POST['end_time']
+    form.visit_duration = request.POST['visit_duration']
+    return form
+
+
+def doctor_plan(request):
+    doctor = get_doctor_from_req(request)
+    now = datetime.now()
+    date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
+    apps = get_doctor_day_plan(date, doctor)
+
+    if request.method == 'POST':
+        date = request.POST['date']
+        apps = get_doctor_day_plan(date, doctor)
+
+    apps = None if len(apps) == 0 else apps
+    return render(request, 'user/doctor_plan.html', {'apps': apps, 'date': date})
+
+
+def doctor_free_time(request):
+    message = ''
+    response = False
+
+    if request.method == 'POST':
+        doctor = get_doctor_from_req(request)
+        form = get_doctor_free_times_form_from_req(request)
+        if form.is_data_valid():
+            save_doctor_free_times_in_db(doctor, form)
+            message = 'اطلاعات شما با موفقیت ثبت شد. '
+            response = True
+        else:
+            message = '*اطلاعات واردشده مجاز نمی‌باشد. '
+
+    return render(request, 'user/set_doctor_free_times.html', {'message': message, 'response': response})

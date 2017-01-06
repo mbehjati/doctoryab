@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+
 def is_time_before(first, second):
     if 'pm' in first and 'am' in second:
         return False

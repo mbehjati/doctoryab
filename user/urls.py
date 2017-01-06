@@ -10,5 +10,7 @@ urlpatterns = [
     url(r'^profile', views.view_profile, name='viewProfile'),
     url(r'^edit-profile$', views.edit_profile, name='EditProfile'),
     url(r'^edit-password$', views.edit_password, name='EditPassword'),
+    url(r'^enter-plan$', views.doctor_free_time, name='EnterPlan'),
+    url(r'^plan$', views.doctor_plan, name='EnterPlan'),
     url(r'^static/user/contract/contract.pdf$', views.generate_pdf),
 ]
