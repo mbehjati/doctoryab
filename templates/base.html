@@ -41,7 +41,7 @@
         </div>
     </nav>
 </div>
-<ul id="slide-out" class="side-nav" style="padding: 0;direction: ltr;text-align:left">
+<ul id="slide-out" class="side-nav">
     <li>
         <div class="userView">
             <div class="background">
@@ -49,7 +49,7 @@
             </div>
             <a href="#!user">
                 {% if  request.user.myuser.image %}
-                    <img class="circle" src='{{ request.user.myuser.image.url }}'>
+                    <img class="circle ._user-image" src='{{ request.user.myuser.image.url }}'>
                 {% else %}
                     <img class="circle" src={% static 'images/silhouette.png' %}>
                 {% endif %}
@@ -125,11 +125,11 @@
             <div class="col l4 offset-l2 s12">
                 <h5 class="white-text">دست‌رسی سریع</h5>
                 <ul>
-                    <li><a class="grey-text text-lighten-3" href="/">خانه</a></li>
+                    <li><a class="grey-text text-lighten-3" href={% url 'home' %}>خانه</a></li>
                     <li><a class="grey-text text-lighten-3" href="#login-modal">ورود</a></li>
-                    <li><a class="grey-text text-lighten-3" href="/user/register">ثبت‌نام</a></li>
-                    <li><a class="grey-text text-lighten-3" href="/search">جستجو پیشرفته</a></li>
-                    <li><a class="grey-text text-lighten-3" href="/user/static/user/contract/contract.pdf">دانلود فرم
+                    <li><a class="grey-text text-lighten-3" href={% url 'user:register' %}>ثبت‌نام</a></li>
+                    <li><a class="grey-text text-lighten-3" href={% url 'search' %}>جستجو پیشرفته</a></li>
+                    <li><a class="grey-text text-lighten-3" href={% static 'user/contract/contract.pdf' %}>دانلود فرم
                         قرارداد</a></li>
                 </ul>
             </div>

@@ -20,8 +20,15 @@ body {
 }
 
 #slide-out {
+  padding: 0;
+  direction: ltr;
+  text-align: left;
+
   ._image {
     object-fit: cover;
     height: 200px;
+  }
+  ._user-image {
+    object-fit: cover;
   }
 }
