@@ -3,7 +3,7 @@
 from django.test import TestCase
 
 from appointment.logic.appointment_time import sort_appointment_times_in_day, is_time_before, add_time, \
-    sort_appointment_times
+    sort_appointment_times, cluster_appointment_times
 from appointment.logic.doctor_plan import calc_doctor_free_times, has_appointment_conflict, calc_visit_times_for_a_day
 from appointment.logic.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
     search_by_insurance
@@ -170,7 +170,7 @@ class SearchDoctor(TestCase):
                                           office_address='addr',
                                           office_phone_number='09123456789', expertise=self.exp1)
 
-        self.user = User.objects.create(username='test_doc2', password='12345678', first_name='doc2 f',
+        self.user = User.objects.create(username='test_doc2', password='12345678', first_name='doc2 f exp1',
                                         last_name='doc2 l')
         self.myuser = MyUser.objects.create(user=self.user, phone_number='09361827280', national_code='1234567890')
         self.doc2 = Doctor.objects.create(user=self.myuser, university='teh', year_diploma='1390', diploma='tajrobi',
@@ -234,6 +234,13 @@ class SearchDoctor(TestCase):
         self.assertEqual(search_by_insurance([self.doc1, self.doc2, self.doc3], 'همه'),
                          [self.doc1, self.doc2, self.doc3])
 
+    def test_search_by_expertise_or_name(self):
+        self.add_objs_to_db()
+        self.assertEqual(set(search_by_name_or_expertise([self.doc1, self.doc2, self.doc3], "exp1")),
+                         set([self.doc1, self.doc2, self.doc3]))
+        self.assertEqual(set(search_by_name_or_expertise([self.doc1, self.doc2, self.doc3], "exp2")), set([self.doc2]))
+        self.assertEqual(set(search_by_name_or_expertise([self.doc1, self.doc2, self.doc3], "exp")), set([self.doc2]))
+
 
 class DoctorPlan(TestCase):
     def add_objects(self):
@@ -287,4 +294,25 @@ class DoctorPlan(TestCase):
         self.add_objects()
         self.assertEqual(sort_appointment_times(
             [self.app3, self.app1, self.app4, self.app2, self.app7, self.app5, self.app8, self.app6]),
-                         [self.app1, self.app2, self.app3, self.app4, self.app8, self.app6, self.app7, self.app5])
+            [self.app1, self.app2, self.app3, self.app4, self.app8, self.app6, self.app7, self.app5])
+
+    def test_get_doctor_day_plan(self):
+        self.add_objects()
+        self.assertEqual(get_doctor_day_plan('1395-07-01', self.doc1),
+                         [self.app1, self.app2, self.app3, self.app4, self.app8])
+        self.assertEqual(get_doctor_day_plan('1395-07-02', self.doc1), [self.app6, self.app7])
+
+    def test_get_doctor_plan_all(self):
+        self.add_objects()
+        exp_ans = [{'date': '1395-07-01', 'apps': [self.app1, self.app2, self.app3, self.app4, self.app8]},
+                   {'date': '1395-07-02', 'apps': [self.app6, self.app7]},
+                   {'date': '1395-07-03', 'apps': [self.app5]}]
+        self.assertEqual(get_doctor_all_plan('1395-07-01', self.doc1), exp_ans)
+
+    def test_cluster_appointment_times(self):
+        self.add_objects()
+        exp_ans = [{'date': '1395-07-01', 'apps': [self.app1, self.app2, self.app3, self.app4, self.app8]},
+                   {'date': '1395-07-02', 'apps': [self.app6, self.app7]},
+                   {'date': '1395-07-03', 'apps': [self.app5]}]
+        self.assertEqual(cluster_appointment_times(
+            [self.app1, self.app2, self.app3, self.app4, self.app8, self.app6, self.app7, self.app5]), exp_ans)
