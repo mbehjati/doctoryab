@@ -32,10 +32,10 @@
 
                     <ul class="_plan-box">
                         {% for app in date.apps %}
-                            <li class="_date-box  {% if app.patient == None %} z-depth-2 {% endif %}"
+                            <li onclick="showDialog('{{ date.date }}','{{ app.start_time }}','{{ app.id }}')"
+                                class="_date-box  {% if app.patient == None %} z-depth-2 {% endif %}"
                                 style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %};
-                                        cursor: {% if app.patient == None %} pointer {% else %} default {% endif %} ;"
-                            >
+                                        cursor: {% if app.patient == None %} pointer {% else %} default {% endif %} ;">
                                 {{ app.start_time }}
 
                                 تا
@@ -60,11 +60,50 @@
             {% endif %}
         </div>
     </div>
+    <div id="confirm-dialog" class="modal">
+        <div class="modal-content">
+            <h5 class="indigo-text">تایید نوبت</h5>
+            <div class="divider"></div>
+            <p>
+                آیا مایل هستید از دکتر
+                {{ doctor.user.user.first_name }} {{ doctor.user.user.last_name }}
+                در تاریخ
+                <span id="date"></span>
+                ساعت
+                <span id="hour"></span>
+                وقت بگیرید؟
+
+            </p>
+        </div>
+        <div class="modal-footer">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" id="appointment" name="appointment">
+                <button type="submit" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">
+                    بله
+                </button>
+
+            </form>
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">خیر</a>
+
+        </div>
+    </div>
 
     <script type="text/javascript">
 
+        function showDialog(date, time, id) {
+            {% if not request.user.is_authenticated %}
+                $('#login-modal').modal('open');
+            {% else %}
+                $('#date').text(date);
+                $('#hour').text(time);
+                $('#appointment').val(id);
+                $('#confirm-dialog').modal('open');
+            {% endif %}
+
+        }
         $(document).ready(function () {
-            $('._reserve-time').persiaNumber()
+            $('._reserve-time').persiaNumber();
         })
 
     </script>

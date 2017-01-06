@@ -106,10 +106,10 @@
                 </button>
                 <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
-                <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left">گذرواژه‌ام
-                    را
-                    فراموش
-                    کرده‌ام</a>
+                <a class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left"
+                   href={% url 'user:register' %}>
+                    ثبت نام
+                </a>
             </form>
 
         </div>
@@ -156,7 +156,7 @@
                 {% if message.tags == 'success' %}
                     Materialize.toast('{{ message }}', 3000, 'rounded');
                 {% else %}
-                    $('.modal').modal('open');
+                    $('#login-modal').modal('open');
                 {% endif %}
             {% endfor %}
         {% endif %}
