@@ -58,3 +58,9 @@ def search_by_insurance(doctors, insurance):
             if ins.name == insurance:
                 ans.append(doc)
     return ans
+
+
+def search_by_name_or_expertise(doctors, keyword):
+    ans1 = search_by_expertise(doctors, keyword)
+    ans2 = search_by_name(doctors, keyword)
+    return ans1 + list(set(ans2) - set(ans1))

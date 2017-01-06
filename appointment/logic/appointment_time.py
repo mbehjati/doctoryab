@@ -44,6 +44,7 @@ def cluster_appointment_times(apps):
             ans.append({'date': date, 'apps': app_date})
             date = apps[i].date
             app_date = [apps[i]]
+    ans.append({'date': date, 'apps': app_date})
     return ans
 
 

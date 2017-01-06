@@ -6,14 +6,18 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 
 from appointment.logic.doctor_plan import save_doctor_free_times_in_db, get_doctor_day_plan, get_doctor_all_plan
-from appointment.logic.search import do_advanced_search
+from appointment.logic.search import do_advanced_search, search_by_name_or_expertise
 from .forms import DoctorFreeTimes, AdvancedSearchForm
 from .jalali import Gregorian
 from .models import *
 
 
 def home(request):
-    return render(request, 'index.html')
+    result = None
+    if request.method == 'POST':
+        keyword = request.POST['keyword']
+        result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+    return render(request, 'index.html', {'result': result})
 
 
 def get_doctor_from_req(request):
