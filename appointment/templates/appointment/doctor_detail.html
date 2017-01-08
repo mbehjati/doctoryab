@@ -14,13 +14,16 @@
         <div class="_alaki">
             <div class="col s9  _details">
                 <h5>دکتر {{ doctor.user.user.first_name }} {{ doctor.user.user.last_name }}</h5>
-                <p class="_expertise">متخصص {{ doctor.expertise }}</p>
+                <p class="_expertise">{{ doctor.title }} {{ doctor.expertise }}</p>
                 <div class="divider"></div>
                 <p class="_title">
                     <span>   آدرس مطب:</span>
                     {{ doctor.office_address }}
                 </p>
-                <p class="_title">شماره تلفن مطب: {{ doctor.office_phone_number }}</p>
+                <p class="_title">شماره تلفن مطب: {{ doctor.office_phone_number|default:'-' }}</p>
+                {% if doctor.insurance %}
+                    <p class="_title">بیمه‌های طرف قرارداد: {{ doctor.insurance.all|join:" ،"|default:'-' }}</p>
+                {% endif %}
             </div>
         </div>
         <div class="_reserve-title white-text indigo center right">نوبت‌دهی آنلاین</div>
