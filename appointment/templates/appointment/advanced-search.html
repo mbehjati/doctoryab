@@ -63,35 +63,33 @@
     {% if result != None %}
         <div class="row _result-box">
 
-            {% if result %}
-                <table class="bordered">
-                    <thead>
-                    <tr>
-                        <th data-field="id">نام</th>
-                        <th data-field="name">تخصص</th>
-                        <th data-field="price">آدرس مطب</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for res in result %}
-
-                        <tr>
-                            <td>
-                                <a href={% url 'appointment:detail' res.id %}>
-                                    {{ res.user.user.first_name }} {{ res.user.user.last_name }}                                                        </a>
-                            </td>
-                            <td>{{ res.expertise }}</td>
-                            <td>{{ res.office_address }}</td>
-
-                        </tr>
-
-
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
+            {% for res in result %}
+                <div class="_kachal">
+                    <div class="card">
+                        <div class="card-image">
+                            {% if res.user.image %}
+                                <img src={{ res.user.image.url }}>
+                            {% else %}
+                                <img src={% static 'images/icon.png' %}>
+                            {% endif %}
+                        </div>
+                        <div class="card-content">
+                            <p class="_title">دکتر {{ res.user.user.first_name }} {{ res.user.user.last_name }}</p>
+                            <p>{{ res.title }} {{ res.expertise }}</p>
+                            <p class="truncate">
+                                آدرس مطب:
+                                {{ res.office_address }}
+                            </p>
+                        </div>
+                        <div class="card-action">
+                            <a href={% url 'appointment:detail' res.id %}>دریافت نوبت </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
                 <p>موردی یافت نشد.</p>
-            {% endif %}
+
+            {% endfor %}
         </div>
 
     {% endif %}
