@@ -8,17 +8,13 @@ from django.shortcuts import render, get_object_or_404
 from appointment.logic.doctor_plan import get_doctor_all_plan
 # from user.doctor_plan import save_doctor_free_times_in_db, get_doctor_day_plan
 from appointment.logic.search import do_advanced_search, search_by_name_or_expertise
-from .forms import AdvancedSearchForm
+from .forms import AdvancedSearchForm, DoctorFreeTimes
 from appointment.logic.jalali import Gregorian
 from .models import *
 
 
 def home(request):
-    result = None
-    if request.method == 'POST':
-        keyword = request.POST['keyword']
-        result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
-    return render(request, 'index.html', {'result': result})
+    return render(request, 'index.html')
 
 
 def get_doctor_from_req(request):
@@ -56,11 +52,20 @@ def get_doctor_free_times_form_from_req(request):
 
 
 def search(request):
-    form = AdvancedSearchForm()
+
     result = None
+    form = AdvancedSearchForm()
+
     if request.method == 'POST':
-        form = AdvancedSearchForm(request.POST)
-        result = do_advanced_search(form)
+        if 'keyword' in request.POST:
+            keyword = request.POST['keyword']
+            result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+            form = AdvancedSearchForm(initial={'name': keyword})
+        else:
+            form = AdvancedSearchForm(request.POST)
+            result = do_advanced_search(form)
+
+
     return render(request, 'appointment/advanced-search.html', {'form': form, 'result': result})
 
 

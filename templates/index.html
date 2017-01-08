@@ -7,17 +7,15 @@
     <link rel="stylesheet" type="text/css" href={% static "index.css" %}>
     <div class="search-container">
         <div class="row">
-            <form class="col s12" method="post">
+            <form class="col s12" method="post" action={% url 'search' %}>
                 {% csrf_token %}
                 <div class="row">
                     <div class="input-field col s4 right">
-                        {#                        <i class="material-icons prefix">mode_edit</i>#}
                         <input id="icon_prefix2" type="text" name="keyword">
                         <label for="icon_prefix2">نام پزشک یا تخصص</label>
                     </div>
 
-                    <button class="btn-floating btn-large waves-effect waves-light" type="submit"
-                            style="vertical-align: bottom" name="action">
+                    <button class="btn-floating btn-large waves-effect waves-light" type="submit" name="action">
                         <i class="material-icons">search</i>
                     </button>
 
@@ -26,54 +24,4 @@
         </div>
     </div>
 
-    {% if result != None %}
-        <div class="result-box" style="margin: 10px ; padding: 50px">
-
-            {% if result %}
-                <table class="bordered">
-                    <thead>
-                    <tr>
-                        <th data-field="id">نام</th>
-                        <th data-field="name">تخصص</th>
-                        <th data-field="price">آدرس مطب</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for res in result %}
-
-                        <tr>
-                            <td>
-                                <a href={% url 'appointment:detail' res.id %}>
-                                    {{ res.user.user.first_name }} {{ res.user.user.last_name }}                                                        </a>
-                            </td>
-                            <td>{{ res.expertise }}</td>
-                            <td>{{ res.office_address }}</td>
-
-                        </tr>
-
-
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>موردی یافت نشد.</p>
-            {% endif %}
-        </div>
-
-    {% endif %}
-    {#    </div>#}
-
-    {#    <div class="section white">#}
-    {#        <div class="row container">#}
-    {#            <h2 class="header">وقت شما سرمایه ما</h2>#}
-    {#            <p class="grey-text text-darken-3 lighten-3">#}
-    {##}
-    {#                با دکتریاب می‌توانید پزشکان نزدیک خود را پیدا کنید و به سادگی وقت بگیرید.#}
-    {#                <br>#}
-    {#                این یک برنامه است.#}
-    {#                <br>#}
-    {#                لطفا توجه کنید#}
-    {#            </p>#}
-    {#        </div>#}
-    {#    </div>#}
 {% endblock %}
