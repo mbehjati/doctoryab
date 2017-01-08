@@ -16,7 +16,7 @@ from .forms.doctorplan import DoctorFreeTimes
 
 
 def generate_pdf(request):
-    file = open('user/static/user/contract/contract.pdf', "rb")
+    file = open('user/static/user/contract/contract.pdf', 'rb')
     file.seek(0)
     pdf = file.read()
     file.close()
@@ -37,7 +37,7 @@ def view_profile(request):
             return render(request, 'user/profile_doctor.html', {'doctor': doctor})
 
     except User.DoesNotExist:
-        redirect("/")
+        redirect('/')
 
 
 @login_required()
@@ -51,7 +51,7 @@ def edit_password(request):
             update_session_auth_hash(request, request.user)
             messages.success(request, 'رمز شما با موفقیت تغییر یافت.')
             return redirect('/user/edit-profile')
-    return render(request, 'user/edit_password.html', {"form": form, "user": user})
+    return render(request, 'user/edit_password.html', {'form': form, 'user': user})
 
 
 @login_required()
@@ -107,8 +107,8 @@ def edit_profile(request):
             return redirect('/user/edit-profile')
 
     return render(request, 'user/profile.html',
-                  {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
-                   "myuser": myuser, "doctor": doctor})
+                  {'form_user': form_user, 'form_myuser': form_myuser, 'form_doctor': form_doctor,
+                   'myuser': myuser, 'doctor': doctor})
 
 
 # @login_required()
@@ -134,7 +134,7 @@ def edit_profile(request):
 #                 myuser.save()
 #             return HttpResponseRedirect('/user/profile')
 #         return render(request, 'user/edit_profile_user.html',
-#                       {"form_user": form_user, "form_myuser": form_myuser, "myuser": myuser})
+#                       {'form_user': form_user, 'form_myuser': form_myuser, 'myuser': myuser})
 #     else:
 #         doctor = Doctor.objects.get(user=myuser)
 #         form_doctor = EditMyDoctorForm(request.POST or None, initial={'university': doctor.university,
@@ -162,8 +162,8 @@ def edit_profile(request):
 #                 doctor.save()
 #             return HttpResponseRedirect('/user/profile')
 #         return render(request, 'user/profile.html',
-#                       {"form_user": form_user, "form_myuser": form_myuser, "form_doctor": form_doctor,
-#                        "myuser": myuser, "doctor": doctor})
+#                       {'form_user': form_user, 'form_myuser': form_myuser, 'form_doctor': form_doctor,
+#                        'myuser': myuser, 'doctor': doctor})
 
 
 def register(request):
@@ -189,16 +189,17 @@ def register(request):
                                  image=upf.cleaned_data['image']
                                  )
             userprofile.save()
-            # print("is df valid:", df.is_valid(), "\n")
+            # print('is df valid:', df.is_valid(), '\n')
             if df.is_valid():
-                # print("yes df is valid")
+                # print('yes df is valid')
                 doctorprofile = Doctor(user=userprofile, university=df.cleaned_data['university'],
                                        year_diploma=df.cleaned_data['year_diploma'],
                                        diploma=df.cleaned_data['diploma'],
                                        office_address=df.cleaned_data['office_address'],
                                        office_phone_number=df.cleaned_data['office_phone_number'],
-                                       expertise=df.cleaned_data["expertise"],
-                                       contract=df.cleaned_data['contract']
+                                       expertise=df.cleaned_data['expertise'],
+                                       contract=df.cleaned_data['contract'],
+                                       insurance=df.cleaned_data['insurance']
                                        )
                 # print(doctorprofile.year_diploma)
                 userprofile.is_doctor = True
@@ -207,7 +208,7 @@ def register(request):
                 doctorprofile.save()
             new_user = authenticate(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'])
             django_login(request, new_user)
-            messages.success('شما با موفقیت ثبت نام شدید.')
+            messages.success(request, 'شما با موفقیت ثبت نام شدید.')
             return redirect('/user/edit-profile')
     else:
         uf = UserForm(prefix='user')
@@ -217,12 +218,12 @@ def register(request):
 
 
 # def login(request):
-#     message = ""
-#     if request.method == "POST":
+#     message = ''
+#     if request.method == 'POST':
 #         form = LoginForm(request.POST)
 #         if form.is_valid():
-#             username = form.cleaned_data["username"]
-#             password = form.cleaned_data["password"]
+#             username = form.cleaned_data['username']
+#             password = form.cleaned_data['password']
 #             user = authenticate(username=username, password=password)
 #             if user is not None:
 #                 findeduser = User.objects.get(pk=user.id)
@@ -238,15 +239,15 @@ def register(request):
 #                 else:
 #                     form = LoginForm()
 #                     # raise forms.ValidationError('.حساب کاربری شما غیرفعال است.')
-#                     message = ".حساب کاربری شما غیرفعال است."
+#                     message = '.حساب کاربری شما غیرفعال است.'
 #             else:
 #                 form = LoginForm()
-#                 # print("pass or username wrong")
+#                 # print('pass or username wrong')
 #                 # raise forms.ValidationError('نام کاربری یا گذرواژه شما اشتباه است..')
-#                 message = "نام کاربری یا گذرواژه شما اشتباه است."
+#                 message = 'نام کاربری یا گذرواژه شما اشتباه است.'
 #     else:
 #         form = LoginForm()
-#     return render(request, "user/login_user.html", {'form': form, 'message': message})
+#     return render(request, 'user/login_user.html', {'form': form, 'message': message})
 
 
 def logout(request):
@@ -258,8 +259,8 @@ def logout(request):
 def login(request):
     form = LoginForm(request.POST)
     if form.is_valid():
-        username = form.cleaned_data["username"]
-        password = form.cleaned_data["password"]
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             findeduser = User.objects.get(pk=user.id)
@@ -293,7 +294,7 @@ def get_doctor_free_times_form_from_req(request):
 def doctor_plan(request):
     doctor = get_doctor_from_req(request)
     now = datetime.now()
-    date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
+    date = Gregorian(now.strftime('%Y-%m-%d')).persian_string()
     apps = get_doctor_day_plan(date, doctor)
 
     if request.method == 'POST':
