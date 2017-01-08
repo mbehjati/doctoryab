@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404
 
 from appointment.logic.doctor_plan import get_doctor_all_plan
 from appointment.logic.search import do_advanced_search, search_by_name_or_expertise
-from lib.jalali import Gregorian
+from user.lib.jalali import Gregorian
 from .forms import AdvancedSearchForm
 from .models import *
 
