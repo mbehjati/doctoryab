@@ -207,6 +207,7 @@ def register(request):
                 doctorprofile.save()
             new_user = authenticate(username=uf.cleaned_data['username'], password=uf.cleaned_data['password'])
             django_login(request, new_user)
+            messages.success('شما با موفقیت ثبت نام شدید.')
             return redirect('/user/edit-profile')
     else:
         uf = UserForm(prefix='user')

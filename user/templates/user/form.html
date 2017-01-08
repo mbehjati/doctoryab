@@ -1,22 +1,31 @@
-{#{{ form }}!#}
 {% for f in form %}
-    {% if f.name == 'image' %}
-        <div class="file-field input-field">
-            <div class="btn right grey">
-                <span>عکس</span>
-                {{ f }}
+    <div class="row">
+        {% if f.name == 'image' %}
+            <div class="file-field input-field">
+                <div class="btn right grey">
+                    <span>عکس</span>
+                    {{ f }}
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
             </div>
-            <div class="file-path-wrapper">
-                <input class="file-path validate" type="text">
+        {% elif f.name == 'contract' %}
+            <div class="file-field input-field">
+                <div class="btn right grey">
+                    <span>قرارداد</span>
+                    {{ f }}
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
             </div>
-        </div>
-    {% else %}
-        <div class="row">
+        {% else %}
 
             <div class="input-field">
                 {{ f }}
                 <label for={{ f.id_for_label }}>{{ f.label }}</label>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 {% endfor %}
