@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse
 
 from appointment.logic.doctor_plan import get_doctor_day_plan
-from appointment.logic.jalali import Gregorian
+from lib.jalali import Gregorian
 from user.forms import *
 from user.models import *
 from .doctor_plan import save_doctor_free_times_in_db
