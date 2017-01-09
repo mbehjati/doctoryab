@@ -19,6 +19,7 @@ from .forms.doctorplan import DoctorFreeTimes
 
 
 def upload_contract_file(request):
+    """ uploads primary contract file to site which user can download and fill it """
     file = open('user/static/user/contract/contract.pdf', 'rb')
     file.seek(0)
     pdf = file.read()
@@ -26,24 +27,13 @@ def upload_contract_file(request):
     return HttpResponse(pdf, 'application/pdf')
 
 
-@login_required(login_url='/')
-def view_profile(request):
-    user_id = request.user.id
-    try:
-        user = User.objects.get(pk=user_id)
-        my_user = MyUser.objects.get(user=user)
-        if not my_user.is_doctor:
-            return render(request, 'user/profile_user.html', {'my_user': my_user})
-        else:
-            doctor = Doctor.objects.get(user=my_user)
-            return render(request, 'user/profile_doctor.html', {'doctor': doctor})
-
-    except User.DoesNotExist:
-        redirect('/')
-
-
 @login_required()
 def edit_password(request):
+    """ user can his/her password
+
+         restrictions:
+         just for logged in users
+    """
     user = request.user
     form = EditPasswordForm(request.POST or None, username=user.username)
     if request.method == 'POST':
@@ -58,6 +48,14 @@ def edit_password(request):
 
 @login_required()
 def edit_profile(request):
+    """ user can see his/her profile information and change them if wants
+
+     restrictions:
+     just for logged in users
+
+     passes user/my_user_doctor forms and models to register_user.html
+     doctor form and model are None if user is not doctor
+     """
     user = request.user
     my_user = MyUser.objects.get(user=user)
     user_form = EditUserForm(request.POST or None, initial={'first_name': my_user.user.first_name,
@@ -66,8 +64,10 @@ def edit_profile(request):
     my_user_form = EditMyUserForm(request.POST or None, request.FILES or None,
                                   initial={'phone_number': my_user.phone_number,
                                            'national_code': my_user.national_code})
+    # first set doctor  model and form to None then
     doctor = None
     doctor_form = None
+    # decides based on my_user is doctor or not to make doctor model and form or not
     if my_user.is_doctor:
         doctor = Doctor.objects.get(user=my_user)
         doctor_form = EditMyDoctorForm(request.POST or None, initial={'university': doctor.university,
@@ -79,6 +79,7 @@ def edit_profile(request):
                                                                       'expertise': doctor.expertise})
 
     if request.method == 'POST':
+        # if method is post sets user info
         if user_form.is_valid() and my_user_form.is_valid():
             user.first_name = user_form.cleaned_data['first_name']
             user.last_name = user_form.cleaned_data['last_name']
@@ -116,6 +117,7 @@ def register(request):
         doctor_form = DoctorForm(request.POST, request.FILES,
                                  prefix='doctor')
         if user_form.is_valid() and my_user_form.is_valid():
+            ''' if user fill the forms right, so he is user and user, MyUser models will be made '''
             user = User.objects.create_user(username=user_form.cleaned_data['username'],
                                             password=user_form.cleaned_data['password'],
                                             first_name=user_form.cleaned_data['first_name'],
@@ -128,6 +130,7 @@ def register(request):
                              image=my_user_form.cleaned_data['image'])
             my_user.save()
             if doctor_form.is_valid():
+                # so user is doctor, creates Doctor model and save it, also set is_doctor of my_user to true
                 doctor = Doctor(user=my_user, university=doctor_form.cleaned_data['university'],
                                 year_diploma=doctor_form.cleaned_data['year_diploma'],
                                 diploma=doctor_form.cleaned_data['diploma'],
@@ -166,8 +169,8 @@ def login(request):
         password = form.cleaned_data['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            findeduser = User.objects.get(pk=user.id)
-            if findeduser.is_active:
+            finded_user = User.objects.get(pk=user.id)
+            if finded_user.is_active:
                 django_login(request, user)
                 messages.success(request, 'کاربر عزیز خوش آمدید.')
         else:

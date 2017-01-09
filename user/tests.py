@@ -41,7 +41,8 @@ class UserModelsTest(TestCase):
 
 
 class UserRegistrationForm(UserModelsTest):
-    def test_register_form_passes_similarity(self):
+    def test_passes_(self):
+        """ checks entered password and password confirmation to be similar """
         form1 = UserForm(data={'username': 'user1',
                                'password': '12345',
                                'password2': '12345'})
@@ -52,7 +53,8 @@ class UserRegistrationForm(UserModelsTest):
 
         self.assertEqual(form2.is_valid(), False)
 
-    def test_registration_form_mail_validation(self):
+    def test_mail_validation(self):
+        """ checks entered mail fields in registration form to be valid"""
         form1 = UserForm(data={'username': 'user1',
                                'password': '12345',
                                'password2': '12345',
@@ -66,7 +68,8 @@ class UserRegistrationForm(UserModelsTest):
                                })
         self.assertEqual(form2.is_valid(), False)
 
-    def test_user_reg_form_no_empty_fields(self):
+    def test_no_empty_fields(self):
+        """ checks user registration form required fields to bi filled by user"""
         form1 = UserForm(data={'username': 'user1',
                                'password': '12345',
                                'password2': '12345',
@@ -113,8 +116,9 @@ class UserRegistrationForm(UserModelsTest):
         self.assertEqual(form3.is_valid(), False)
 
 
-class UserLogin(UserModelsTest):
-    def test_valid_user_login_view(self):
+class UserLogin(TestCase):
+    def test_user_login_view(self):
+        """checks log in of registered and active users """
         self.user1 = User.objects.create_user(username='user1', password='12345', email='m.soleimani73.z@gmail.com')
         user = MyUser.objects.create(user=self.user1, phone_number='09109999999', national_code='1200153374')
         user = authenticate(username='user1', password='12345')
@@ -159,12 +163,15 @@ class UserRegistrationView(TestCase):
 
 class UserViewProfileTests(TestCase):
     def test_view_profile(self):
+        # first creates user
         self.user1 = User.objects.create_user(username='user1', password='12345', email='m.soleimani73.z@gmail.com')
         user = MyUser.objects.create(user=self.user1, phone_number='09109999999', national_code='1200153374')
         response = self.client.get('/user/edit-profile')
         self.assertEqual(response.status_code, 302)
 
+        # then logs in
         self.client.login(username='user1', password='12345')
+        # then edits profile forms
         response = self.client.get('/user/edit-profile')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['user'].username, 'user1')
@@ -189,6 +196,7 @@ class UserViewProfileTests(TestCase):
 
 class DoctorViewProfileTests(TestCase):
     def test_view_profile(self):
+        """checks doctor register, log in and profile edit as for user"""
         self.user2 = User.objects.create_user(username='doc1', password='12345', email='m.soleimani73.z@gmail.com')
         self.my_user2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
                                               is_doctor='True')
@@ -207,9 +215,11 @@ class DoctorViewProfileTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
         user = authenticate(username='doc1', password='12345')
+        # logs registered doctor in
         self.client.login(username='doc1', password='12345')
         response = self.client.get('/user/edit-profile')
         self.assertEqual(response.status_code, 200)
+        # changes doctor profile
         self.assertEqual(response.context['user'].username, 'doc1')
         self.assertEqual(response.context['my_user'].phone_number, '09109999999')
         self.assertEqual(response.context['doctor'].office_phone_number, '02188888888')
