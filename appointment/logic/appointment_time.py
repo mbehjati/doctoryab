@@ -2,11 +2,14 @@
 
 
 def is_time_before(first, second):
-    if len(first) < 7:
-        first = str(0) + first
-    if len(second) < 7:
-        second = str(0) + second
-    # print(first, second)
+    '''
+
+    :param first: first time
+    :param second: second time
+    :return: true if first time is before second one (in 12 hours format)
+    '''
+    first = first if len(first) == 7 else '0' + first
+    second = second if len(second) == 7 else '0' + second
     if 'pm' in first and 'am' in second:
         return False
     if 'am' in first and 'pm' in second:
@@ -38,6 +41,10 @@ def sort_appointment_times(apps):
 
 
 def cluster_appointment_times(apps):
+    '''
+    :param apps: sorted list of appointment times
+    :return: a sorted list of dictionary items (containing date and appointment times in that date)
+    '''
     ans = []
     if apps == []:
         return None
