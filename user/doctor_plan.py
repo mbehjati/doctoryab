@@ -11,6 +11,11 @@ def save_doctor_free_times_in_db(doctor, form):
 
 
 def calc_doctor_free_times(doctor, form):
+    '''
+    :param doctor: doctor
+    :param form: form of doctor free time
+    :return: a list of AppointmentTime objects for doctor created base on from information
+    '''
     start_date = datetime.strptime(form.start_date, '%Y-%m-%d')
     end_date = datetime.strptime(form.end_date, '%Y-%m-%d')
     day = timedelta(days=1)
@@ -24,6 +29,12 @@ def calc_doctor_free_times(doctor, form):
 
 
 def has_appointment_conflict(appointment, all_apps):
+    '''
+
+    :param appointment: an appointment
+    :param all_apps: a list of appointments
+    :return: true if given appointment has time conflict with list of appointments
+    '''
     for app in all_apps:
         if app.doctor == appointment.doctor:
             if app.date == appointment.date:
