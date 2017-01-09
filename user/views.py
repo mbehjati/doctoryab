@@ -8,9 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse
 
 from appointment.logic.doctor_plan import get_doctor_day_plan
+from appointment.logic.search import search_by_name_or_expertise, do_advanced_search
 from user.forms import *
+from user.forms.search import AdvancedSearchForm
 from user.lib.jalali import Gregorian
 from user.models import *
+from user.models import Doctor
 from .doctor_plan import save_doctor_free_times_in_db
 from .forms.doctorplan import DoctorFreeTimes
 
@@ -320,3 +323,19 @@ def doctor_free_time(request):
             message = '*اطلاعات واردشده مجاز نمی‌باشد. '
 
     return render(request, 'user/set_doctor_free_times.html', {'message': message, 'response': response})
+
+
+def search(request):
+    result = None
+    form = AdvancedSearchForm()
+
+    if request.method == 'POST':
+        if 'keyword' in request.POST:
+            keyword = request.POST['keyword']
+            result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+            form = AdvancedSearchForm(initial={'name': keyword})
+        else:
+            form = AdvancedSearchForm(request.POST)
+            result = do_advanced_search(form)
+
+    return render(request, 'appointment/advanced-search.html', {'form': form, 'result': result})
