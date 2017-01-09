@@ -6,15 +6,13 @@ from appointment.models import AppointmentTime
 
 
 def get_doctor_all_plan(start_date, doctor):
-    '''
+    """
     :param start_date: start time
     :param doctor: doctor
     :return: list of doctor plan from a given time to end
-    '''
-    apps = []
-    for app in AppointmentTime.objects.filter(doctor=doctor):
-        if app.date >= start_date:
-            apps.append(app)
+    """
+    apps = [app for app in AppointmentTime.objects.filter(doctor=doctor) if app.date >= start_date]
+
     apps = sort_appointment_times(apps)
     return cluster_appointment_times(apps)
 

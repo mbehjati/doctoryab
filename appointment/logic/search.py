@@ -22,45 +22,32 @@ def search_by_name(doctors, name):
 
 
 def search_by_expertise(doctors, expertise):
-    ans = []
     if expertise == 'همه':
         return doctors
-    for doc in doctors:
-        if doc.expertise.name == expertise:
-            ans.append(doc)
-    return ans
+
+    return [doc for doc in doctors if doc.expertise.name == expertise]
 
 
 def search_by_date(doctors, date, app_times):
-    ans = []
     if date == '':
         return doctors
-    for app_time in app_times:
-        if app_time.date == date and app_time.doctor not in ans and app_time.doctor in doctors:
-            ans.append(app_time.doctor)
-    return ans
+
+    ans = [app_time.doctor for app_time in app_times if app_time.date == date and app_time.doctor]
+    return list(set(ans).intersection(set(doctors)))
 
 
 def search_by_address(doctors, address):
-    ans = []
-    for doc in doctors:
-        if address in doc.office_address:
-            ans.append(doc)
-    return ans
+    return [doc for doc in doctors if address in doc.office_address]
 
 
 def search_by_insurance(doctors, insurance):
     if insurance == 'همه':
         return doctors
-    ans = []
-    for doc in doctors:
-        for ins in doc.insurance.all():
-            if ins.name == insurance:
-                ans.append(doc)
-    return ans
+
+    return [doc for doc in doctors for ins in doc.insurance.all() if ins.name == insurance]
 
 
 def search_by_name_or_expertise(doctors, keyword):
     ans1 = search_by_expertise(doctors, keyword)
     ans2 = search_by_name(doctors, keyword)
-    return ans1 + list(set(ans2) - set(ans1))
+    return list(set(ans2).union(set(ans1)))
