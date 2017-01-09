@@ -6,7 +6,7 @@ from appointment.logic.appointment_time import sort_appointment_times_in_day, so
     cluster_appointment_times
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.logic.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
-    search_by_insurance
+    search_by_insurance, search_by_name_or_expertise
 from user.models import Expertise, Insurance
 from .views import *
 
