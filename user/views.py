@@ -117,7 +117,7 @@ def register(request):
         doctor_form = DoctorForm(request.POST, request.FILES,
                                  prefix='doctor')
         if user_form.is_valid() and my_user_form.is_valid():
-            ''' if user fill the forms right, so he is user and user, MyUser models will be made '''
+            # if user fill the forms right, so he is user and user, MyUser models will be made
             user = User.objects.create_user(username=user_form.cleaned_data['username'],
                                             password=user_form.cleaned_data['password'],
                                             first_name=user_form.cleaned_data['first_name'],
