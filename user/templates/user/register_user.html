@@ -82,7 +82,7 @@
                 <label for="is-doctor">پزشک هستم</label>
             </p>
             <div id="doctor-form" style="display:none">
-                {% include "user/form.html" with form=doctor %}
+                {% include "user/form.html" with form=doctor_form %}
             </div>
             <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
