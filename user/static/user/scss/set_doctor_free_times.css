@@ -1,0 +1,14 @@
+._free-times-card {
+    width: 50%;
+    margin: 20px auto auto;
+}
+
+._free-times-card ._content {
+    overflow: auto;
+}
+
+._free-times-card ._span {
+    font-size: larger;
+}
+
+/*# sourceMappingURL=set_doctor_free_times.css.map */

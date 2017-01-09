@@ -2103,7 +2103,7 @@ if (jQuery) {
                             complete: function () {
                                 $(this).css('height', '');
                                 execCallbacks($(this).siblings('.collapsible-header'));
-                            }
+                }
                         });
                     }
                 });
@@ -2210,10 +2210,10 @@ if (jQuery) {
             } else { // Handle Expandables
                 $panel_headers.filter('.active').each(function () {
                     collapsibleOpen($(this));
-                });
+        });
             }
 
-        });
+    });
     };
 
     $(document).ready(function () {
@@ -2393,7 +2393,7 @@ if (jQuery) {
                         easing: 'easeOutCubic',
                         complete: function () {
                             $(this).css('height', '');
-                        }
+            }
                     })
                     .animate({opacity: 1}, {queue: false, duration: curr_options.inDuration, easing: 'easeOutSine'});
             }
@@ -2479,7 +2479,7 @@ if (jQuery) {
             origin.on('close', hideDropdown);
 
 
-        });
+    });
     }; // End dropdown plugin
 
     $(document).ready(function () {
@@ -2821,7 +2821,7 @@ if (jQuery) {
                                         complete: function () {
                                             doneAnimating = true;
                                         }
-                                    }
+                }
                                 );
                         } // End Complete
                     }); // End Velocity
@@ -2940,7 +2940,7 @@ if (jQuery) {
                         if (ancestorsChanged) {
                             ancestorsChanged.css('overflow', '');
                         }
-                    }
+            }
                 });
 
             }
@@ -3004,7 +3004,7 @@ if (jQuery) {
             $(window).resize(function () {
                 window_width = $(window).width();
                 updateParallax(false);
-            });
+        });
 
         });
 
@@ -3152,7 +3152,7 @@ if (jQuery) {
                             delay: 90
                         });
 
-                    } else {
+        } else {
                         $indicator.velocity({"left": calcLeftPos($active)}, {
                             duration: 300,
                             queue: false,
@@ -3164,12 +3164,12 @@ if (jQuery) {
                             easing: 'easeOutQuad',
                             delay: 90
                         });
-                    }
+        }
 
                     // Prevent the anchor's default click action
                     e.preventDefault();
                 });
-            });
+    });
 
         },
         select_tab: function (id) {
@@ -3412,7 +3412,7 @@ if (jQuery) {
                         }
                     }, 225);
                 }
-            });
+        });
         });
     };
 
@@ -3841,6 +3841,7 @@ if (jQuery) {
     }
 
 
+
     function createToast(html) {
 
         // Create toast
@@ -4247,7 +4248,7 @@ if (jQuery) {
                                         }
                                     });
                                     $dragTarget.css({width: '10px', right: 0, left: ''});
-                                }
+                }
                             }
 
                         }
@@ -4301,7 +4302,7 @@ if (jQuery) {
                                     }
                                 });
 
-                            });
+            });
                         $('body').append($overlay);
                         $overlay.velocity({opacity: 1}, {
                             duration: 300, queue: false, easing: 'easeOutQuad',
@@ -4520,7 +4521,7 @@ if (jQuery) {
         var defaults = {
             throttle: 100,
             scrollOffset: 200 // offset - 200 allows elements near bottom of page to scroll
-        };
+    };
         options = $.extend(defaults, options);
 
         var visible = [];
@@ -4677,13 +4678,13 @@ if (jQuery) {
                     if ($(this).attr('value') === '') {
                         $(this).siblings('label').removeClass('active');
                     }
-                });
+        });
 
                 // Reset select
                 formReset.find('select.initialized').each(function () {
                     var reset_text = formReset.find('option[selected]').text();
                     formReset.siblings('input.select-dropdown').val(reset_text);
-                });
+        });
             }
         });
 
@@ -4741,7 +4742,7 @@ if (jQuery) {
                 $this.one('blur', function (e) {
 
                     $(this).removeClass('tabbed');
-                });
+        });
                 return;
             }
         });
@@ -4992,7 +4993,7 @@ if (jQuery) {
                                     $autocomplete.append(autocompleteOption);
 
                                     highlight(val, autocompleteOption);
-                                }
+                }
                             }
                         }
                     });
@@ -5089,7 +5090,7 @@ if (jQuery) {
 
                         } else {
                             appendOptionWithIcon($select, $(this));
-                        }
+            }
                     } else if ($(this).is('optgroup')) {
                         // Optgroup.
                         var selectOptions = $(this).children('option');
@@ -5706,7 +5707,7 @@ if (jQuery) {
                             complete: function () {
                                 $(this).css({display: 'none'});
                             }
-                        }
+            }
                     );
                 }
                 else if ($(e.target).is($('.card .activator')) ||
@@ -5719,7 +5720,7 @@ if (jQuery) {
                     });
                 }
             }
-        });
+    });
 
     });
 }(jQuery));
@@ -5739,7 +5740,7 @@ if (jQuery) {
                 return;
             }
             $(this).closest('.chip').remove();
-        });
+    });
     });
 
     $.fn.material_chip = function (options) {
@@ -6019,7 +6020,7 @@ if (jQuery) {
             top: 0,
             bottom: Infinity,
             offset: 0
-        };
+    };
 
         // Remove pushpin event and classes
         if (options === "remove") {
@@ -6027,7 +6028,7 @@ if (jQuery) {
                 if (id = $(this).data('pushpin-id')) {
                     $(window).off('scroll.' + id);
                     $(this).removeData('pushpin-id').removeClass('pin-top pinned pin-bottom').removeAttr('style');
-                }
+        }
             });
             return false;
         }
@@ -6069,7 +6070,7 @@ if (jQuery) {
                         $(this).addClass('pin-bottom');
                         $(this).css('top', options.bottom - $original_offset);
                     }
-                });
+        });
             }
 
             $(this).data('pushpin-id', $uniqueId);
@@ -6108,14 +6109,14 @@ if (jQuery) {
             } else {
                 openFABMenu($menu);
             }
-        });
+    });
 
         // Toolbar transition behaviour.
         $(document).on('click.fabToolbar', '.fixed-action-btn.toolbar > a', function (e) {
             var $this = $(this);
             var $menu = $this.parent();
             FABtoToolbar($menu);
-        });
+    });
 
     });
 
@@ -6244,14 +6245,14 @@ if (jQuery) {
             });
 
             setTimeout(function () {
-                btn.css({
-                    overflow: 'hidden',
-                    'background-color': fabColor
-                });
-                backdrop.css({
-                    transform: 'scale(' + scaleFactor + ')',
-                    transition: 'transform .2s cubic-bezier(0.550, 0.055, 0.675, 0.190)'
-                });
+        btn.css({
+            overflow: 'hidden',
+            'background-color': fabColor
+        });
+        backdrop.css({
+            transform: 'scale(' + scaleFactor + ')',
+            transition: 'transform .2s cubic-bezier(0.550, 0.055, 0.675, 0.190)'
+        });
                 menu.find('> li > a').css({
                     opacity: 1
                 });
@@ -6336,14 +6337,14 @@ if (jQuery) {
             });
 
             setTimeout(function () {
-                btn.css({
-                    transform: 'translate3d(0,0,0)',
-                    transition: 'transform .2s'
-                });
-                anchor.css({
-                    transform: 'translate3d(0,0,0)',
-                    transition: 'transform .2s cubic-bezier(0.550, 0.055, 0.675, 0.190)'
-                });
+        btn.css({
+            transform: 'translate3d(0,0,0)',
+            transition: 'transform .2s'
+        });
+        anchor.css({
+            transform: 'translate3d(0,0,0)',
+            transition: 'transform .2s cubic-bezier(0.550, 0.055, 0.675, 0.190)'
+        });
             }, 20);
         }, 200);
     };
@@ -6383,7 +6384,7 @@ if (jQuery) {
                     $(this).css({
                         "-webkit-filter": "grayscale(" + grayscale_setting + ")" + "brightness(" + brightness_setting + "%)",
                         "filter": "grayscale(" + grayscale_setting + ")" + "brightness(" + brightness_setting + "%)"
-                    });
+                });
                 }
             }
         });
@@ -6490,7 +6491,7 @@ if (jQuery) {
                                     }
                                 });
                             }
-                        });
+            });
                     }
                     else {
                         $this.velocity({
@@ -6568,9 +6569,9 @@ if (jQuery) {
                                     callbackFunc(currentElement);
                                 }
                                 value.done = true;
-                            }
+                }
                         }
-                    }
+            }
                 }
             }
         }, 100);
@@ -6872,12 +6873,12 @@ if (jQuery) {
                                 // Trigger the key movement action.
                                 if (keycodeToMove) {
                                     PickerConstructor._.trigger(P.component.key.go, P, [PickerConstructor._.trigger(keycodeToMove)])
-                                }
+                            }
 
                                 // On “enter”, if the highlighted item isn’t disabled, set the value and close.
                                 else if (!P.$root.find('.' + CLASSES.highlighted).hasClass(CLASSES.disabled)) {
                                     P.set('select', P.component.item.highlight).close()
-                                }
+                            }
                             }
 
 
@@ -6982,13 +6983,13 @@ if (jQuery) {
                             if (thingItem in P.component.item) {
                                 if (thingValue === undefined) thingValue = null
                                 P.component.set(thingItem, thingValue, options)
-                            }
+                        }
 
                             // Then, check to update the element value and broadcast a change.
                             if (thingItem == 'select' || thingItem == 'clear') {
                                 $ELEMENT.val(thingItem == 'clear' ? '' : P.get(thingItem, SETTINGS.format)).trigger('change')
                             }
-                        }
+                    }
 
                         // Render a new picker.
                         P.render()
@@ -7016,7 +7017,7 @@ if (jQuery) {
                     if (thing == 'valueSubmit') {
                         if (P._hidden) {
                             return P._hidden.value
-                        }
+                    }
                         thing = 'value'
                     }
 
@@ -7035,7 +7036,7 @@ if (jQuery) {
                                     P.component,
                                     [format, thingValue]
                                 ) : ''
-                        }
+                    }
                         return P.component.get(thing)
                     }
                 }, //get
@@ -7066,14 +7067,14 @@ if (jQuery) {
                             // If it was an internal binding, prefix it.
                             if (internal) {
                                 thingName = '_' + thingName
-                            }
+                        }
 
                             // Make sure the thing methods collection exists.
                             STATE.methods[thingName] = STATE.methods[thingName] || []
 
                             // Add the method to the relative method collection.
                             STATE.methods[thingName].push(thingMethod)
-                        }
+                    }
                     }
 
                     return P
@@ -7090,7 +7091,7 @@ if (jQuery) {
                         thingName = names[i]
                         if (thingName in STATE.methods) {
                             delete STATE.methods[thingName]
-                        }
+                    }
                     }
                     return P
                 },
@@ -7106,7 +7107,7 @@ if (jQuery) {
                             methodList.map(function (method) {
                                 PickerConstructor._.trigger(method, P, [data])
                             })
-                        }
+                    }
                     }
                     _trigger('_' + name)
                     _trigger(name)
@@ -7137,11 +7138,11 @@ if (jQuery) {
 
                             // The picker box class
                             CLASSES.box
-                        ),
+                    ),
 
                         // Picker wrap class
                         CLASSES.wrap
-                    ),
+                ),
 
                     // Picker frame class
                     CLASSES.frame
@@ -7177,7 +7178,7 @@ if (jQuery) {
                     P.$root.eq(0).focus()
                 }).// Handle keyboard event based on the picker being opened or not.
                 on('keydown.' + STATE.id, handleKeydownEvent)
-            }
+        }
 
 
             // Update the aria attributes.
@@ -7361,7 +7362,7 @@ if (jQuery) {
                 else {
                     P.open()
                 }
-            }
+        }
         }
 
 
@@ -7374,7 +7375,7 @@ if (jQuery) {
             // If it’s a focus event, add the “focused” class to the root.
             if (event.type == 'focus') {
                 P.$root.addClass(CLASSES.focused)
-            }
+        }
 
             // And then finally open the picker.
             P.open()
@@ -7422,7 +7423,7 @@ if (jQuery) {
         // For IE.
         if (element.currentStyle) {
             theme = element.currentStyle[prop]
-        }
+    }
 
         // For normal browsers.
         else if (window.getComputedStyle) {
@@ -7577,10 +7578,10 @@ if (jQuery) {
         },
 
 
-        /**
-         * Create ARIA attribute strings.
-         */
-        ariaAttr: ariaAttr
+    /**
+     * Create ARIA attribute strings.
+     */
+    ariaAttr: ariaAttr
     } //PickerConstructor._
 
 
@@ -7598,7 +7599,7 @@ if (jQuery) {
             // If the picker is requested, return the data object.
             if (options == 'picker') {
                 return componentData
-            }
+        }
 
             // If the component data exists and `options` is a string, carry out the action.
             if (componentData && typeof options == 'string') {
@@ -7612,9 +7613,9 @@ if (jQuery) {
                 var $this = $(this)
                 if (!$this.data(name)) {
                     new PickerConstructor(this, name, Component, options)
-                }
+            }
             })
-        }
+    }
 
         // Set the defaults.
         $.fn[name].defaults = Component.defaults
@@ -7625,8 +7626,8 @@ if (jQuery) {
         if ($.isPlainObject(attribute)) {
             for (var key in attribute) {
                 ariaSet(element, key, attribute[key])
-            }
         }
+    }
         else {
             ariaSet(element, attribute, value)
         }
@@ -7659,6 +7660,7 @@ if (jQuery) {
         } catch (err) {
         }
     }
+
 
 
 // Expose the picker constructor.
@@ -7776,7 +7778,7 @@ if (jQuery) {
                     {interval: timeChange}
                 )
                 this.render()
-            }
+        }
         }
 
 
@@ -7843,10 +7845,10 @@ if (jQuery) {
         else if (type.match(/^(flip|min|max|disable|enable)$/)) {
             if (calendarItem.select && calendar.disabled(calendarItem.select)) {
                 calendar.set('select', calendarItem.select, options)
-            }
+        }
             if (calendarItem.highlight && calendar.disabled(calendarItem.highlight)) {
                 calendar.set('highlight', calendarItem.highlight, options)
-            }
+        }
         }
 
         return calendar
@@ -7922,9 +7924,9 @@ if (jQuery) {
             createDate = function (date) {
                 if (date === true || $.isArray(date) || _.isDate(date)) {
                     return calendar.create(date)
-                }
-                return date
             }
+                return date
+        }
 
         // Create objects if possible.
         if (!_.isInteger(from)) {
@@ -7945,7 +7947,7 @@ if (jQuery) {
         return {
             from: createDate(from),
             to: createDate(to)
-        }
+    }
     } //DatePicker.prototype.createRange
 
 
@@ -8020,7 +8022,7 @@ if (jQuery) {
             if (options && options.nav && viewsetObject && viewsetObject.month !== targetMonth) {
                 targetYear = viewsetObject.year
                 targetMonth = viewsetObject.month
-            }
+        }
 
             // Figure out the expected target year and month.
             targetDateObject = new Date(targetYear, targetMonth + ( options && options.nav ? options.nav : 0 ), 1)
@@ -8038,7 +8040,7 @@ if (jQuery) {
             }
 
             value = [targetYear, targetMonth, targetDate]
-        }
+    }
 
         return value
     } //DatePicker.prototype.navigate
@@ -8073,7 +8075,7 @@ if (jQuery) {
         // If it's an integer, get a date relative to today.
         else if (_.isInteger(value)) {
             value = calendar.now(type, value, {rel: value})
-        }
+    }
 
         return value
     } ///DatePicker.prototype.measure
@@ -8315,7 +8317,7 @@ if (jQuery) {
             // If there's no month index, add it to the date object
             if (!dateObject.mm && !dateObject.m) {
                 dateObject.m = collection.indexOf(word) + 1
-            }
+        }
 
             // Return the length of the word.
             return word.length
@@ -8404,7 +8406,7 @@ if (jQuery) {
                 return calendar.formats.toArray(formatString).map(function (label) {
                     return _.trigger(calendar.formats[label], calendar, [0, itemObject]) || label.replace(/^!/, '')
                 }).join('')
-            }
+        }
         }
     })() //DatePicker.prototype.formats
 
@@ -8430,7 +8432,7 @@ if (jQuery) {
             ( _.isDate(two) || $.isArray(two) )
         ) {
             return calendar.create(one).pick === calendar.create(two).pick
-        }
+    }
 
         // When we’re working with range objects, compare the “from” and “to”.
         if ($.isPlainObject(one) && $.isPlainObject(two)) {
@@ -8453,7 +8455,7 @@ if (jQuery) {
         if (_.isInteger(one) && ( _.isDate(two) || $.isArray(two) )) {
             one = one % 7 + firstDay
             return one === calendar.create(two).day + 1
-        }
+    }
         if (_.isInteger(two) && ( _.isDate(one) || $.isArray(one) )) {
             two = two % 7 + firstDay
             return two === calendar.create(one).day + 1
@@ -8462,7 +8464,7 @@ if (jQuery) {
         // When we’re working with range objects, check if the ranges overlap.
         if ($.isPlainObject(one) && $.isPlainObject(two)) {
             return calendar.overlapRanges(one, two)
-        }
+    }
 
         return false
     }
@@ -8514,7 +8516,7 @@ if (jQuery) {
                     if (calendar.isDateExact(unitToDisable, disabledItems[index])) {
                         matchFound = true
                         break
-                    }
+                }
                 }
 
                 // If nothing was found, add the validated unit to the collection.
@@ -8526,7 +8528,7 @@ if (jQuery) {
                         ( $.isPlainObject(unitToDisable) && unitToDisable.from && unitToDisable.to )
                     ) {
                         disabledItems.push(unitToDisable)
-                    }
+                }
                 }
             })
         }
@@ -8580,14 +8582,14 @@ if (jQuery) {
                         matchFound = disabledItems[index] = null
                         isExactRange = true
                         break
-                    }
+                }
 
                     // When an overlapped match is found, add the “inverted” state to it.
                     else if (calendar.isDateOverlap(disabledUnit, unitToEnable)) {
                         if ($.isPlainObject(unitToEnable)) {
                             unitToEnable.inverted = true
                             matchFound = unitToEnable
-                        }
+                    }
                         else if ($.isArray(unitToEnable)) {
                             matchFound = unitToEnable
                             if (!matchFound[3]) matchFound.push('inverted')
@@ -8596,7 +8598,7 @@ if (jQuery) {
                             matchFound = [unitToEnable.getFullYear(), unitToEnable.getMonth(), unitToEnable.getDate(), 'inverted']
                         }
                         break
-                    }
+                }
                 }
 
                 // If a match was found, remove a previous duplicate entry.
@@ -8604,7 +8606,7 @@ if (jQuery) {
                     if (calendar.isDateExact(disabledItems[index], unitToEnable)) {
                         disabledItems[index] = null
                         break
-                    }
+                }
                 }
 
                 // In the event that we’re dealing with an exact range of dates,
@@ -8613,14 +8615,14 @@ if (jQuery) {
                     if (calendar.isDateOverlap(disabledItems[index], unitToEnable)) {
                         disabledItems[index] = null
                         break
-                    }
+                }
                 }
 
                 // If something is still matched, add it into the collection.
                 if (matchFound) {
                     disabledItems.push(matchFound)
                 }
-            })
+        })
         }
 
         // Return the updated collection.
@@ -8738,11 +8740,11 @@ if (jQuery) {
                                     'value=' + loopedMonth +
                                     ( viewsetObject.month == loopedMonth ? ' selected' : '' ) +
                                     (
-                                        (
-                                            ( viewsetObject.year == minLimitObject.year && loopedMonth < minLimitObject.month ) ||
-                                            ( viewsetObject.year == maxLimitObject.year && loopedMonth > maxLimitObject.month )
-                                        ) ?
-                                            ' disabled' : ''
+                                    (
+                                        ( viewsetObject.year == minLimitObject.year && loopedMonth < minLimitObject.month ) ||
+                                        ( viewsetObject.year == maxLimitObject.year && loopedMonth > maxLimitObject.month )
+                                    ) ?
+                                        ' disabled' : ''
                                     )
                                 ]
                             }
@@ -8825,7 +8827,7 @@ if (jQuery) {
                             ( isOpen ? '' : 'disabled' ) + ' ' + _.ariaAttr({controls: calendar.$node[0].id + '_table'}) + ' ' +
                             'title="' + settings.labelYearSelect + '"'
                         )
-                    }
+                }
                 }
 
                 // Materialize modified
@@ -8860,7 +8862,7 @@ if (jQuery) {
                 // Date presentation View
                 'div',
                 _.node(
-                    'div',
+                'div',
                     createWeekdayLabel(),
                     "picker__weekday-display"
                 ) +
@@ -8906,67 +8908,67 @@ if (jQuery) {
                                 var shiftDateBy = settings.firstDay && calendar.create([viewsetObject.year, viewsetObject.month, 1]).day === 0 ? -7 : 0
 
                                 return [
-                                    _.group({
-                                        min: DAYS_IN_WEEK * rowCounter - viewsetObject.day + shiftDateBy + 1, // Add 1 for weekday 0index
-                                        max: function () {
-                                            return this.min + DAYS_IN_WEEK - 1
-                                        },
-                                        i: 1,
-                                        node: 'td',
-                                        item: function (targetDate) {
+                        _.group({
+                            min: DAYS_IN_WEEK * rowCounter - viewsetObject.day + shiftDateBy + 1, // Add 1 for weekday 0index
+                            max: function () {
+                                return this.min + DAYS_IN_WEEK - 1
+                            },
+                            i: 1,
+                            node: 'td',
+                            item: function (targetDate) {
 
-                                            // Convert the time date from a relative date to a target date.
-                                            targetDate = calendar.create([viewsetObject.year, viewsetObject.month, targetDate + ( settings.firstDay ? 1 : 0 )])
+                                // Convert the time date from a relative date to a target date.
+                                targetDate = calendar.create([viewsetObject.year, viewsetObject.month, targetDate + ( settings.firstDay ? 1 : 0 )])
 
-                                            var isSelected = selectedObject && selectedObject.pick == targetDate.pick,
-                                                isHighlighted = highlightedObject && highlightedObject.pick == targetDate.pick,
-                                                isDisabled = disabledCollection && calendar.disabled(targetDate) || targetDate.pick < minLimitObject.pick || targetDate.pick > maxLimitObject.pick,
-                                                formattedDate = _.trigger(calendar.formats.toString, calendar, [settings.format, targetDate])
+                                var isSelected = selectedObject && selectedObject.pick == targetDate.pick,
+                                    isHighlighted = highlightedObject && highlightedObject.pick == targetDate.pick,
+                                    isDisabled = disabledCollection && calendar.disabled(targetDate) || targetDate.pick < minLimitObject.pick || targetDate.pick > maxLimitObject.pick,
+                                    formattedDate = _.trigger(calendar.formats.toString, calendar, [settings.format, targetDate])
 
-                                            return [
-                                                _.node(
-                                                    'div',
-                                                    targetDate.date,
-                                                    (function (klasses) {
+                                return [
+                                    _.node(
+                                        'div',
+                                        targetDate.date,
+                                        (function (klasses) {
 
-                                                        // Add the `infocus` or `outfocus` classes based on month in view.
-                                                        klasses.push(viewsetObject.month == targetDate.month ? settings.klass.infocus : settings.klass.outfocus)
+                                            // Add the `infocus` or `outfocus` classes based on month in view.
+                                            klasses.push(viewsetObject.month == targetDate.month ? settings.klass.infocus : settings.klass.outfocus)
 
-                                                        // Add the `today` class if needed.
-                                                        if (nowObject.pick == targetDate.pick) {
-                                                            klasses.push(settings.klass.now)
-                                                        }
+                                            // Add the `today` class if needed.
+                                            if (nowObject.pick == targetDate.pick) {
+                                                klasses.push(settings.klass.now)
+                                            }
 
-                                                        // Add the `selected` class if something's selected and the time matches.
-                                                        if (isSelected) {
-                                                            klasses.push(settings.klass.selected)
-                                                        }
+                                            // Add the `selected` class if something's selected and the time matches.
+                                            if (isSelected) {
+                                                klasses.push(settings.klass.selected)
+                                            }
 
-                                                        // Add the `highlighted` class if something's highlighted and the time matches.
-                                                        if (isHighlighted) {
-                                                            klasses.push(settings.klass.highlighted)
-                                                        }
+                                            // Add the `highlighted` class if something's highlighted and the time matches.
+                                            if (isHighlighted) {
+                                                klasses.push(settings.klass.highlighted)
+                                            }
 
-                                                        // Add the `disabled` class if something's disabled and the object matches.
-                                                        if (isDisabled) {
-                                                            klasses.push(settings.klass.disabled)
-                                                        }
+                                            // Add the `disabled` class if something's disabled and the object matches.
+                                            if (isDisabled) {
+                                                klasses.push(settings.klass.disabled)
+                                            }
 
-                                                        return klasses.join(' ')
-                                                    })([settings.klass.day]),
-                                                    'data-pick=' + targetDate.pick + ' ' + _.ariaAttr({
-                                                        role: 'gridcell',
-                                                        label: formattedDate,
-                                                        selected: isSelected && calendar.$node.val() === formattedDate ? true : null,
-                                                        activedescendant: isHighlighted ? true : null,
-                                                        disabled: isDisabled ? true : null
-                                                    })
-                                                ),
-                                                '',
-                                                _.ariaAttr({role: 'presentation'})
-                                            ] //endreturn
-                                        }
-                                    })
+                                            return klasses.join(' ')
+                                        })([settings.klass.day]),
+                                        'data-pick=' + targetDate.pick + ' ' + _.ariaAttr({
+                                            role: 'gridcell',
+                                            label: formattedDate,
+                                            selected: isSelected && calendar.$node.val() === formattedDate ? true : null,
+                                            activedescendant: isHighlighted ? true : null,
+                                            disabled: isDisabled ? true : null
+                                        })
+                                    ),
+                                    '',
+                                    _.ariaAttr({role: 'presentation'})
+                                ] //endreturn
+                            }
+                        })
                                 ] //endreturn
                             }
                         })
@@ -9076,7 +9078,7 @@ if (jQuery) {
                 buttonClear: prefix + 'button--clear',
                 buttonToday: prefix + 'button--today',
                 buttonClose: prefix + 'button--close'
-            }
+        }
         }
     })(Picker.klasses().picker + '__')
 
@@ -9131,7 +9133,7 @@ if (jQuery) {
 
         if ($counterElement.length) {
             return;
-        }
+    }
 
         $counterElement = $('<span/>')
             .addClass('character-counter')
@@ -9150,11 +9152,11 @@ if (jQuery) {
         var inputHasInvalidClass = $input.hasClass('invalid');
         if (isValidLength && inputHasInvalidClass) {
             $input.removeClass('invalid');
-        }
+    }
         else if (!isValidLength && !inputHasInvalidClass) {
             $input.removeClass('valid');
             $input.addClass('invalid');
-        }
+    }
     }
 
     $(document).ready(function () {

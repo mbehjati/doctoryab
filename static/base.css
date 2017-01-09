@@ -1,0 +1,38 @@
+.logo-img {
+    height: 64px;
+    width: 64px;
+}
+
+body {
+    text-align: right !important;
+    direction: rtl;
+}
+
+#login-modal {
+    width: 40%;
+}
+
+#login-modal ._divider {
+    margin-bottom: 10px;
+}
+
+#login-modal .modal-content {
+    padding-bottom: 10px;
+}
+
+#slide-out {
+    padding: 0;
+    direction: ltr;
+    text-align: left;
+}
+
+#slide-out ._image {
+    object-fit: cover;
+    height: 200px;
+}
+
+#slide-out ._user-image {
+    object-fit: cover;
+}
+
+/*# sourceMappingURL=base.css.map */

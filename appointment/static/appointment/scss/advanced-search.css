@@ -1,0 +1,32 @@
+._search-box {
+    padding: 50px;
+    min-height: 20vw;
+    overflow: hidden;
+    background-image: url("/static/images/encontre.png");
+    background-size: cover;
+}
+
+._result-box {
+    background-color: #fafafa;
+    overflow: auto;
+    padding: 3vw 5vw;
+    margin-bottom: 0;
+}
+
+._result-box ._kachal {
+    float: right;
+    width: 15vw;
+    margin: 1.5vw;
+}
+
+._result-box ._kachal img {
+    width: 15vw;
+    height: 15vw;
+    object-fit: cover;
+}
+
+._result-box ._kachal ._title {
+    font-size: 18px;
+}
+
+/*# sourceMappingURL=advanced-search.css.map */

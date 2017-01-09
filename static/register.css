@@ -1,0 +1,22 @@
+._register-form {
+    width: 50%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px;
+    border-color: lightgray;
+    border-style: solid;
+    box-shadow: #00e5ff;
+    border-radius: 10px;
+}
+
+body {
+    direction: rtl;
+    text-align: right;
+}
+
+._submit-btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+/*# sourceMappingURL=register.css.map */
