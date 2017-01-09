@@ -3,12 +3,28 @@
 from django.test import TestCase
 
 from appointment.logic.appointment_time import sort_appointment_times_in_day, sort_appointment_times, \
-    cluster_appointment_times
+    cluster_appointment_times, add_time, is_time_before
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.logic.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
     search_by_insurance, search_by_name_or_expertise
 from user.models import Expertise, Insurance
 from .views import *
+
+
+class AppointmentTimeTest(TestCase):
+    def test_add_time(self):
+        self.assertEqual(add_time('12:15pm', 45), '1:00pm')
+        self.assertEqual(add_time('11:30am', 45), '12:15pm')
+        self.assertEqual(add_time('4:30am', 30), '5:00am')
+        self.assertEqual(add_time('5:15pm', 45), '6:00pm')
+        self.assertEqual(add_time('12:00am', 15), '12:15am')
+        self.assertEqual(add_time('12:00pm', 30), '12:30pm')
+
+    def test_is_time_before(self):
+        self.assertEqual(is_time_before('12:45am', '1:00am'), True)
+        self.assertEqual(is_time_before('12:00pm', '1:45am'), False)
+        self.assertEqual(is_time_before('12:00pm', '12:00pm'), True)
+        self.assertEqual(is_time_before('9:00am', '11:00am'), True)
 
 
 class SearchDoctor(TestCase):

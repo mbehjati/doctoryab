@@ -2,6 +2,11 @@
 
 
 def is_time_before(first, second):
+    if len(first) < 7:
+        first = str(0) + first
+    if len(second) < 7:
+        second = str(0) + second
+    print(first, second)
     if 'pm' in first and 'am' in second:
         return False
     if 'am' in first and 'pm' in second:

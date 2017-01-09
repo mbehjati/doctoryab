@@ -1,10 +1,8 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
-from appointment.logic.appointment_time import add_time, is_time_before
 from appointment.models import AppointmentTime
 from user.doctor_plan import calc_doctor_free_times, calc_visit_times_for_a_day, has_appointment_conflict
-from .forms.doctorplan import DoctorFreeTimes
 from .views import *
 
 
@@ -285,19 +283,6 @@ class AddDoctorFreeTime(TestCase):
     myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
     doc2 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr teh',
                   office_phone_number='09123456789')
-
-    def test_add_time(self):
-        self.assertEqual(add_time('12:15pm', 45), '1:00pm')
-        self.assertEqual(add_time('11:30am', 45), '12:15pm')
-        self.assertEqual(add_time('4:30am', 30), '5:00am')
-        self.assertEqual(add_time('5:15pm', 45), '6:00pm')
-        self.assertEqual(add_time('12:00am', 15), '12:15am')
-        self.assertEqual(add_time('12:00pm', 30), '12:30pm')
-
-    def test_is_time_before(self):
-        self.assertEqual(is_time_before('12:45am', '1:00am'), True)
-        self.assertEqual(is_time_before('12:00pm', '1:45am'), False)
-        self.assertEqual(is_time_before('12:00pm', '12:00pm'), True)
 
     def test_calc_doctor_free_time(self):
         test = DoctorFreeTimes()
