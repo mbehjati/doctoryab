@@ -44,6 +44,9 @@ class MyUser(models.Model):
             pass
         super(MyUser, self).save(*args, **kwargs)
 
+    def imagename(self):
+        return self.image.name
+
 
 class Doctor(models.Model):
     user = models.OneToOneField(MyUser, default='1')

@@ -66,8 +66,7 @@ def edit_profile(request):
                                                             'email': myuser.user.email})
     form_myuser = EditMyUserForm(request.POST or None, request.FILES or None,
                                  initial={'phone_number': myuser.phone_number,
-                                          'national_code': myuser.national_code,
-                                          'image': myuser.image})
+                                          'national_code': myuser.national_code})
     doctor = None
     form_doctor = None
     if myuser.is_doctor:
@@ -111,7 +110,6 @@ def edit_profile(request):
                    'myuser': myuser, 'doctor': doctor})
 
 
-
 def register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST, prefix='user')
@@ -144,7 +142,8 @@ def register(request):
                                        # insurance=df.cleaned_data['insurance']
                                        )
                 doctorprofile.save()
-                doctorprofile.insurance.add(df.cleaned_data['insurance'])
+                for ins in df.cleaned_data['insurance']:
+                    doctorprofile.insurance.add(ins)
                 userprofile.is_doctor = True
                 userprofile.save()
 
