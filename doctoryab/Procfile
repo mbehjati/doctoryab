@@ -1,0 +1,8 @@
+web: gunicorn doctoryab.wsgi --log-file -
+
+
+
+
+
+
+
