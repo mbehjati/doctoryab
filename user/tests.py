@@ -9,13 +9,13 @@ from .views import *
 class UserModelsTest(TestCase):
     def add_new_users(self):
         self.user1 = User.objects.create(username='user1', password='12345', email='m.soleimani73.z@gmail.com')
-        self.myuser1 = MyUser.objects.create(user=self.user1, phone_number='09109999999', national_code='1200153374')
+        self.my_user1 = MyUser.objects.create(user=self.user1, phone_number='09109999999', national_code='1200153374')
 
         self.user2 = User.objects.create_user(username='doc1', password='12345', email='m.soleimani73.z@gmail.com')
-        self.myuser2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
-                                             is_doctor='True')
+        self.my_user2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
+                                              is_doctor='True')
         self.expertise = Expertise.objects.create(name='expert')
-        self.doc1 = Doctor.objects.create(user=self.myuser2, university='tehran', year_diploma='1995',
+        self.doc1 = Doctor.objects.create(user=self.my_user2, university='tehran', year_diploma='1995',
                                           office_address='tehran',
                                           office_phone_number='02188888888',
                                           expertise=self.expertise)
@@ -27,7 +27,7 @@ class UserModelsTest(TestCase):
     def test_new_users_activation(self):
         self.add_new_users()
         self.assertEqual(self.user1.is_active, True)
-        self.assertEqual(self.myuser1.is_active, True)
+        self.assertEqual(self.my_user1.is_active, True)
         self.assertEqual(self.doc1.user.is_active, True)
 
     def test_users_added(self):
@@ -36,7 +36,7 @@ class UserModelsTest(TestCase):
         self.assertEqual(MyUser.objects.count(), 2)
         self.assertEqual(Doctor.objects.count(), 1)
         self.assertEqual(self.user1.password, '12345')
-        self.assertEqual(self.myuser1.phone_number, '09109999999')
+        self.assertEqual(self.my_user1.phone_number, '09109999999')
         self.assertEqual(self.doc1.university, 'tehran')
 
 
@@ -121,11 +121,11 @@ class UserLogin(UserModelsTest):
         self.assertTrue(self.client.login(username='user1', password='12345'))
 
         self.user2 = User.objects.create_user(username='doc1', password='12345', email='m.soleimani73.z@gmail.com')
-        self.myuser2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
-                                             is_doctor='True')
+        self.my_user2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
+                                              is_doctor='True')
         self.expertise = Expertise.objects.create(name='expert')
         upload_file = open('user/static/user/contract/contract.pdf', 'rb')
-        self.doc1 = Doctor.objects.create(user=self.myuser2, university='tehran', year_diploma='1995',
+        self.doc1 = Doctor.objects.create(user=self.my_user2, university='tehran', year_diploma='1995',
                                           office_address='tehran',
                                           office_phone_number='02188888888',
                                           expertise=self.expertise,
@@ -133,7 +133,6 @@ class UserLogin(UserModelsTest):
         self.insurance1 = self.doc1.insurance.create(name='taminEjtemaiee')
         self.insurance2 = self.doc1.insurance.create(name='niroyeMosallah')
         user = authenticate(username='doc1', password='12345')
-        print(self.doc1)
         self.assertTrue(self.client.login(username='doc1', password='12345'))
 
 
@@ -169,7 +168,7 @@ class UserViewProfileTests(TestCase):
         response = self.client.get('/user/edit-profile')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['user'].username, 'user1')
-        self.assertEqual(response.context['myuser'].phone_number, '09109999999')
+        self.assertEqual(response.context['my_user'].phone_number, '09109999999')
 
         response = self.client.get('/user/edit-profile')
         self.assertEqual(response.context['user'].first_name, '')
@@ -191,11 +190,11 @@ class UserViewProfileTests(TestCase):
 class DoctorViewProfileTests(TestCase):
     def test_view_profile(self):
         self.user2 = User.objects.create_user(username='doc1', password='12345', email='m.soleimani73.z@gmail.com')
-        self.myuser2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
-                                             is_doctor='True')
+        self.my_user2 = MyUser.objects.create(user=self.user2, phone_number='09109999999', national_code='1200153374',
+                                              is_doctor='True')
         self.expertise = Expertise.objects.create(name='expert')
         upload_file = open('user/static/user/contract/contract.pdf', 'rb')
-        self.doc1 = Doctor.objects.create(user=self.myuser2, university='tehran', year_diploma='1995',
+        self.doc1 = Doctor.objects.create(user=self.my_user2, university='tehran', year_diploma='1995',
                                           office_address='tehran',
                                           office_phone_number='02188888888',
                                           expertise=self.expertise,
@@ -212,7 +211,7 @@ class DoctorViewProfileTests(TestCase):
         response = self.client.get('/user/edit-profile')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['user'].username, 'doc1')
-        self.assertEqual(response.context['myuser'].phone_number, '09109999999')
+        self.assertEqual(response.context['my_user'].phone_number, '09109999999')
         self.assertEqual(response.context['doctor'].office_phone_number, '02188888888')
 
         response = self.client.get('/user/edit-profile')
@@ -275,13 +274,13 @@ class DoctorFreeTimeFormTest(TestCase):
 
 class AddDoctorFreeTime(TestCase):
     user = User(username='doc1', password='12345678')
-    myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
-    doc1 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr',
+    my_user = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
+    doc1 = Doctor(user=my_user, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr',
                   office_phone_number='09123456789')
 
     user = User(username='doc2', password='12345678', first_name='doc2 f', last_name='doc2 l')
-    myuser = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
-    doc2 = Doctor(user=myuser, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr teh',
+    my_user = MyUser(user=user, phone_number='09361827280', national_code='1234567890')
+    doc2 = Doctor(user=my_user, university='teh', year_diploma='1390', diploma='tajrobi', office_address='addr teh',
                   office_phone_number='09123456789')
 
     def test_calc_doctor_free_time(self):

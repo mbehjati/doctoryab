@@ -20,8 +20,8 @@ class EditPasswordForm(forms.Form):
         new_pass = cleaned_data['new_pass']
         new_pass_conf = cleaned_data['pass_conf']
         if not self.user.check_password(pre_pass):
-            raise forms.ValidationError("کلمه عبور قبلی اشتباه است.")
+            raise forms.ValidationError('کلمه عبور قبلی اشتباه است.')
         else:
             if new_pass != new_pass_conf:
-                raise forms.ValidationError("تکرار کلمه عبور نادرست است.")
+                raise forms.ValidationError('تکرار کلمه عبور نادرست است.')
         return cleaned_data

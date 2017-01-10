@@ -7,8 +7,6 @@ from user.models import MyUser, Doctor
 
 
 class EditUserForm(forms.ModelForm):
-    # first_name = forms.CharField(label='First Name')
-    # last_name = forms.CharField(label='Last Name')
 
     class Meta:
         model = User

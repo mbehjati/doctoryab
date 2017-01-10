@@ -27,12 +27,12 @@ class UserForm(forms.ModelForm):
             'email': forms.EmailInput
         }
         labels = {
-            "username": "نام‌کاربری",
-            "password": "گذواژه",
-            "password2": "تکرار گذرواژه",
-            "first_name": "نام",
-            "last_name": "نام خانوادگی",
-            "email": "ایمیل"
+            'username': 'نام‌کاربری',
+            'password': 'گذواژه',
+            'password2': 'تکرار گذرواژه',
+            'first_name': 'نام',
+            'last_name': 'نام خانواگی',
+            'email': 'ایمیل'
         }
 
 

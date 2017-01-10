@@ -19,8 +19,8 @@
             $(":input").addClass("validate");
             $('select').material_select();
 
-            {% if userprofileform.errors %}
-                {% for field in userprofileform %}
+            {% if my_user_form.errors %}
+                {% for field in my_user_form %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').prop('required', true);
                         $('#{{ field.id_for_label }}').removeClass('validate');
@@ -31,12 +31,12 @@
 
                     {% endfor %}
                 {% endfor %}
-                {% for error in userprofileform.non_field_errors %}
+                {% for error in my_user_form.non_field_errors %}
 
                 {% endfor %}
             {% endif %}
-            {% if userform.errors %}
-                {% for field in userform %}
+            {% if user_form.errors %}
+                {% for field in user_form %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
@@ -46,12 +46,12 @@
 
                     {% endfor %}
                 {% endfor %}
-                {% for error in userform.non_field_errors %}
+                {% for error in user_form.non_field_errors %}
 
                 {% endfor %}
             {% endif %}
-            {% if doctorprofile.errors %}
-                {% for field in doctorprofile %}
+            {% if doctor_form.errors %}
+                {% for field in doctor_form %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').addClass('invalid');
                         var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
@@ -60,29 +60,29 @@
 
                     {% endfor %}
                 {% endfor %}
-                {% for error in doctorprofile.non_field_errors %}
+                {% for error in doctor_form.non_field_errors %}
 
                 {% endfor %}
             {% endif %}
         });
     </script>
     <div class="row _register-form">
-        {% if userform.errors %}
-            {% for error in userform.non_field_errors %}
+        {% if user_form.errors %}
+            {% for error in user_form.non_field_errors %}
                 <p class="right red-text">{{ error }}</p>
             {% endfor %}
         {% endif %}
         <form enctype="multipart/form-data" class="col s12" action="" method="post">
             {% csrf_token %}
 
-            {% include "user/form.html" with form=userform %}
-            {% include "user/form.html" with form=userprofileform %}
+            {% include "user/form.html" with form=user_form %}
+            {% include "user/form.html" with form=my_user_form %}
             <p>
                 <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
                 <label for="is-doctor">پزشک هستم</label>
             </p>
             <div id="doctor-form" style="display:none">
-                {% include "user/form.html" with form=doctorprofile %}
+                {% include "user/form.html" with form=doctor %}
             </div>
             <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 

@@ -18,8 +18,8 @@
 
             $(":input").addClass("validate");
             $('select').material_select();
-            {% if form_user.errors %}
-                {% for field in form_user %}
+            {% if user_form.errors %}
+                {% for field in user_form %}
                     {% for error in field.errors %}
                         console.log('{{ error }}');
                         $('#{{ field.id_for_label }}').prop('required', true);
@@ -31,8 +31,8 @@
                     {% endfor %}
                 {% endfor %}
             {% endif %}
-            {% if form_myuser.errors %}
-                {% for field in form_myuser %}
+            {% if my_user_form.errors %}
+                {% for field in my_user_form %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
@@ -42,8 +42,8 @@
                     {% endfor %}
                 {% endfor %}
             {% endif %}
-            {% if form_doctor.errors %}
-                {% for field in form_doctor %}
+            {% if doctor_form.errors %}
+                {% for field in doctor_form %}
                     {% for error in field.errors %}
                         $('#{{ field.id_for_label }}').addClass('invalid');
                         var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
@@ -59,14 +59,14 @@
     <div class="row _register-form">
 
         <div class="input-field col s12">
-            <input disabled value={{ myuser.user.username }} id="disabled" type="text" class="validate">
+            <input disabled value={{ my_user.user.username }} id="disabled" type="text" class="validate">
             <label for="disabled">نام کاربری</label>
         </div>
         <form enctype="multipart/form-data" class="col s12" action="" method="post">
             {% csrf_token %}
-            {% include "user/form.html" with form=form_user %}
-            {% include "user/form.html" with form=form_myuser %}
-            {% include "user/form.html" with form=form_doctor %}
+            {% include "user/form.html" with form=user_form %}
+            {% include "user/form.html" with form=my_user_form %}
+            {% include "user/form.html" with form=doctor_form %}
             <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت تغییرات
             </button>
             <a href="/user/edit-password" class=" btn-large waves-effect waves-light _submit-btn"> تغییر رمز عبور </a>

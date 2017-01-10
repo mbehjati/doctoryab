@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^edit-password$', views.edit_password, name='EditPassword'),
     url(r'^enter-plan$', views.doctor_free_time, name='EnterPlan'),
     url(r'^plan$', views.doctor_plan, name='EnterPlan'),
-    url(r'^static/user/contract/contract.pdf$', views.generate_pdf),
+    url(r'^static/user/contract/contract.pdf$', views.upload_contract_file),
 ]
