@@ -7,7 +7,7 @@
                     {{ f }}
                 </div>
                 <div class="file-path-wrapper">
-                    <input class="file-path validate" type="text" value={{ myuser.imagename }}>
+                    <input class="file-path validate" type="text" value={{ myuser.imagename|default_if_none:"" }}>
                 </div>
             </div>
         {% elif f.name == 'contract' %}
