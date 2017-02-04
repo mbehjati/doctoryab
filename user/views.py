@@ -8,9 +8,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 
+from appointment.logic.appointment_time import sort_appointment_times
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.logic.search import search_by_name_or_expertise, do_advanced_search
 from appointment.models import AppointmentTime
+from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian
 from user.doctor_plan import send_app_result_mail, send_notif_mail, send_cancel_mail
 from user.forms import *
 from user.forms.search import AdvancedSearchForm
@@ -189,7 +191,7 @@ def get_doctor_from_req(request):
     return Doctor.objects.get(user=my_user)
 
 
-def get_doctor_free_times_form_from_req(request):
+def get_doctor_free_times_form_from_req(request):  # TODO: move this to logic
     form = DoctorFreeTimes()
     form.start_date = request.POST['start_date']
     form.end_date = request.POST['end_date']
@@ -257,7 +259,7 @@ def doctor_free_time(request):
         form = get_doctor_free_times_form_from_req(request)
         if form.is_data_valid():
             save_doctor_free_times_in_db(doctor, form)
-            message = 'اطلاعات شما با موفقیت ثبت شد. '
+            message = 'اطلاعات شما با موفقیت ثبت شد. '  # TODO: send to django messages
             response = True
         else:
             message = '*اطلاعات واردشده مجاز نمی‌باشد. '
@@ -278,4 +280,23 @@ def search(request):
             form = AdvancedSearchForm(request.POST)
             result = do_advanced_search(form)
 
-    return render(request, 'appointment/advanced-search.html', {'form': form, 'result': result})
+    return render(request, 'appointment/advanced_search.html', {'form': form, 'result': result})
+
+
+@login_required()
+def user_appointments(request):
+    appointments = list(
+        AppointmentTime.objects.filter(patient=request.user.myuser))  # TODO: Check for another way to convert queryset
+    sorted_appointments = sort_appointment_times(appointments)
+    return render(request, 'user/appointments_list.html', {'appointments': sorted_appointments})
+
+
+@login_required()
+def doctor_weekly_plan(request):
+    start_day = datetime.now()
+
+    if request.method == 'POST':
+        start_day = convert_jalali_gregorian(request.POST['date'])
+
+    weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
+    return render(request, 'user/weekly_plan.html', {'plan': weekly_plan})

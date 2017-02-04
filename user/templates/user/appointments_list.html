@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    مشاهده نوبت‌ها
+{% endblock %}
+{% block contents %}
+    <link rel="stylesheet" href={% static 'user/scss/appointments_list.css' %}>
+
+    <div class="_appointments">
+        {% if appointments %}
+            <table class="striped _table">
+                <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>تاریخ</th>
+                    <th>ساعت</th>
+                    <th>پزشک</th>
+                    <th>وضعیت</th>
+                </tr>
+                </thead>
+                {% for appointment in appointments reversed %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.date }}</td>
+                        <td>{{ appointment.start_time }}</td>
+                        <td>دکتر {{ appointment.doctor }}</td>
+                        <td>{{ appointment.get_status }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>
+                نوبتی دریافت نگردیده‌است.
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

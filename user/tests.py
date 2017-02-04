@@ -1,9 +1,13 @@
+from datetime import date
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.test.client import RequestFactory
 
 from user.doctor_plan import calc_doctor_free_times, calc_visit_times_for_a_day, has_appointment_conflict
 from .views import *
+
+STATUS_OK = 200
 
 
 class UserModelsTest(TestCase):
@@ -452,3 +456,67 @@ class DcotorPlan(TestCase):
         self.app3 = AppointmentTime.objects.get(id=self.app3.id)
         self.assertEqual(self.app3.confirmation, '2')
         self.assertEqual(AppointmentTime.objects.count(), 5)
+
+
+class UserViewAppointmentsTest(TestCase):
+    def setUp(self):
+        user = User.objects.create_user(username='meli', password='12345678', first_name='melika', last_name='behjati',
+                                        email='m@g.com')
+        self.patient = MyUser.objects.create(user=user, phone_number='09361827280', national_code='1234567890')
+
+    def test_view_appointments(self):
+        self.client.login(username=self.patient.user.username, password='12345678')
+        response = self.client.get('/user/appointments')
+        self.assertEqual(response.status_code, STATUS_OK)
+
+    def test_login_required(self):
+        response = self.client.get('/user/appointments')
+        self.assertEqual(response.status_code, 302)
+
+
+class DoctorWeeklyPlanTest(TestCase):
+    def setUp(self):
+        # Create Doctor
+        user = User.objects.create_user(username='meli', password='12345')
+        my_user = MyUser.objects.create(user=user)
+        expertise = Expertise.objects.create(name='expert')
+        upload_file = open('user/static/user/contract/contract.pdf', 'rb')
+        self.doctor = Doctor.objects.create(user=my_user, university='tehran', year_diploma='1995',
+                                            office_address='tehran',
+                                            office_phone_number='02188888888',
+                                            expertise=expertise,
+                                            contract=SimpleUploadedFile(upload_file.name, upload_file.read()))
+        self.insurance1 = self.doctor.insurance.create(name='taminEjtemaiee')
+
+        # Create Patient
+        patient_user = User.objects.create_user(username='mariz', password='12345')
+        self.patient = MyUser.objects.create(user=patient_user, phone_number='09194259636')
+
+        # Create Appointments
+        today = datetime.now()
+        for i in range(7):
+            delta = timedelta(i)
+            date = today + delta
+            formatted_date = Gregorian(date.strftime('%Y-%m-%d')).persian_string()
+            AppointmentTime.objects.create(patient=self.patient, doctor=self.doctor, date=formatted_date,
+                                           end_time='03:00pm',
+                                           duration=15, start_time='03:15pm')
+
+    def test_view(self):
+        self.client.login(username=self.doctor.user.user.username, password='12345')
+        response = self.client.get('/user/weekly-plan')
+        self.assertEqual(response.status_code, STATUS_OK)
+
+    def test_get_weekly_plan(self):
+        today = datetime.now()
+        weekly_plan = get_doctor_weekly_plan(self.doctor, today)
+        print(weekly_plan)
+        for date, appointments in weekly_plan:
+            day_appointments = list(AppointmentTime.objects.filter(doctor=self.doctor, patient=self.patient, date=date))
+            self.assertListEqual(appointments, day_appointments)
+
+    def test_convert_jalali_gregorian(self):
+        jalali_str = '1395-11-16'
+        gregorian = convert_jalali_gregorian(jalali_str)
+        gregorian_date = date(2017, 2, 4)
+        self.assertEqual(gregorian_date, gregorian)

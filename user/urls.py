@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^enter-plan$', views.doctor_free_time, name='EnterPlan'),
     url(r'^plan$', views.doctor_plan, name='EnterPlan'),
     url(r'^static/user/contract/contract.pdf$', views.upload_contract_file),
+    url(r'^appointments', views.user_appointments, name='view_appointments'),
+    url(r'^weekly-plan', views.doctor_weekly_plan, name='weekly_plan')
 ]

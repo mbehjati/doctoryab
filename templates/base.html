@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}دکتریاب{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
     <link type="text/css" rel="stylesheet" href={% static "base.css" %}>
     <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
@@ -61,12 +61,16 @@
     </li>
     <li><a href={% url 'user:EditProfile' %}><i class="material-icons">person</i>صفحه کاربری</a></li>
     <li><a href={% url 'user:EditPassword' %}><i class="material-icons">edit</i>تغییر رمز عبور</a></li>
+    <li><a href={% url 'user:view_appointments' %}><i class="material-icons">view_list</i>مشاهده نوبت‌ها</a></li>
+
     {% if request.user.myuser.is_doctor %}
         <li>
             <div class="divider"></div>
         </li>
         <li><a href="/user/enter-plan"><i class="material-icons">schedule</i>ورود برنامه</a></li>
-        <li><a href="/user/plan"><i class="material-icons">event_note</i>مشاهده برنامه</a></li>
+        <li><a href="/user/plan"><i class="material-icons">today</i>مشاهده برنامه روزانه</a></li>
+        <li><a href="/user/weekly-plan"><i class="material-icons">event_note</i>مشاهده برنامه هفتگی</a></li>
+
     {% endif %}
     <li>
         <div class="divider"></div>
@@ -161,8 +165,6 @@
             {% endfor %}
         {% endif %}
         $(".button-collapse").sideNav();
-
-
     });
 </script>
 </html>

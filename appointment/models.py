@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from django.db import models
 
 from user.models import Doctor, MyUser
@@ -20,3 +22,7 @@ class AppointmentTime(models.Model):
     def __eq__(self, other):
         return self.date == other.date and self.start_time == other.start_time and self.duration == other.duration and \
                self.doctor == other.doctor and self.patient == other.patient
+
+    def get_status(self):  # TODO: write test for this part
+        status = ['در انتظار تایید', 'تایید نشده', 'تایید شده']
+        return status[int(self.confirmation)]
