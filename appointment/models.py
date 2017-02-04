@@ -10,10 +10,13 @@ class AppointmentTime(models.Model):
     duration = models.IntegerField()
     doctor = models.ForeignKey(Doctor)
     patient = models.ForeignKey(MyUser, null=True)
+    confirmation = models.CharField(max_length=1, default='1',
+                                    choices=(('1', 'awaiting'), ('2', 'not_confirmed'), ('3', 'confirmed')))
+    presence = models.BooleanField(default=False)
 
     def __str__(self):
         return "doctor " + str(self.doctor.user.user.username) + " " + str(self.date) + " " + str(self.start_time)
 
     def __eq__(self, other):
-        return self.date == other.date and self.start_time == other.start_time and self.duration == other.duration and self.doctor == other.doctor and self.patient == other.patient
-
+        return self.date == other.date and self.start_time == other.start_time and self.duration == other.duration and \
+               self.doctor == other.doctor and self.patient == other.patient
