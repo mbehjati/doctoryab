@@ -25,6 +25,9 @@ class AppointmentTimeTest(TestCase):
         self.assertEqual(is_time_before('12:00pm', '1:45am'), False)
         self.assertEqual(is_time_before('12:00pm', '12:00pm'), True)
         self.assertEqual(is_time_before('9:00am', '11:00am'), True)
+        self.assertEqual(is_time_before('12:00am', '1:00am'), True)
+        self.assertEqual(is_time_before('12:15am', '4:00am'), True)
+        self.assertEqual(is_time_before('12:45am', '1:45am'), True)
 
 
 class SearchDoctor(TestCase):
@@ -145,6 +148,9 @@ class DoctorPlan(TestCase):
         self.app8 = AppointmentTime.objects.create(start_time='13:45pm', end_time='13:15pm', date='1395-07-01',
                                                    doctor=self.doc1,
                                                    duration=30)
+        self.app9 = AppointmentTime.objects.create(start_time='1:45pm', end_time='13:15pm', date='1395-07-04',
+                                                   doctor=self.doc1,
+                                                   duration=30)
 
     def test_sort_appointment_times_in_day(self):
         self.add_objects()
@@ -158,6 +164,9 @@ class DoctorPlan(TestCase):
                          [self.app1, self.app2, self.app3, self.app4])
         self.assertEqual(sort_appointment_times_in_day([self.app1, self.app3, self.app4, self.app2]),
                          [self.app1, self.app2, self.app3, self.app4])
+
+        self.assertEqual(sort_appointment_times_in_day([self.app1, self.app9, self.app4, self.app2, self.app3]),
+                         [self.app1, self.app2, self.app3, self.app4, self.app9])
 
     def test_sort_appointment_times(self):
         self.add_objects()
@@ -175,7 +184,8 @@ class DoctorPlan(TestCase):
         self.add_objects()
         exp_ans = [{'date': '1395-07-01', 'apps': [self.app1, self.app2, self.app3, self.app4, self.app8]},
                    {'date': '1395-07-02', 'apps': [self.app6, self.app7]},
-                   {'date': '1395-07-03', 'apps': [self.app5]}]
+                   {'date': '1395-07-03', 'apps': [self.app5]},
+                   {'date': '1395-07-04', 'apps': [self.app9]}]
         self.assertEqual(get_doctor_all_plan('1395-07-01', self.doc1), exp_ans)
 
     def test_cluster_appointment_times(self):

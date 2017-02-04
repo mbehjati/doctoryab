@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 
-from appointment.logic.doctor_plan import get_doctor_all_plan
+from appointment.logic.doctor_plan import get_doctor_all_plan, send_app_reserve_mail
 from user.lib.jalali import Gregorian
 from .models import *
 
@@ -27,7 +27,8 @@ def doctor_detail(request, doctor_id):
         appointment = get_object_or_404(AppointmentTime, id=app_id)
         appointment.patient = request.user.myuser
         appointment.save()
-        messages.success(request, 'نوبت شما با موفقیت ثبت گردید')
+        messages.success(request, 'نوبت شما با موفقیت رزرو گردید')
+        send_app_reserve_mail(appointment)
     doctor = get_object_or_404(Doctor, id=doctor_id)
     now = datetime.now()
     date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
