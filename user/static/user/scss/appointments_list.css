@@ -1,0 +1,10 @@
+._appointments {
+    min-height: 50vh;
+}
+
+._appointments ._table {
+    width: 75vw;
+    margin: 2vw auto;
+}
+
+/*# sourceMappingURL=appointments_list.css.map */

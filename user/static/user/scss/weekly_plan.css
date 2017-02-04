@@ -1,0 +1,40 @@
+._weekly-plan {
+    width: 80vw;
+    margin: 3vw auto;
+}
+
+._weekly-plan ._table th, ._weekly-plan ._table td {
+    border: 1px solid #dddddd;
+}
+
+._weekly-plan thead th {
+    border: double lightgray 2px;
+}
+
+._weekly-plan th {
+    padding: 0;
+    height: 2vw;
+}
+
+._weekly-plan ._full {
+    background-color: lightyellow;
+}
+
+._weekly-plan ._border {
+    border-top: solid lightgray 1px;
+}
+
+._weekly-plan tbody tr td {
+    border: 1px dashed lightgray;
+    border-right-style: solid;
+    border-left-style: solid;
+    padding: 0;
+}
+
+._weekly-plan ._date-picker {
+    margin: auto;
+    margin-bottom: 5vw;
+    width: 20vw;
+}
+
+/*# sourceMappingURL=weekly_plan.css.map */
