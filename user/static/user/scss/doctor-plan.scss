@@ -40,6 +40,20 @@
       padding: 5px;
     }
 
+    ._done-btn:hover {
+      color: darkgreen;
+    }
+
+    ._close-btn:hover {
+      color: darkred;
+    }
+
+    ._delete-btn:hover {
+      color: darkred;
+    }
+
+
+
   }
 
 }

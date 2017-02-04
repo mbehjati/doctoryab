@@ -8,7 +8,18 @@
 
     <script type="text/javascript">
 
+        function showDialog(id) {
+
+            $('#appointment').val(id);
+            $('#mail_action').val('mail')
+            $('#mail-dialog').modal('open');
+
+
+        }
+
         $(document).ready(function () {
+
+            $('#time_picker').timepicker({'step': 15});
 
 
             function clean_date(str) {
@@ -28,6 +39,8 @@
 
             });
             $(".date-picker").val("{{ date }}")
+
+            $(".tooltiped").tooltip({delay: 50});
 
 
         })
@@ -57,12 +70,108 @@
             {% endif %}
             {% for app in apps %}
                 <div class="row"
-                     style="background-color:{% if app.patient == None %}#e1f2ea {% else %} #ffcf93{% endif %}; margin: 10px ">
+                     style="background-color:{% if app.patient == None %}#e1f2ea  {% elif app.confirmation == '1' %} #fdf498{% else %} #ffcf93{% endif %}; margin: 10px ">
 
-                    <div class="col s8 _left-box">
+                    <div class="col s2 ">
+                        {% if app.patient != None and app.confirmation == '1' %}
+                            {#                            <br>#}
+                            <form method="post" style="float: right ; width: 50%">
+                                {% csrf_token %}
+                                <input type="hidden" name="appointment" value="{{ app.id }}">
+                                <input type="hidden" name="app_action" value="confirmed">
+                                <input type="hidden" name="date" value="{{ date }}">
+
+                                <button style="background-color: transparent ; border: none ; outline: none;">
+                                    <a type="submit" style="color: gray;"
+                                       class="tooltiped _done-btn btn-block btn-small waves-effect waves-light "
+                                       data-position="top" data-tooltip="تایید"><i
+                                            class="material-icons">done</i></a>
+
+                                </button>
+
+                            </form>
+                            <form method="post" style="float:left; width: 50% ">
+                                {% csrf_token %}
+                                <input type="hidden" name="appointment" value="{{ app.id }}">
+                                <input type="hidden" name="app_action" value="not_confirmed">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button style="background-color: transparent ; border: none; outline: none">
+                                    <a type="submit" style="color:gray;"
+                                       class="tooltiped btn-block btn-small waves-effect waves-light _close-btn "
+                                       data-position="top" data-tooltip="لغو"><i
+                                            class="material-icons">close</i></a>
+                                </button>
+
+
+                            </form>
+                        {% elif app.patient == None %}
+                            <form method="post" style="float:left; width: 50% ">
+                                {% csrf_token %}
+                                <input type="hidden" name="appointment" value="{{ app.id }}">
+                                <input type="hidden" name="app_action" value="delete">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button style="background-color: transparent ; border: none; outline: none">
+                                    <a type="submit" style="color:gray;"
+                                       class="tooltiped btn-block btn-small waves-effect waves-light _delete-btn "
+                                       data-position="top" data-tooltip="حذف"><i
+                                            class="material-icons">delete</i></a>
+                                </button>
+
+
+                            </form>
+
+                        {% elif app.patient != None and app.confirmation == '3' and date == today  and app.presence == False %}
+
+
+                            <span style="float:right; width: 50% ">
+                                <button style="background-color: transparent ; border: none ; outline: none;"
+                                        onclick="showDialog({{ app.id }})">
+                                    <div class="_done-btn">
+                                        <a style="color: gray;"
+                                           class="tooltiped _done-btn btn-block btn-small waves-effect waves-light "
+                                           data-position="top" data-tooltip="ارسال ایمیل"><i
+                                                class="material-icons">email</i></a>
+                                    </div>
+                                </button>
+                            </span>
+
+                            <form method="post" style="float:left; width: 50% ">
+                                {% csrf_token %}
+                                <input type="hidden" name="appointment" value="{{ app.id }}">
+                                <input type="hidden" name="app_action" value="presence">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button style="background-color: transparent ; border: none; outline: none">
+                                    <a type="submit" style="color:gray;"
+                                       class="tooltiped btn-block btn-small waves-effect waves-light _close-btn "
+                                       data-position="top" data-tooltip="اعلام حضور بیمار"><i
+                                            class="material-icons ">input</i></a>
+                                </button>
+
+
+                            </form>
+
+                        {% elif date >= cancel_deadline %}
+                            <form method="post" style="float:left; width: 50% ">
+                                {% csrf_token %}
+                                <input type="hidden" name="appointment" value="{{ app.id }}">
+                                <input type="hidden" name="app_action" value="cancel">
+                                <input type="hidden" name="date" value="{{ date }}">
+                                <button style="background-color: transparent ; border: none; outline: none">
+                                    <a type="submit" style="color:gray;"
+                                       class="tooltiped btn-block btn-small waves-effect waves-light _delete-btn "
+                                       data-position="top" data-tooltip="کنسلی"><i
+                                            class="material-icons">close </i></a>
+                                </button>
+
+                            </form>
+                        {% endif %}
+                    </div>
+
+                    <div class="col s6 _left-box">
                         {% if app.patient != None %}
 
                             نام بیمار : {{ app.patient.user.first_name }} {{ app.patient.user.last_name }}
+
                             <br>
                             شماره تماس :   {{ app.patient.phone_number }}
                         {% else %}
@@ -87,4 +196,36 @@
 
 
     </div>
+
+
+    <div id="mail-dialog" class="modal" style="width: 400px">
+        <form method="post">
+            <div class="modal-content">
+                <h5 class="indigo-text"> ارسال ایمیل یادآوری به بیمار</h5>
+                <div class="divider"></div>
+
+            </div>
+            <div class="modal-footer">
+
+                {% csrf_token %}
+                <input type="hidden" id="appointment" name="appointment">
+                <input type="hidden" id="mail_action" name="app_action">
+                <input type="hidden" name="date" value="{{ date }}">
+                <div style="width: 30%; margin: auto ; ">
+                    <p>
+                        ساعت حضور در مطب
+                    </p>
+                    <input class="stepTimePicker" id="time_picker" name="presence_time">
+                </div>
+
+                <button type="submit"
+                        class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left">
+                    ارسال ایمیل
+                </button>
+
+
+            </div>
+        </form>
+    </div>
+
 {% endblock %}

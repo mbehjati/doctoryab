@@ -1,19 +1,19 @@
 ._doctor-plan {
-    width: 50%;
-    margin: auto;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: solid lightgray 1.5px;
-    border-radius: 10px;
-    min-height: 20vw;
-    background-color: white;
+  width: 50%;
+  margin: auto;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: solid lightgray 1.5px;
+  border-radius: 10px;
+  min-height: 20vw;
+  background-color: white;
 }
 
 ._doctor-plan ._date-picker {
     direction: rtl;
     width: 60%;
-    margin: auto;
+  margin: auto;
 }
 
 ._doctor-plan ._plan-box {
@@ -21,23 +21,35 @@
     padding-top: 20px;
     padding-bottom: 20px;
     width: 80%;
-    margin: auto;
+  margin: auto;
 }
 
 ._doctor-plan ._plan-box ._no-plan {
-    color: red;
+  color: red;
 }
 
 ._doctor-plan ._plan-box ._left-box {
-    padding: 5px;
-    padding-right: 10px;
+  padding: 5px;
+  padding-right: 10px;
 }
 
 ._doctor-plan ._plan-box ._right-box {
-    border-left: double;
-    border-color: #3a3a3a;
-    border-bottom-width: 1px;
-    padding: 5px;
+  border-left: double;
+  border-color: #3a3a3a;
+  border-bottom-width: 1px;
+  padding: 5px;
+}
+
+._doctor-plan ._plan-box ._done-btn:hover {
+  color: darkgreen;
+}
+
+._doctor-plan ._plan-box ._close-btn:hover {
+  color: darkred;
+}
+
+._doctor-plan ._plan-box ._delete-btn:hover {
+  color: darkred;
 }
 
 /*# sourceMappingURL=doctor-plan.css.map */
