@@ -1,14 +1,17 @@
 # -*- coding: UTF-8 -*-
-from datetime import datetime
+
+from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.logic.search import search_by_name_or_expertise, do_advanced_search
+from appointment.models import AppointmentTime
+from user.doctor_plan import send_app_result_mail, send_notif_mail, send_cancel_mail
 from user.forms import *
 from user.forms.search import AdvancedSearchForm
 from user.lib.jalali import Gregorian
@@ -200,14 +203,49 @@ def doctor_plan(request):
     doctor = get_doctor_from_req(request)
     now = datetime.now()
     date = Gregorian(now.strftime('%Y-%m-%d')).persian_string()
+    cancel_deadline = Gregorian(str((datetime.now() + timedelta(days=1)).date())).persian_string()
     apps = get_doctor_day_plan(date, doctor)
+    today = date
 
     if request.method == 'POST':
-        date = request.POST['date']
+
+        if 'app_action' in request.POST:
+            app = request.POST['appointment']
+            app = get_object_or_404(AppointmentTime, id=app)
+            if request.POST['app_action'] == 'confirmed':
+                app.confirmation = '3'
+                app.save()
+                x = AppointmentTime.objects.get(id=app.id)
+                send_app_result_mail(app, True)
+            elif request.POST['app_action'] == 'not_confirmed':
+                app.confirmation = '2'
+                app.save()
+                new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
+                                          doctor=app.doctor, duration=app.duration)
+                new_app.save()
+                send_app_result_mail(app, False)
+            elif request.POST['app_action'] == 'delete':
+                app.delete()
+            elif request.POST['app_action'] == 'presence':
+                app.presence = True
+                app.save()
+            elif request.POST['app_action'] == 'mail':
+                presence_time = request.POST['presence_time']
+                send_notif_mail(app, presence_time)
+            elif request.POST['app_action'] == 'cancel':
+                app.confirmation = '2'
+                app.save()
+                new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
+                                          doctor=app.doctor, duration=app.duration)
+                new_app.save()
+                send_cancel_mail(app)
+
+        date = request.POST.get('date')
         apps = get_doctor_day_plan(date, doctor)
 
     apps = None if len(apps) == 0 else apps
-    return render(request, 'user/doctor_plan.html', {'apps': apps, 'date': date})
+    return render(request, 'user/doctor_plan.html',
+                  {'apps': apps, 'date': date, 'today': today, 'cancel_deadline': cancel_deadline})
 
 
 def doctor_free_time(request):

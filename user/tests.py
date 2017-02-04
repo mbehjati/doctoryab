@@ -1,7 +1,7 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from django.test.client import RequestFactory
 
-from appointment.models import AppointmentTime
 from user.doctor_plan import calc_doctor_free_times, calc_visit_times_for_a_day, has_appointment_conflict
 from .views import *
 
@@ -367,3 +367,88 @@ class AddDoctorFreeTime(TestCase):
         new_app.date = '1395-07-01'
         new_app.doctor = self.doc2
         self.assertEqual(has_appointment_conflict(new_app, [app]), False)
+
+
+class DcotorPlan(TestCase):
+    def add_objs(self):
+        self.user = User.objects.create(username='doc', password='12345678')
+        self.myuser = MyUser.objects.create(user=self.user, phone_number='09361827280', national_code='1234567890')
+        self.exp1 = Expertise.objects.create(name='exp1')
+        self.doc1 = Doctor.objects.create(user=self.myuser, university='teh', year_diploma='1390', diploma='tajrobi',
+                                          office_address='addr',
+                                          office_phone_number='09123456789', expertise=self.exp1)
+
+        self.app1 = AppointmentTime.objects.create(start_time='12:00pm', end_time='12:30pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30)
+        self.app2 = AppointmentTime.objects.create(start_time='12:15pm', end_time='12:345pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30, patient=self.myuser, confirmation='1')
+        self.app3 = AppointmentTime.objects.create(start_time='12:30pm', end_time='13:0pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30, patient=self.myuser, confirmation='1')
+        self.app4 = AppointmentTime.objects.create(start_time='12:45pm', end_time='13:15pm', date='1395-07-01',
+                                                   doctor=self.doc1,
+                                                   duration=30, confirmation='3')
+
+    def test_doctor_free_time_deleted(self):
+        self.add_objs()
+        self.assertEqual(AppointmentTime.objects.count(), 4)
+        rf = RequestFactory()
+        request = rf.post('/user/plan', {'app_action': 'delete', 'date': '1395-07-01', 'appointment': self.app1.id,
+                                         'cancel_deadline': '1395-07-02'})
+        request.user = self.user
+        response = doctor_plan(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(AppointmentTime.objects.count(), 3)
+        self.assertEqual(set(AppointmentTime.objects.all()), set([self.app2, self.app3, self.app4]))
+
+    def test_confirm_appointment(self):
+        self.add_objs()
+        rf = RequestFactory()
+        request = rf.post('/user/plan', {'app_action': 'confirmed', 'date': '1395-07-01', 'appointment': self.app2.id,
+                                         'cancel_deadline': '1395-07-02'})
+        request.user = self.user
+        response = doctor_plan(request)
+        self.assertEqual(response.status_code, 200)
+        self.app2 = AppointmentTime.objects.get(id=self.app2.id)
+        self.assertEqual(self.app2.confirmation, '3')
+
+    def test_not_confirm_appointment(self):
+        self.add_objs()
+        rf = RequestFactory()
+        self.assertEqual(AppointmentTime.objects.count(), 4)
+        request = rf.post('/user/plan',
+                          {'app_action': 'not_confirmed', 'date': '1395-07-01', 'appointment': self.app3.id,
+                           'cancel_deadline': '1395-07-02'})
+        request.user = self.user
+        response = doctor_plan(request)
+        self.assertEqual(response.status_code, 200)
+        self.app3 = AppointmentTime.objects.get(id=self.app3.id)
+        self.assertEqual(self.app3.confirmation, '2')
+        self.assertEqual(AppointmentTime.objects.count(), 5)
+
+    def test_presence_of_appointment(self):
+        self.add_objs()
+        rf = RequestFactory()
+        request = rf.post('user/plan', {'app_action': 'presence', 'date': '1395-07-01', 'appointment': self.app4.id,
+                                        'cancel_deadline': '1395-07-02'})
+        request.user = self.user
+        response = doctor_plan(request)
+        self.assertEqual(self.app4.presence, False)
+        self.assertEqual(response.status_code, 200)
+        self.app4 = AppointmentTime.objects.get(id=self.app4.id)
+        self.assertEqual(self.app4.presence, True)
+
+    def test_canceling_of_appointment(self):
+        self.add_objs()
+        rf = RequestFactory()
+        self.assertEqual(AppointmentTime.objects.count(), 4)
+        request = rf.post('/user/plan',
+                          {'app_action': 'cancel', 'date': '1395-07-01', 'appointment': self.app3.id})
+        request.user = self.user
+        response = doctor_plan(request)
+        self.assertEqual(response.status_code, 200)
+        self.app3 = AppointmentTime.objects.get(id=self.app3.id)
+        self.assertEqual(self.app3.confirmation, '2')
+        self.assertEqual(AppointmentTime.objects.count(), 5)

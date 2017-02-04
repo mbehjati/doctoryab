@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta
 
+from django.core.mail import send_mail
+
 from appointment.logic.appointment_time import is_time_before, add_time
 from appointment.models import AppointmentTime
 
 
 def save_doctor_free_times_in_db(doctor, form):
     for obj in calc_doctor_free_times(doctor, form):
-        if not has_appointment_conflict(obj, AppointmentTime.objects.all()):
+        if not has_appointment_conflict(obj, AppointmentTime.objects.filter(confirmation__in=['1', '3'])):
             obj.save()
 
 
@@ -54,3 +56,27 @@ def calc_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
                             doctor=doctor))
         start_time = add_time(start_time, duration)
     return ans
+
+
+def send_app_result_mail(app, confirm):
+    action = 'تایید' if confirm else 'رد'
+    title = action + ' نوبت'
+    body = ' با سلام \n نوبت شما از دکتر' + str(app.doctor.user.user.first_name) + ' ' + str(
+        app.doctor.user.user.last_name) + ' در تاریخ ' + str(app.date) + ' ساعت  ' + str(
+        app.start_time) + ' توسط پزشک ' + action + ' شد.'
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
+
+
+def send_notif_mail(app, time):
+    title = ' زمان حضور در مطب'
+    body = ' با سلام \n لطفا برای نوبت خود از دکتر ' + str(app.doctor.user.user.first_name) + ' ' + str(
+        app.doctor.user.user.last_name) + ' ساعت ' + time + ' در مطب حضور داشته باشید.'
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
+
+
+def send_cancel_mail(app):
+    title = 'کنسل شدن وقت توسط دکتر'
+    body = ' با سلام \n نوبت شما از دکتر' + str(app.doctor.user.user.first_name) + ' ' + str(
+        app.doctor.user.user.last_name) + ' در تاریخ ' + str(app.date) + ' ساعت  ' + str(
+        app.start_time) + ' توسط پزشک کنسل شد. '
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
