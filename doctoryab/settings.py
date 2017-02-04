@@ -139,3 +139,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_ROOT = '/Users/a/Documents/ASD/doctoryab/media/'
 MEDIA_URL = '/media/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'onlinefoodforyou@gmail.com'
+EMAIL_HOST_PASSWORD = 'minamelikamasoume'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
