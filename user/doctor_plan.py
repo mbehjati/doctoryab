@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from datetime import datetime, timedelta
 
 from django.core.mail import send_mail
