@@ -23,8 +23,14 @@
         {% else %}
 
             <div class="input-field">
+
                 {{ f }}
-                <label for={{ f.id_for_label }}>{{ f.label }}</label>
+                <label for={{ f.id_for_label }}>
+                    {% if f.field.required %}
+                        *
+                    {% endif %}
+                    {{ f.label }}
+                </label>
             </div>
         {% endif %}
     </div>
