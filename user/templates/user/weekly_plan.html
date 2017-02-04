@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    برنامه‌ هفتگی
+{% endblock %}
+{% block contents %}
+    <link rel="stylesheet" href={% static 'user/scss/weekly_plan.css' %}>
+    <div class="row">
+        <div class="_weekly-plan">
+            <form class=" _date-picker" method="post" id="plan-form">
+
+                {% csrf_token %}
+
+                <label for="date"> تاریخ مورد نظر برای شروع هفته را انتخاب نمایید. </label>
+                <input type="text" class="date-picker" name="date"/>
+                </button>
+
+            </form>
+            <table class="centered">
+                <thead>
+                <td></td>
+                {% for date, _ in plan %}
+                    <th>{{ date }}</th>
+                {% endfor %}
+                </thead>
+                <tbody id="schedule">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var times = [];
+            var min = ['00', '15', '30', '45'];
+            var i;
+            for (i = 0; i < 24; i++) {
+                var str;
+                if (i == 0)
+                    str = '12:';
+                else if (i > 12)
+                    str = (i - 12) + ':';
+                else
+                    str = i + ':';
+                for (var j = 0; j < 4; j++) {
+                    var time_str;
+                    time_str = str + min[j];
+                    if (i >= 12)
+                        time_str += 'pm';
+                    else
+                        time_str += 'am';
+                    times.push(time_str);
+                }
+
+            }
+
+            var table = new Array(times.length);
+            for (i = 0; i < times.length; i++) {
+                table[i] = new Array(7);
+            }
+
+            for (i = 0; i < 96; i++) {
+                var a = 0;
+
+                {% for d,aps in plan %}
+                    {% for ap in aps %}
+
+                        var s = '{{ ap.start_time }}';
+                        var e = '{{ ap.end_time }}';
+                        var p = '{{ ap.patient }}';
+                        if (s == times[i]) {
+                            var v = 1;
+                            if (p == 'None') {
+                                v = 2;
+                            }
+                            table[i][a] = v;
+                            var d =;
+                            {{ ap.duration }} /
+                            15;
+                            for (var k = 1; k < d; k++) {
+                                table[i + k][a] = v;
+                            }
+
+                        }
+                        else if (!table[i][a]) {
+                            table[i][a] = 0;
+                        }
+                    {% empty %}
+                        table[i][a] = 0;
+                    {% endfor %}
+                    a++;
+                {% endfor %}
+            }
+
+            var table_body = '';
+            for (i = 0; i < 96; i++) {
+                if (i % 4 == 0)
+                    table_body += '<tr class="_border"><th>' + times[i] + '</th>';
+                else
+                    table_body += '<tr><th></th>';
+
+                for (j = 0; j < 7; j++) {
+                    table_body += '<td class=';
+                    if (table[i][j] == 0)
+                        table_body += '_empty></td>';
+                    else if (table[i][j] == 1)
+                        table_body += '_full>وقت ویزیت</td>';
+                    else
+                        table_body += '_full></td>';
+
+                }
+                table_body += '</tr>';
+            }
+            $('#schedule').append(table_body);
+
+            function clean_date(str) {
+                $(str).val($(str).val().split(" ")[0])
+            }
+
+            $(".date-picker").pDatepicker({
+                observer: true,
+                justSelectOnDate: true,
+                onSelect: function () {
+                    clean_date(".date-picker");
+                    $("#plan-form").submit();
+                },
+                onShow: function () {
+                    clean_date(".date-picker")
+                }
+
+            });
+            $(".date-picker").val("{{ plan.0.0 }}")
+        })
+    </script>
+{% endblock %}

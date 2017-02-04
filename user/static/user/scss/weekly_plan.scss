@@ -1,0 +1,34 @@
+._weekly-plan {
+  width: 80vw;
+  margin: 3vw auto;
+  ._table {
+    th, td {
+      border: 1px solid #dddddd;
+
+    }
+  }
+  thead th {
+    border: double lightgray 2px;
+  }
+  th {
+    padding: 0;
+    height: 2vw;
+  }
+  ._full {
+    background-color: lightyellow;
+  }
+  ._border {
+    border-top: solid lightgray 1px;
+  }
+  tbody tr td {
+    border: 1px dashed lightgray;
+    border-right-style: solid;
+    border-left-style: solid;
+    padding: 0;
+  }
+  ._date-picker {
+    margin: auto;
+    margin-bottom: 5vw;
+    width: 20vw;
+  }
+}

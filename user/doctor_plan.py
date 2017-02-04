@@ -2,10 +2,13 @@
 
 from datetime import datetime, timedelta
 
+import jdatetime
 from django.core.mail import send_mail
 
 from appointment.logic.appointment_time import is_time_before, add_time
+from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.models import AppointmentTime
+from user.lib.jalali import Gregorian
 
 
 def save_doctor_free_times_in_db(doctor, form):
@@ -82,3 +85,32 @@ def send_cancel_mail(app):
         app.doctor.user.user.last_name) + ' در تاریخ ' + str(app.date) + ' ساعت  ' + str(
         app.start_time) + ' توسط پزشک کنسل شد. '
     send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
+
+
+def get_doctor_weekly_plan(doctor, date):
+    """
+    from the date given to 7 days after that returns doctor's plan
+    :param doctor: the doctor whose weekly plan is required
+    :param date: the start date from which the week starts
+    :return: the weekly plan of doctor
+    """
+    weekly_plan = []
+    for i in range(7):
+        delta = timedelta(i)
+        week_day = date + delta
+        formatted_date = Gregorian(week_day.strftime('%Y-%m-%d')).persian_string()
+        day_appointments = get_doctor_day_plan(doctor=doctor, date=formatted_date)
+        weekly_plan.append((formatted_date, day_appointments))
+
+    return weekly_plan
+
+
+def convert_jalali_gregorian(jalali_date):
+    """
+    convert jalali string date to gregorian date object
+    :param jalali_date: jalali date as string
+    :return: gregorian date of jalali date
+    """
+    year, month, day = jalali_date.split('-')
+    start_day = jdatetime.date(day=int(day), year=int(year), month=int(month)).togregorian()
+    return start_day
