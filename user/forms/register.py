@@ -8,6 +8,18 @@ from user.models import MyUser, Doctor
 class UserForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.widgets.PasswordInput, label='تکرار گذرواژه')
 
+    def __init__(self, *args, **kwargs):
+        delete_some_field = kwargs.get('delete_some_field', False)
+        if 'delete_some_field' in kwargs:
+            del kwargs['delete_some_field']
+        super(UserForm, self).__init__(*args, **kwargs)
+        if delete_some_field:
+            del self.fields['username']
+            del self.fields['password']
+            del self.fields['password2']
+            # or
+            # self.fields['is_manager'].widget = something_else
+
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
 
@@ -47,6 +59,14 @@ class MyUserForm(forms.ModelForm):
 
 
 class DoctorForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        delete_some_field = kwargs.get('delete_some_field', False)
+        if 'delete_some_field' in kwargs:
+            del kwargs['delete_some_field']
+        super(DoctorForm, self).__init__(*args, **kwargs)
+        if delete_some_field:
+            del self.fields['contract']
+
     class Meta:
         model = Doctor
         exclude = ['user']

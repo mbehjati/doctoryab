@@ -63,25 +63,25 @@ def edit_profile(request):
      """
     user = request.user
     my_user = MyUser.objects.get(user=user)
-    user_form = EditUserForm(request.POST or None, initial={'first_name': my_user.user.first_name,
-                                                            'last_name': my_user.user.last_name,
-                                                            'email': my_user.user.email})
-    my_user_form = EditMyUserForm(request.POST or None, request.FILES or None,
-                                  initial={'phone_number': my_user.phone_number,
-                                           'national_code': my_user.national_code})
+    user_form = UserForm(request.POST or None, initial={'first_name': my_user.user.first_name,
+                                                        'last_name': my_user.user.last_name,
+                                                        'email': my_user.user.email}, delete_some_field=True)
+    my_user_form = MyUserForm(request.POST or None, request.FILES or None,
+                              initial={'phone_number': my_user.phone_number,
+                                       'national_code': my_user.national_code})
     # first set doctor  model and form to None then
     doctor = None
     doctor_form = None
     # decides based on my_user is doctor or not to make doctor model and form or not
     if my_user.is_doctor:
         doctor = Doctor.objects.get(user=my_user)
-        doctor_form = EditMyDoctorForm(request.POST or None, initial={'university': doctor.university,
-                                                                      'year_diploma': doctor.year_diploma,
-                                                                      'diploma': doctor.diploma,
-                                                                      'office_address': doctor.office_address,
-                                                                      'office_phone_number': doctor.office_phone_number,
-                                                                      'insurance': doctor.insurance.all(),
-                                                                      'expertise': doctor.expertise})
+        doctor_form = DoctorForm(request.POST or None, initial={'university': doctor.university,
+                                                                'year_diploma': doctor.year_diploma,
+                                                                'diploma': doctor.diploma,
+                                                                'office_address': doctor.office_address,
+                                                                'office_phone_number': doctor.office_phone_number,
+                                                                'insurance': doctor.insurance.all(),
+                                                                'expertise': doctor.expertise}, delete_some_field=True)
 
     if request.method == 'POST':
         # if method is post sets user info
@@ -117,10 +117,10 @@ def edit_profile(request):
 
 def register(request):
     if request.method == 'POST':
-        user_form = UserForm(request.POST, prefix='user')
+        user_form = UserForm(request.POST, prefix='user', delete_some_field=False)
         my_user_form = MyUserForm(request.POST, request.FILES, prefix='my_user')
         doctor_form = DoctorForm(request.POST, request.FILES,
-                                 prefix='doctor')
+                                 prefix='doctor', delete_some_field=False)
         if user_form.is_valid() and my_user_form.is_valid():
             # if user fill the forms right, so he is user and user, MyUser models will be made
             user = User.objects.create_user(username=user_form.cleaned_data['username'],
