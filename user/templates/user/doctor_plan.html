@@ -80,6 +80,7 @@
                                 <input type="hidden" name="appointment" value="{{ app.id }}">
                                 <input type="hidden" name="app_action" value="confirmed">
                                 <input type="hidden" name="date" value="{{ date }}">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
                                 <button style="background-color: transparent ; border: none ; outline: none;">
                                     <a type="submit" style="color: gray;"

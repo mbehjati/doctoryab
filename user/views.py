@@ -219,7 +219,7 @@ def doctor_plan(request):
                 app.save()
                 x = AppointmentTime.objects.get(id=app.id)
                 send_app_result_mail(app, True)
-            elif request.POST['app_action'] == 'not_confirmed':
+            if request.POST['app_action'] == 'not_confirmed':
                 app.confirmation = '2'
                 app.save()
                 new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
@@ -248,6 +248,15 @@ def doctor_plan(request):
     apps = None if len(apps) == 0 else apps
     return render(request, 'user/doctor_plan.html',
                   {'apps': apps, 'date': date, 'today': today, 'cancel_deadline': cancel_deadline})
+
+
+# def app_confirmation(request):
+#     app = request.POST['appointment']
+#     app = get_object_or_404(AppointmentTime, id=app)
+#     app.confirmation = '3'
+#     app.save()
+#     send_app_result_mail(app, True)
+#     return redirect(request.META.get('HTTP_REFERER'))
 
 
 def doctor_free_time(request):
