@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from user.doctor_plan import calc_doctor_free_times, calc_visit_times_for_a_day, has_appointment_conflict
+from .forms.doctorplan import DoctorFreeTimes
 from .views import *
 
 STATUS_OK = 200
@@ -402,8 +403,9 @@ class DcotorPlan(TestCase):
         request = rf.post('/user/plan', {'app_action': 'delete', 'date': '1395-07-01', 'appointment': self.app1.id,
                                          'cancel_deadline': '1395-07-02'})
         request.user = self.user
-        response = doctor_plan(request)
-        self.assertEqual(response.status_code, 200)
+        request.session = {}
+        response = delete_free_app(request)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(AppointmentTime.objects.count(), 3)
         self.assertEqual(set(AppointmentTime.objects.all()), set([self.app2, self.app3, self.app4]))
 
@@ -413,8 +415,10 @@ class DcotorPlan(TestCase):
         request = rf.post('/user/plan', {'app_action': 'confirmed', 'date': '1395-07-01', 'appointment': self.app2.id,
                                          'cancel_deadline': '1395-07-02'})
         request.user = self.user
-        response = doctor_plan(request)
-        self.assertEqual(response.status_code, 200)
+        request.session = {}
+
+        response = app_confirmation(request)
+        self.assertEqual(response.status_code, 302)
         self.app2 = AppointmentTime.objects.get(id=self.app2.id)
         self.assertEqual(self.app2.confirmation, '3')
 
@@ -426,8 +430,10 @@ class DcotorPlan(TestCase):
                           {'app_action': 'not_confirmed', 'date': '1395-07-01', 'appointment': self.app3.id,
                            'cancel_deadline': '1395-07-02'})
         request.user = self.user
-        response = doctor_plan(request)
-        self.assertEqual(response.status_code, 200)
+        request.session = {}
+
+        response = app_not_confirmation(request)
+        self.assertEqual(response.status_code, 302)
         self.app3 = AppointmentTime.objects.get(id=self.app3.id)
         self.assertEqual(self.app3.confirmation, '2')
         self.assertEqual(AppointmentTime.objects.count(), 5)
@@ -438,9 +444,10 @@ class DcotorPlan(TestCase):
         request = rf.post('user/plan', {'app_action': 'presence', 'date': '1395-07-01', 'appointment': self.app4.id,
                                         'cancel_deadline': '1395-07-02'})
         request.user = self.user
-        response = doctor_plan(request)
+        request.session = {}
+        response = set_presence(request)
         self.assertEqual(self.app4.presence, False)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.app4 = AppointmentTime.objects.get(id=self.app4.id)
         self.assertEqual(self.app4.presence, True)
 
@@ -451,8 +458,10 @@ class DcotorPlan(TestCase):
         request = rf.post('/user/plan',
                           {'app_action': 'cancel', 'date': '1395-07-01', 'appointment': self.app3.id})
         request.user = self.user
-        response = doctor_plan(request)
-        self.assertEqual(response.status_code, 200)
+        request.session = {}
+
+        response = cancel_app(request)
+        self.assertEqual(response.status_code, 302)
         self.app3 = AppointmentTime.objects.get(id=self.app3.id)
         self.assertEqual(self.app3.confirmation, '2')
         self.assertEqual(AppointmentTime.objects.count(), 5)

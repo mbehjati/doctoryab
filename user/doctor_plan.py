@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from appointment.logic.appointment_time import is_time_before, add_time
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.models import AppointmentTime
+from user.forms.doctorplan import DoctorFreeTimes
 from user.lib.jalali import Gregorian
 
 
@@ -114,3 +115,51 @@ def convert_jalali_gregorian(jalali_date):
     year, month, day = jalali_date.split('-')
     start_day = jdatetime.date(day=int(day), year=int(year), month=int(month)).togregorian()
     return start_day
+
+
+def app_confirmation_action(app, request):
+    app.confirmation = '3'
+    app.save()
+    send_app_result_mail(app, True)
+
+
+def delete_free_app_action(app, request):
+    app.delete()
+
+
+def send_presence_mail_action(app, request):
+    presence_time = request.POST['presence_time']
+    send_notif_mail(app, presence_time)
+
+
+def cancel_app_action(app, request):
+    app.confirmation = '2'
+    app.save()
+    new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
+                              doctor=app.doctor, duration=app.duration)
+    new_app.save()
+    send_cancel_mail(app)
+
+
+def set_presence_action(app, request):
+    app.presence = True
+    app.save()
+
+
+def app_not_confirmation_action(app, request):
+    app.confirmation = '2'
+    app.save()
+    new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
+                              doctor=app.doctor, duration=app.duration)
+    new_app.save()
+    send_app_result_mail(app, False)
+
+
+def get_doctor_free_times_form_from_req(request):  # TODO: move this to logic
+    form = DoctorFreeTimes()
+    form.start_date = request.POST['start_date']
+    form.end_date = request.POST['end_date']
+    form.start_time = request.POST['start_time']
+    form.end_time = request.POST['end_time']
+    form.visit_duration = request.POST['visit_duration']
+    return form

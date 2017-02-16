@@ -11,7 +11,6 @@
         function showDialog(id) {
 
             $('#appointment').val(id);
-            $('#mail_action').val('mail')
             $('#mail-dialog').modal('open');
 
 
@@ -75,10 +74,10 @@
                     <div class="col s2 ">
                         {% if app.patient != None and app.confirmation == '1' %}
                             {#                            <br>#}
-                            <form method="post" style="float: right ; width: 50%">
+                            <form method="post" style="float: right ; width: 50%"
+                                  action={% url 'user:app_confirmation' %}>
                                 {% csrf_token %}
                                 <input type="hidden" name="appointment" value="{{ app.id }}">
-                                <input type="hidden" name="app_action" value="confirmed">
                                 <input type="hidden" name="date" value="{{ date }}">
                                 <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
@@ -91,10 +90,11 @@
                                 </button>
 
                             </form>
-                            <form method="post" style="float:left; width: 50% ">
+                            <form method="post" style="float:left; width: 50% "
+                                  action={% url 'user:app_not_confirmation' %}>
                                 {% csrf_token %}
                                 <input type="hidden" name="appointment" value="{{ app.id }}">
-                                <input type="hidden" name="app_action" value="not_confirmed">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
                                 <input type="hidden" name="date" value="{{ date }}">
                                 <button style="background-color: transparent ; border: none; outline: none">
                                     <a type="submit" style="color:gray;"
@@ -106,10 +106,10 @@
 
                             </form>
                         {% elif app.patient == None %}
-                            <form method="post" style="float:left; width: 50% ">
+                            <form method="post" style="float:left; width: 50% " action={% url 'user:delete_free_app' %}>
                                 {% csrf_token %}
                                 <input type="hidden" name="appointment" value="{{ app.id }}">
-                                <input type="hidden" name="app_action" value="delete">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
                                 <input type="hidden" name="date" value="{{ date }}">
                                 <button style="background-color: transparent ; border: none; outline: none">
                                     <a type="submit" style="color:gray;"
@@ -136,10 +136,10 @@
                                 </button>
                             </span>
 
-                            <form method="post" style="float:left; width: 50% ">
+                            <form method="post" style="float:left; width: 50% " action={% url 'user:set_presence' %}>
                                 {% csrf_token %}
                                 <input type="hidden" name="appointment" value="{{ app.id }}">
-                                <input type="hidden" name="app_action" value="presence">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
                                 <input type="hidden" name="date" value="{{ date }}">
                                 <button style="background-color: transparent ; border: none; outline: none">
                                     <a type="submit" style="color:gray;"
@@ -152,10 +152,10 @@
                             </form>
 
                         {% elif date >= cancel_deadline %}
-                            <form method="post" style="float:left; width: 50% ">
+                            <form method="post" style="float:left; width: 50% " action={% url 'user:cancel_app' %}>
                                 {% csrf_token %}
                                 <input type="hidden" name="appointment" value="{{ app.id }}">
-                                <input type="hidden" name="app_action" value="cancel">
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
                                 <input type="hidden" name="date" value="{{ date }}">
                                 <button style="background-color: transparent ; border: none; outline: none">
                                     <a type="submit" style="color:gray;"
@@ -200,7 +200,7 @@
 
 
     <div id="mail-dialog" class="modal" style="width: 400px">
-        <form method="post">
+        <form method="post" action={% url 'user:send_presence_mail' %}>
             <div class="modal-content">
                 <h5 class="indigo-text"> ارسال ایمیل یادآوری به بیمار</h5>
                 <div class="divider"></div>
@@ -210,7 +210,7 @@
 
                 {% csrf_token %}
                 <input type="hidden" id="appointment" name="appointment">
-                <input type="hidden" id="mail_action" name="app_action">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
                 <input type="hidden" name="date" value="{{ date }}">
                 <div style="width: 30%; margin: auto ; ">
                     <p>
