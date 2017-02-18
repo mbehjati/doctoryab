@@ -54,7 +54,6 @@ class UserRegistrationForm(UserModelsTest):
         form2 = UserForm(data={'username': 'user1',
                                'password': '123456',
                                'password2': '12345'})
-
         self.assertEqual(form2.is_valid(), False)
 
     def test_mail_validation(self):
@@ -71,6 +70,31 @@ class UserRegistrationForm(UserModelsTest):
                                'email': 'm.solieimani73.z'
                                })
         self.assertEqual(form2.is_valid(), False)
+
+        form3 = UserForm(data={'username': 'user1',
+                               'password': '12345',
+                               'password2': '12345',
+                               'email': 'm.solieimani73.z',
+                               'phone_number': '09109999999',
+                               'national_code': '1200153374'
+                               })
+        self.assertEqual(form3.is_valid(), False)
+
+        form4 = UserForm(data={'username': 'user1',
+                               'password': '12345',
+                               'password2': '12345',
+                               'email': 'm.solieimani73.z',
+                               'phone_number': '9109999999',
+                               'national_code': '1200153374'})
+        self.assertEqual(form4.is_valid(), False)
+
+        form5 = UserForm(data={'username': 'user1',
+                               'password': '12345',
+                               'password2': '12345',
+                               'email': 'm.solieimani73.z',
+                               'phone_number': '09109999999',
+                               'national_code': '200153374'})
+        self.assertEqual(form5.is_valid(), False)
 
     def test_no_empty_fields(self):
         """ checks user registration form required fields to bi filled by user"""
@@ -104,20 +128,6 @@ class UserRegistrationForm(UserModelsTest):
                                'email': 'm.solieimani73.z@gmail.com'
                                })
         self.assertEqual(form1.is_valid(), False)
-
-    def test_myuser_form_validation(self):
-        form1 = MyUserForm(data={'phone_number': '09109999999',
-                                 'national_code': '1200153374'})
-        self.assertEqual(form1.is_valid(), True)
-
-        form2 = MyUserForm(data={'phone_number': '9109999999',
-                                 'national_code': '1200153374'})
-
-        self.assertEqual(form2.is_valid(), False)
-
-        form3 = MyUserForm(data={'phone_number': '09109999999',
-                                 'national_code': '200153374'})
-        self.assertEqual(form3.is_valid(), False)
 
 
 class UserLogin(TestCase):
