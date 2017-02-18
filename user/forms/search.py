@@ -22,6 +22,3 @@ class AdvancedSearchForm(forms.Form):
     date = forms.CharField(label='تاریخ', required=False)
     insurance = forms.ChoiceField(choices=insurance_choices, label='بیمه')
     address = forms.CharField(label='آدرس', required=False)
-
-    def clean(self):
-        cleaned_data = super(AdvancedSearchForm, self).clean()
