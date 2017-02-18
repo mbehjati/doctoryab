@@ -23,6 +23,7 @@ class AppointmentTime(models.Model):
         return self.date == other.date and self.start_time == other.start_time and self.duration == other.duration and \
                self.doctor == other.doctor and self.patient == other.patient
 
+    @property
     def get_status(self):  # TODO: write test for this part
         status = ['در انتظار تایید', 'تایید نشده', 'تایید شده']
-        return status[int(self.confirmation)]
+        return status[int(self.confirmation) - 1]
