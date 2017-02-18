@@ -6,8 +6,6 @@ from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.core import serializers
-from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -25,7 +23,6 @@ from user.forms.search import AdvancedSearchForm
 from user.lib.jalali import Gregorian
 from user.models import *
 from user.models import Doctor
-from user.serializers import SearchFormSerializer
 from .doctor_plan import save_doctor_free_times_in_db
 
 
@@ -264,8 +261,8 @@ def simple_search(request):
     keyword = request.POST['keyword']
     result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
     form = AdvancedSearchForm(initial={'name': keyword})
-    s = SearchFormSerializer()
-    print(s.data)
+    # s = SearchFormSerializer()
+    # print(s.data)
     return form, result
 
 
