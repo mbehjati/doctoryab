@@ -19,25 +19,27 @@
             $(":input").addClass("validate");
             $('select').material_select();
 
-            {% if my_user_form.errors %}
-                {% for field in my_user_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').prop('required', true);
-                        $('#{{ field.id_for_label }}').removeClass('validate');
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-
-                        $label.attr('data-error', '{{ error }}');
-
-                    {% endfor %}
-                {% endfor %}
-                {% for error in my_user_form.non_field_errors %}
-
-                {% endfor %}
-            {% endif %}
+            {#            {% if my_user_form.errors %}#}
+            {#                {% for field in my_user_form %}#}
+            {#                    {% for error in field.errors %}#}
+            {#                        $('#{{ field.id_for_label }}').prop('required', true);#}
+            {#                        $('#{{ field.id_for_label }}').removeClass('validate');#}
+            {#                        $('#{{ field.id_for_label }}').addClass('invalid');#}
+            {#                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');#}
+            {##}
+            {#                        $label.attr('data-error', '{{ error }}');#}
+            {##}
+            {#                    {% endfor %}#}
+            {#                {% endfor %}#}
+            {#                {% for error in my_user_form.non_field_errors %}#}
+            {##}
+            {#                {% endfor %}#}
+            {#            {% endif %}#}
             {% if user_form.errors %}
                 {% for field in user_form %}
                     {% for error in field.errors %}
+                        {#                        the below one added by masoumeh#}
+                        $('#{{ field.id_for_label }}').prop('required', true);
                         $('#{{ field.id_for_label }}').removeClass('validate');
                         $('#{{ field.id_for_label }}').addClass('invalid');
                         var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
@@ -76,7 +78,7 @@
             {% csrf_token %}
 
             {% include "user/form.html" with form=user_form %}
-            {% include "user/form.html" with form=my_user_form %}
+            {#            {% include "user/form.html" with form=my_user_form %}#}
             <p>
                 <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
                 <label for="is-doctor">پزشک هستم</label>

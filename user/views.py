@@ -21,6 +21,8 @@ from user.models import *
 from user.models import Doctor
 from .doctor_plan import save_doctor_free_times_in_db
 from .forms.doctorplan import DoctorFreeTimes
+from django.core import serializers
+from django.http import JsonResponse
 
 
 def upload_contract_file(request):
@@ -34,7 +36,7 @@ def upload_contract_file(request):
 
 @login_required()
 def edit_password(request):
-    """ user can his/her password
+    """ user can change his/her password
 
          restrictions:
          just for logged in users
@@ -52,6 +54,20 @@ def edit_password(request):
 
 
 @login_required()
+def json_password(request):
+    user = request.user
+    json_object = {'username': user.username, 'first_name': user.first_name}
+    return JsonResponse(json_object)
+
+
+# def json_password(request):
+#     json_serializer = serializers.get_serializer("json")()
+#     json_dict = {'name': 'soli'}
+#     response = json_serializer.serialize(json_dict, ensure_ascii=False, indent=2, use_natural_keys=True)
+#     return HttpResponse(response, mimetype="json")
+
+
+@login_required()
 def edit_profile(request):
     """ user can see his/her profile information and change them if wants
 
@@ -63,91 +79,46 @@ def edit_profile(request):
      """
     user = request.user
     my_user = MyUser.objects.get(user=user)
-    user_form = UserForm(request.POST or None, initial={'first_name': my_user.user.first_name,
-                                                        'last_name': my_user.user.last_name,
-                                                        'email': my_user.user.email}, delete_some_field=True)
-    my_user_form = MyUserForm(request.POST or None, request.FILES or None,
-                              initial={'phone_number': my_user.phone_number,
-                                       'national_code': my_user.national_code})
+    user_form = UserForm(request.POST or None, request.FILES or None, instance=my_user,
+                         for_edit_profile=True)
     # first set doctor  model and form to None then
     doctor = None
     doctor_form = None
     # decides based on my_user is doctor or not to make doctor model and form or not
     if my_user.is_doctor:
         doctor = Doctor.objects.get(user=my_user)
-        doctor_form = DoctorForm(request.POST or None, initial={'university': doctor.university,
-                                                                'year_diploma': doctor.year_diploma,
-                                                                'diploma': doctor.diploma,
-                                                                'office_address': doctor.office_address,
-                                                                'office_phone_number': doctor.office_phone_number,
-                                                                'insurance': doctor.insurance.all(),
-                                                                'expertise': doctor.expertise}, delete_some_field=True)
+        doctor_form = DoctorForm(request.POST or None, instance=doctor,
+                                 for_edit_profile=True)
 
     if request.method == 'POST':
         # if method is post sets user info
-        if user_form.is_valid() and my_user_form.is_valid():
-            user.first_name = user_form.cleaned_data['first_name']
-            user.last_name = user_form.cleaned_data['last_name']
-            user.email = user_form.cleaned_data['email']
-            my_user.phone_number = my_user_form.cleaned_data['phone_number']
-            my_user.national_code = my_user_form.cleaned_data['national_code']
-            if not (my_user_form.cleaned_data['image'] is None):
-                my_user.image = my_user_form.cleaned_data['image']
-            user.save()
-            my_user.user = user
-            my_user.save()
+        if user_form.is_valid():
+            my_user = user_form.save(user=user)
             if my_user.is_doctor:
                 if doctor_form.is_valid():
-                    doctor.university = doctor_form.cleaned_data['university']
-                    doctor.year_diploma = doctor_form.cleaned_data['year_diploma']
-                    doctor.diploma = doctor_form.cleaned_data['diploma']
-                    doctor.office_address = doctor_form.cleaned_data['office_address']
-                    doctor.office_phone_number = doctor_form.cleaned_data['office_phone_number']
-                    doctor.insurance = doctor_form.cleaned_data['insurance']
-                    doctor.expertise = doctor_form.cleaned_data['expertise']
-                    doctor.user = my_user
-                    doctor.save()
+                    doctor = doctor_form.save(user=my_user)
             messages.success(request, 'مشخصات ویرایش شد.')
             return redirect('/user/edit-profile')
 
     return render(request, 'user/profile.html',
-                  {'user_form': user_form, 'my_user_form': my_user_form, 'doctor_form': doctor_form,
+                  {'user_form': user_form,
+                   'doctor_form': doctor_form,
                    'my_user': my_user, 'doctor': doctor})
 
 
 def register(request):
     if request.method == 'POST':
-        user_form = UserForm(request.POST, prefix='user', delete_some_field=False)
-        my_user_form = MyUserForm(request.POST, request.FILES, prefix='my_user')
+        user_form = UserForm(request.POST, request.FILES, for_register=True)
         doctor_form = DoctorForm(request.POST, request.FILES,
-                                 prefix='doctor', delete_some_field=False)
-        if user_form.is_valid() and my_user_form.is_valid():
-            # if user fill the forms right, so he is user and user, MyUser models will be made
-            user = User.objects.create_user(username=user_form.cleaned_data['username'],
-                                            password=user_form.cleaned_data['password'],
-                                            first_name=user_form.cleaned_data['first_name'],
-                                            last_name=user_form.cleaned_data['last_name'],
-                                            email=user_form.cleaned_data['email'])
-            user.is_active = True
-            user.save()
-            my_user = MyUser(user=user, phone_number=my_user_form.cleaned_data['phone_number'],
-                             national_code=my_user_form.cleaned_data['national_code'],
-                             image=my_user_form.cleaned_data['image'])
-            my_user.save()
+                                 prefix='doctor', for_register=True)
+        if user_form.is_valid():
+            user = user_form.save()
+
             if doctor_form.is_valid():
                 # so user is doctor, creates Doctor model and save it, also set is_doctor of my_user to true
-                doctor = Doctor(user=my_user, university=doctor_form.cleaned_data['university'],
-                                year_diploma=doctor_form.cleaned_data['year_diploma'],
-                                diploma=doctor_form.cleaned_data['diploma'],
-                                office_address=doctor_form.cleaned_data['office_address'],
-                                office_phone_number=doctor_form.cleaned_data['office_phone_number'],
-                                expertise=doctor_form.cleaned_data['expertise'],
-                                contract=doctor_form.cleaned_data['contract'])
-                doctor.save()
-                for ins in doctor_form.cleaned_data['insurance']:
-                    doctor.insurance.add(ins)
-                my_user.is_doctor = True
-                my_user.save()
+                doctor = doctor_form.save(user=user)
+                user.is_doctor = True
+                user.save()
 
             new_user = authenticate(username=user_form.cleaned_data['username'],
                                     password=user_form.cleaned_data['password'])
@@ -155,11 +126,19 @@ def register(request):
             messages.success(request, 'شما با موفقیت ثبت نام شدید.')
             return redirect('/user/edit-profile')
     else:
-        user_form = UserForm(prefix='user')
-        my_user_form = MyUserForm(prefix='my_user')
+        user_form = UserForm()
         doctor_form = DoctorForm(prefix='doctor')
     return render(request, 'user/register_user.html',
-                  {'user_form': user_form, 'my_user_form': my_user_form, 'doctor_form': doctor_form})
+                  {'user_form': user_form,
+                   'doctor_form': doctor_form})
+
+
+def save_user_register_info():
+    """user creation with user registration form info
+        input:
+
+    :return:
+    """
 
 
 def logout(request):

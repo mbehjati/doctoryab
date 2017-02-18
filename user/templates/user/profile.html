@@ -31,17 +31,17 @@
                     {% endfor %}
                 {% endfor %}
             {% endif %}
-            {% if my_user_form.errors %}
-                {% for field in my_user_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').removeClass('validate');
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-                        $label.attr('data-error', '{{ error }}');
-
-                    {% endfor %}
-                {% endfor %}
-            {% endif %}
+            {#            {% if my_user_form.errors %}#}
+            {#                {% for field in my_user_form %}#}
+            {#                    {% for error in field.errors %}#}
+            {#                        $('#{{ field.id_for_label }}').removeClass('validate');#}
+            {#                        $('#{{ field.id_for_label }}').addClass('invalid');#}
+            {#                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');#}
+            {#                        $label.attr('data-error', '{{ error }}');#}
+            {##}
+            {#                    {% endfor %}#}
+            {#                {% endfor %}#}
+            {#            {% endif %}#}
             {% if doctor_form.errors %}
                 {% for field in doctor_form %}
                     {% for error in field.errors %}
@@ -65,7 +65,7 @@
         <form enctype="multipart/form-data" class="col s12" action="" method="post">
             {% csrf_token %}
             {% include "user/form.html" with form=user_form %}
-            {% include "user/form.html" with form=my_user_form %}
+            {#            {% include "user/form.html" with form=my_user_form %}#}
             {% include "user/form.html" with form=doctor_form %}
             <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت تغییرات
             </button>
