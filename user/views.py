@@ -1,17 +1,22 @@
 # -*- coding: UTF-8 -*-
-
+import json
 from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from appointment.logic.appointment_time import sort_appointment_times
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.logic.search import search_by_name_or_expertise, do_advanced_search
 from appointment.models import AppointmentTime
+from appointment.serializers import AppointmentSerializer
 from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, app_confirmation_action, \
     delete_free_app_action, send_presence_mail_action, cancel_app_action, set_presence_action, \
     app_not_confirmation_action, get_doctor_free_times_form_from_req
@@ -20,6 +25,7 @@ from user.forms.search import AdvancedSearchForm
 from user.lib.jalali import Gregorian
 from user.models import *
 from user.models import Doctor
+from user.serializers import SearchFormSerializer
 from .doctor_plan import save_doctor_free_times_in_db
 
 
@@ -246,9 +252,7 @@ def search(request):
 
     if request.method == 'POST':
         if 'keyword' in request.POST:
-            keyword = request.POST['keyword']
-            result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
-            form = AdvancedSearchForm(initial={'name': keyword})
+            form, result = simple_search(request)
         else:
             form = AdvancedSearchForm(request.POST)
             result = do_advanced_search(form)
@@ -256,12 +260,27 @@ def search(request):
     return render(request, 'appointment/advanced_search.html', {'form': form, 'result': result})
 
 
+def simple_search(request):
+    keyword = request.POST['keyword']
+    result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+    form = AdvancedSearchForm(initial={'name': keyword})
+    s = SearchFormSerializer()
+    print(s.data)
+    return form, result
+
+
 @login_required()
 def user_appointments(request):
+    return render(request, 'user/appointments_list.html')
+
+
+@api_view(['GET'])
+def get_appointments(request):
     appointments = list(
         AppointmentTime.objects.filter(patient=request.user.myuser))  # TODO: Check for another way to convert queryset
     sorted_appointments = sort_appointment_times(appointments)
-    return render(request, 'user/appointments_list.html', {'appointments': sorted_appointments})
+    serializer = AppointmentSerializer(sorted_appointments, many=True)
+    return Response(serializer.data)
 
 
 @login_required()
@@ -273,6 +292,20 @@ def doctor_weekly_plan(request):
 
     weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
     return render(request, 'user/weekly_plan.html', {'plan': weekly_plan})
+
+
+@api_view(['GET', 'POST'])
+def get_doctor_weekly(request):
+    start_day = datetime.now()
+
+    if request.method == 'POST':
+        start_day = convert_jalali_gregorian(request.POST['date'])
+
+    weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
+    w = {}
+    for k, v in weekly_plan:
+        w[k] = AppointmentSerializer(v, many=True).data
+    return Response(w)
 
 
 def app_confirmation(request):

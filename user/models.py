@@ -71,6 +71,7 @@ class Doctor(models.Model):
     def __str__(self):
         return str(self.user.user.username)
 
+    @property
     def title(self):
         title = {'تخصص': 'متخصص', 'عمومی': 'پزشک', 'فوق تخصص': 'فوق تخصص'}
         return title[self.diploma]
