@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-
+import json
 from datetime import datetime, timedelta
 
 from django.contrib import messages
@@ -7,6 +7,9 @@ from django.contrib.auth import login as django_login, logout as django_logout, 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from appointment.logic.appointment_time import sort_appointment_times
 from appointment.logic.doctor_plan import get_doctor_day_plan
@@ -14,13 +17,14 @@ from appointment.logic.search import search_by_name_or_expertise, do_advanced_se
 from appointment.models import AppointmentTime
 from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, app_confirmation_action, \
     delete_free_app_action, send_presence_mail_action, cancel_app_action, set_presence_action, \
-    app_not_confirmation_action, get_doctor_free_times_form_from_req
+    app_not_confirmation_action, get_doctor_free_times_form_from_req, get_doctor_from_req, get_app_from_req
 from user.forms import *
 from user.forms.search import AdvancedSearchForm
 from user.lib.jalali import Gregorian
 from user.models import *
 from user.models import Doctor
 from .doctor_plan import save_doctor_free_times_in_db
+from .serializers import DoctorSerializer
 
 
 def upload_contract_file(request):
@@ -184,13 +188,6 @@ def login(request):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-def get_doctor_from_req(request):
-    user = request.user.id
-    user_obj = User.objects.get(pk=user)
-    my_user = MyUser.objects.get(user=user_obj)
-    return Doctor.objects.get(user=my_user)
-
-
 def doctor_plan(request):
     doctor = get_doctor_from_req(request)
     today = date = Gregorian(datetime.now().strftime('%Y-%m-%d')).persian_string()
@@ -211,11 +208,6 @@ def doctor_plan(request):
                   {'apps': apps, 'date': date, 'today': today, 'cancel_deadline': cancel_deadline})
 
 
-def get_app_from_req(request):
-    app = request.POST['appointment']
-    return get_object_or_404(AppointmentTime, id=app)
-
-
 def app_action(request, action):
     app = get_app_from_req(request)
     action(app, request)
@@ -224,20 +216,33 @@ def app_action(request, action):
 
 
 def doctor_free_time(request):
-    message = ''
-    response = False
+    success = 'no message'
 
-    if request.method == 'POST':
-        doctor = get_doctor_from_req(request)
-        form = get_doctor_free_times_form_from_req(request)
-        if form.is_data_valid():
-            save_doctor_free_times_in_db(doctor, form)
-            message = 'اطلاعات شما با موفقیت ثبت شد. '  # TODO: send to django messages
-            response = True
-        else:
-            message = '*اطلاعات واردشده مجاز نمی‌باشد. '
+    # if request.method == 'POST':
+    #     doctor = get_doctor_from_req(request)
+    #     form = get_doctor_free_times_form_from_req(request)
+    #     if form.is_data_valid():
+    #         save_doctor_free_times_in_db(doctor, form)
+    #         success = True
+    #     else:
+    #         success = False
 
-    return render(request, 'user/set_doctor_free_times.html', {'message': message, 'response': response})
+    return render(request, 'user/set_doctor_free_times.html', {'success': success})
+
+
+def save_doctor_free_times(request):
+    form = get_doctor_free_times_form_from_req(request)
+
+    doctor = get_doctor_from_req(request)
+    if form.is_data_valid():
+        save_doctor_free_times_in_db(doctor, form)
+        messages.success(request, 'اطلاعات شما با موفقیت ثبت شد.')
+        success = True
+    else:
+        messages.success(request, '*اطلاعات وارد شده صحیح نمی‌باشد.')
+        success = False
+    print('done!!!')
+    return HttpResponse(json.dumps(success), content_type='application/json')
 
 
 def search(request):
@@ -297,3 +302,17 @@ def set_presence(request):
 
 def app_not_confirmation(request):
     return app_action(request, app_not_confirmation_action)
+
+
+@api_view(['GET'])
+def get_doctor_detail(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    serializer = DoctorSerializer(doctor)
+    return Response(serializer.data)
+
+
+@csrf_exempt
+def test(request):
+    print('hello')
+    print(request.POST['data'])
+    return HttpResponse(json.dumps('done!!'), content_type='application/json')
