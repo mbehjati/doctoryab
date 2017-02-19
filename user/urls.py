@@ -21,5 +21,8 @@ urlpatterns = [
     url(r'^send_presence_mail', user.views.send_presence_mail, name='send_presence_mail'),
     url(r'^cancel_app', user.views.cancel_app, name='cancel_app'),
     url(r'^set_presence', user.views.set_presence, name='set_presence'),
+    url(r'^doctor/(?P<doctor_id>[0-9]+)/$', views.get_doctor_detail, name='doctor_detail'),
+    url(r'^save_free_time/$', views.save_doctor_free_times, name='save_free_time'),
+    url(r'test/', views.test, name='test')
 
 ]

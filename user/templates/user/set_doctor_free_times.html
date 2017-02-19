@@ -7,7 +7,33 @@
     <link rel="stylesheet" href={% static 'user/scss/set_doctor_free_times.css' %}>
 
     <script type="text/javascript">
+
+
+        function getFormData($form) {
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function (n) {
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+
+        function submit_form() {
+            var $form = $("#form_data")
+            var data = getFormData($form);
+            console.log('in submit')
+            console.log(data)
+            $.post('http://127.0.0.1:8000/user/save_free_time/', data, function (data, status) {
+                {#                alert("Data: " + data + "\nStatus: " + status);#}
+            });
+            location.reload()
+            {#            return false;#}
+        }
+
         $(document).ready(function () {
+
 
             $('#start_time , #end_time').timepicker({'step': 15});
 
@@ -31,19 +57,19 @@
                 });
             }
 
-            custom_date_picker(".datepicker1")
-            custom_date_picker(".datepicker2")
+            custom_date_picker("#datepicker1")
+            custom_date_picker("#datepicker2")
 
 
-            $(".datepicker1").val(' ');
-            $(".datepicker2").val(' ');
+            $("#datepicker1").val(' ');
+            $("#datepicker2").val(' ');
 
         })
 
     </script>
 
     <div class="row">
-        <form class="col s12" method="post">
+        <form class="col s12" id="form_data">
 
             {% csrf_token %}
 
@@ -55,13 +81,13 @@
                     <div class="row" dir="rtl">
                         <div class="col s6">
                             <label for="end_date"> تا </label>
-                            <input type="text" class="datepicker1" name="end_date"/>
+                            <input type="text" id="datepicker1" name="end_date"/>
 
                         </div>
 
                         <div class="col s6">
                             <label for="start_date">از </label>
-                            <input type="text" class="datepicker2" name="start_date"/>
+                            <input type="text" id="datepicker2" name="start_date"/>
                         </div>
                     </div>
 
@@ -91,10 +117,10 @@
                             <option value="60"> ۱ ساعت</option>
                         </select>
                     </div>
-                    <button class="btn waves-effect waves-light left" type="submit" name="action">ثبت
+                    <button class="btn waves-effect waves-light left"
+                            onclick="submit_form()">ثبت
                     </button>
-                    <span style="color: {% if response == True %} green {% else %} red {% endif %} ; display: block; margin:auto ;  ">
-                        {{ message }}
+                    <span style="color: {% if success == True %} green {% else %} red {% endif %} ; display: block; margin:auto ;  ">
                     </span>
 
                 </div>

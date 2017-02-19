@@ -3,13 +3,16 @@
 from datetime import datetime, timedelta
 
 import jdatetime
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 
 from appointment.logic.appointment_time import is_time_before, add_time
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.models import AppointmentTime
 from user.forms.doctorplan import DoctorFreeTimes
 from user.lib.jalali import Gregorian
+from user.models import MyUser, Doctor
 
 
 def save_doctor_free_times_in_db(doctor, form):
@@ -57,6 +60,7 @@ def has_appointment_conflict(appointment, all_apps):
 def calc_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
     ans = []
     while is_time_before(add_time(start_time, duration), end_time):
+
         ans.append(
             AppointmentTime(date=day, start_time=start_time, end_time=add_time(start_time, duration), duration=duration,
                             doctor=doctor))
@@ -163,3 +167,15 @@ def get_doctor_free_times_form_from_req(request):  # TODO: move this to logic
     form.end_time = request.POST['end_time']
     form.visit_duration = request.POST['visit_duration']
     return form
+
+
+def get_doctor_from_req(request):
+    user = request.user.id
+    user_obj = User.objects.get(pk=user)
+    my_user = MyUser.objects.get(user=user_obj)
+    return Doctor.objects.get(user=my_user)
+
+
+def get_app_from_req(request):
+    app = request.POST['appointment']
+    return get_object_or_404(AppointmentTime, id=app)
