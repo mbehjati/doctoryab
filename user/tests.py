@@ -506,7 +506,7 @@ class DoctorWeeklyPlanTest(TestCase):
         for i in range(7):
             delta = timedelta(i)
             date = today + delta
-            formatted_date = Gregorian(date.strftime('%Y-%m-%d')).persian_string()
+            formatted_date = jdatetime.date.fromgregorian(date=date).strftime('%Y-%m-%d')
             AppointmentTime.objects.create(patient=self.patient, doctor=self.doctor, date=formatted_date,
                                            end_time='03:00pm',
                                            duration=15, start_time='03:15pm')
@@ -520,9 +520,10 @@ class DoctorWeeklyPlanTest(TestCase):
         today = datetime.now()
         weekly_plan = get_doctor_weekly_plan(self.doctor, today)
         print(weekly_plan)
-        for date, appointments in weekly_plan:
-            day_appointments = list(AppointmentTime.objects.filter(doctor=self.doctor, patient=self.patient, date=date))
-            self.assertListEqual(appointments, day_appointments)
+        for day_appointments_plan in weekly_plan:
+            day_appointments = list(AppointmentTime.objects.filter(doctor=self.doctor, patient=self.patient,
+                                                                   date=day_appointments_plan['date']))
+            self.assertListEqual(day_appointments_plan['appointments'], day_appointments)
 
     def test_convert_jalali_gregorian(self):
         jalali_str = '1395-11-16'
