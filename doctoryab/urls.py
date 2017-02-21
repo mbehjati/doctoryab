@@ -21,7 +21,7 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from appointment import views
-from user.views import search
+from appointment.views import search
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),

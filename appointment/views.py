@@ -10,9 +10,13 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from appointment.forms import AdvancedSearchForm
 from appointment.logic.doctor_plan import get_doctor_all_plan, send_app_reserve_mail
-from .models import *
-from .serializers import AppointmentSerializer
+from appointment.logic.search import do_advanced_search, search_by_name_or_expertise
+from appointment.models import AppointmentTime
+from appointment.serializers import AppointmentSerializer
+from user.models import MyUser, Doctor
+from user.serializers import DoctorSerializer
 
 
 def home(request):
@@ -67,3 +71,32 @@ def reserve_appointment(request, app_id):
     send_app_reserve_mail(appointment)
     return HttpResponse(json.dumps('success'))
     # TODO return what??
+
+
+def search(request):
+    result = None
+    form = AdvancedSearchForm()
+
+    if request.method == 'POST':
+        if 'keyword' in request.POST:
+            form, result = simple_search(request)
+        else:
+            form = AdvancedSearchForm(request.POST)
+            result = do_advanced_search(form)
+
+    return render(request, 'appointment/advanced_search.html', {'form': form, 'result': result})
+
+
+def simple_search(request):
+    keyword = request.POST['keyword']
+    result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+    form = AdvancedSearchForm(initial={'name': keyword})
+    return form, result
+
+
+@api_view(['POST'])
+def search_keyword(request):
+    keyword = request.POST['keyword']
+    result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+    result_serializer = DoctorSerializer(result, many=True)
+    return Response(result_serializer.data)

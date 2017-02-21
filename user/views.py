@@ -14,7 +14,6 @@ from rest_framework.response import Response
 
 from appointment.logic.appointment_time import sort_appointment_times
 from appointment.logic.doctor_plan import get_doctor_day_plan
-from appointment.logic.search import search_by_name_or_expertise, do_advanced_search
 from appointment.models import AppointmentTime
 from appointment.serializers import AppointmentSerializer
 from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, app_confirmation_action, \
@@ -22,7 +21,6 @@ from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, a
     app_not_confirmation_action, get_doctor_free_times_form_from_req, get_doctor_from_req, get_app_from_req, \
     save_doctor_free_times_in_db
 from user.forms import *
-from user.forms.search import AdvancedSearchForm
 from user.models import *
 from user.models import Doctor
 from user.serializers import WeeklyPlanSerializer, DoctorSerializer
@@ -244,35 +242,6 @@ def save_doctor_free_times(request):
         success = False
     print('done!!!', success)
     return HttpResponse(json.dumps(success), content_type='application/json')
-
-
-def search(request):
-    result = None
-    form = AdvancedSearchForm()
-
-    if request.method == 'POST':
-        if 'keyword' in request.POST:
-            form, result = simple_search(request)
-        else:
-            form = AdvancedSearchForm(request.POST)
-            result = do_advanced_search(form)
-
-    return render(request, 'appointment/advanced_search.html', {'form': form, 'result': result})
-
-
-def simple_search(request):
-    keyword = request.POST['keyword']
-    result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
-    form = AdvancedSearchForm(initial={'name': keyword})
-    return form, result
-
-
-@api_view(['POST'])
-def search_keyword(request):
-    keyword = request.POST['keyword']
-    result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
-    result_serializer = DoctorSerializer(result, many=True)
-    return Response(result_serializer.data)
 
 
 @login_required()
