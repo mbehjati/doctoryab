@@ -11,7 +11,6 @@ from appointment.logic.appointment_time import is_time_before, add_time
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.models import AppointmentTime
 from user.forms.doctorplan import DoctorFreeTimes
-from user.lib.jalali import Gregorian
 from user.models import MyUser, Doctor
 
 
@@ -41,7 +40,6 @@ def calc_doctor_free_times(doctor, form):
 
 def has_appointment_conflict(appointment, all_apps):
     '''
-
     :param appointment: an appointment
     :param all_apps: a list of appointments
     :return: true if given appointment has time conflict with list of appointments
@@ -60,7 +58,6 @@ def has_appointment_conflict(appointment, all_apps):
 def calc_visit_times_for_a_day(doctor, day, start_time, end_time, duration):
     ans = []
     while is_time_before(add_time(start_time, duration), end_time):
-
         ans.append(
             AppointmentTime(date=day, start_time=start_time, end_time=add_time(start_time, duration), duration=duration,
                             doctor=doctor))
@@ -103,9 +100,9 @@ def get_doctor_weekly_plan(doctor, date):
     for i in range(7):
         delta = timedelta(i)
         week_day = date + delta
-        formatted_date = Gregorian(week_day.strftime('%Y-%m-%d')).persian_string()
+        formatted_date = jdatetime.date.fromgregorian(date=week_day).strftime('%Y-%m-%d')
         day_appointments = get_doctor_day_plan(doctor=doctor, date=formatted_date)
-        weekly_plan.append((formatted_date, day_appointments))
+        weekly_plan.append({'date': formatted_date, 'appointments': day_appointments})
 
     return weekly_plan
 
@@ -159,7 +156,7 @@ def app_not_confirmation_action(app, request):
     send_app_result_mail(app, False)
 
 
-def get_doctor_free_times_form_from_req(request):  # TODO: move this to logic
+def get_doctor_free_times_form_from_req(request):
     form = DoctorFreeTimes()
     form.start_date = request.POST['start_date']
     form.end_date = request.POST['end_date']

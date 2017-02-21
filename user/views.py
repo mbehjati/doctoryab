@@ -2,12 +2,12 @@
 import json
 from datetime import datetime, timedelta
 
+import jdatetime
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout, authenticate
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -21,9 +21,9 @@ from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, a
     app_not_confirmation_action, get_doctor_free_times_form_from_req, get_doctor_from_req, get_app_from_req
 from user.forms import *
 from user.forms.search import AdvancedSearchForm
-from user.lib.jalali import Gregorian
 from user.models import *
 from user.models import Doctor
+from user.serializers import WeeklyPlanSerializer
 from .doctor_plan import save_doctor_free_times_in_db
 from .serializers import DoctorSerializer
 
@@ -191,8 +191,8 @@ def login(request):
 
 def doctor_plan(request):
     doctor = get_doctor_from_req(request)
-    today = date = Gregorian(datetime.now().strftime('%Y-%m-%d')).persian_string()
-    cancel_deadline = Gregorian(str((datetime.now() + timedelta(days=1)).date())).persian_string()
+    today = date = jdatetime.date.fromgregorian(date=datetime.now()).strftime('%Y-%m-%d')
+    cancel_deadline = jdatetime.date.fromgregorian(date=(datetime.now() + timedelta(days=1))).strftime('%Y-%m-%d')
 
     if 'date' in request.session:
         date = request.session['date']
@@ -242,7 +242,7 @@ def save_doctor_free_times(request):
     else:
         messages.success(request, '*اطلاعات وارد شده صحیح نمی‌باشد.')
         success = False
-    print('done!!!')
+    print('done!!!', success)
     return HttpResponse(json.dumps(success), content_type='application/json')
 
 
@@ -264,9 +264,15 @@ def simple_search(request):
     keyword = request.POST['keyword']
     result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
     form = AdvancedSearchForm(initial={'name': keyword})
-    # s = SearchFormSerializer()
-    # print(s.data)
     return form, result
+
+
+@api_view(['POST'])
+def search_keyword(request):
+    keyword = request.POST['keyword']
+    result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
+    result_serializer = DoctorSerializer(result, many=True)
+    return Response(result_serializer.data)
 
 
 @login_required()
@@ -279,19 +285,13 @@ def get_appointments(request):
     appointments = list(
         AppointmentTime.objects.filter(patient=request.user.myuser))  # TODO: Check for another way to convert queryset
     sorted_appointments = sort_appointment_times(appointments)
-    serializer = AppointmentSerializer(sorted_appointments, many=True)
-    return Response(serializer.data)
+    appointments_serializer = AppointmentSerializer(sorted_appointments, many=True)
+    return Response(appointments_serializer.data)
 
 
 @login_required()
 def doctor_weekly_plan(request):
-    start_day = datetime.now()
-
-    if request.method == 'POST':
-        start_day = convert_jalali_gregorian(request.POST['date'])
-
-    weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
-    return render(request, 'user/weekly_plan.html', {'plan': weekly_plan})
+    return render(request, 'user/weekly_plan.html')
 
 
 @api_view(['GET', 'POST'])
@@ -302,10 +302,8 @@ def get_doctor_weekly(request):
         start_day = convert_jalali_gregorian(request.POST['date'])
 
     weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
-    w = {}
-    for k, v in weekly_plan:
-        w[k] = AppointmentSerializer(v, many=True).data
-    return Response(w)
+    weekly_plan_serializer = WeeklyPlanSerializer(weekly_plan, many=True)
+    return Response(weekly_plan_serializer.data)
 
 
 def app_confirmation(request):
@@ -337,10 +335,3 @@ def get_doctor_detail(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     serializer = DoctorSerializer(doctor)
     return Response(serializer.data)
-
-
-@csrf_exempt
-def test(request):
-    print('hello')
-    print(request.POST['data'])
-    return HttpResponse(json.dumps('done!!'), content_type='application/json')
