@@ -297,6 +297,7 @@ def doctor_weekly_plan(request):
 @api_view(['GET', 'POST'])
 @ensure_csrf_cookie
 def get_doctor_weekly(request):
+    print('heelll')
     start_day = datetime.now()
 
     if request.method == 'POST':
