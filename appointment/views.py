@@ -2,6 +2,7 @@
 import json
 from datetime import datetime
 
+import jdatetime
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -10,7 +11,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from appointment.logic.doctor_plan import get_doctor_all_plan, send_app_reserve_mail
-from user.lib.jalali import Gregorian
 from .models import *
 from .serializers import AppointmentSerializer
 
@@ -36,7 +36,7 @@ def doctor_detail(request, doctor_id):
         send_app_reserve_mail(appointment)
     doctor = get_object_or_404(Doctor, id=doctor_id)
     now = datetime.now()
-    date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
+    date = jdatetime.date.fromgregorian(date=now).strftime('%Y-%m-%d')
     apps = get_doctor_all_plan(date, doctor)
 
     return render(request, 'appointment/doctor_detail.html', {'doctor': doctor, 'apps': apps})
@@ -46,7 +46,7 @@ def doctor_detail(request, doctor_id):
 def get_appointments(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     now = datetime.now()
-    date = Gregorian(now.strftime("%Y-%m-%d")).persian_string()
+    date = jdatetime.date.fromgregorian(date=now).strftime('%Y-%m-%d')
     apps = get_doctor_all_plan(date, doctor)
     res = {}
     for i in range(len(apps)):
