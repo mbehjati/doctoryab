@@ -8,6 +8,7 @@ from django.contrib.auth import login as django_login, logout as django_logout, 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -18,14 +19,13 @@ from appointment.models import AppointmentTime
 from appointment.serializers import AppointmentSerializer
 from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, app_confirmation_action, \
     delete_free_app_action, send_presence_mail_action, cancel_app_action, set_presence_action, \
-    app_not_confirmation_action, get_doctor_free_times_form_from_req, get_doctor_from_req, get_app_from_req
+    app_not_confirmation_action, get_doctor_free_times_form_from_req, get_doctor_from_req, get_app_from_req, \
+    save_doctor_free_times_in_db
 from user.forms import *
 from user.forms.search import AdvancedSearchForm
 from user.models import *
 from user.models import Doctor
-from user.serializers import WeeklyPlanSerializer
-from .doctor_plan import save_doctor_free_times_in_db
-from .serializers import DoctorSerializer
+from user.serializers import WeeklyPlanSerializer, DoctorSerializer
 
 
 def upload_contract_file(request):
@@ -295,10 +295,13 @@ def doctor_weekly_plan(request):
 
 
 @api_view(['GET', 'POST'])
+@ensure_csrf_cookie
 def get_doctor_weekly(request):
     start_day = datetime.now()
 
     if request.method == 'POST':
+        print(request.POST)
+        print(request.POST['date'])
         start_day = convert_jalali_gregorian(request.POST['date'])
 
     weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
