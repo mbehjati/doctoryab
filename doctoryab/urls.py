@@ -21,11 +21,16 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from appointment import views
+from appointment.templates import appointment
 from user.views import search
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'search/', search, name='search'),
+    # url(r'search_by_location/', TemplateView.as_view(template_name='searchby_location.html')),
+    url(r'search_by_location/', views.search_by_location, name='search_by_location'),
     url(r'^appointment/', include('appointment.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
