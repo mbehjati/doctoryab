@@ -21,7 +21,6 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from appointment import views
-from appointment.templates import appointment
 from user.views import search
 from django.views.generic import TemplateView
 
