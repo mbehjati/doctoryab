@@ -23,7 +23,7 @@ from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, a
 from user.forms import *
 from user.models import *
 from user.models import Doctor
-from user.serializers import WeeklyPlanSerializer, DoctorSerializer
+from user.serializers import DateAppointmentSerializer, DoctorSerializer
 
 
 def upload_contract_file(request):
@@ -51,7 +51,7 @@ def edit_password(request):
             update_session_auth_hash(request, request.user)
             messages.success(request, 'رمز شما با موفقیت تغییر یافت.')
             return redirect('/user/edit-profile')
-    return render(request, 'user/edit_password.html', {'form': form, 'user': user})
+    return render(request, 'user/edit_password.html', {'form': form})
 
 
 @login_required()
@@ -203,7 +203,7 @@ def doctor_plan(request):
 
     apps = None if len(apps) == 0 else apps
 
-    return render(request, 'user/doctor_plan.html',
+    return render(request, 'user/daily_plan.html',
                   {'apps': apps, 'date': date, 'today': today, 'cancel_deadline': cancel_deadline})
 
 
@@ -226,7 +226,7 @@ def doctor_free_time(request):
     #     else:
     #         success = False
 
-    return render(request, 'user/set_doctor_free_times.html', {'success': success})
+    return render(request, 'user/enter_plan.html', {'success': success})
 
 
 def save_doctor_free_times(request):
@@ -266,7 +266,6 @@ def doctor_weekly_plan(request):
 @api_view(['GET', 'POST'])
 @ensure_csrf_cookie
 def get_doctor_weekly(request):
-    print('heelll')
     start_day = datetime.now()
 
     if request.method == 'POST':
@@ -275,7 +274,7 @@ def get_doctor_weekly(request):
         start_day = convert_jalali_gregorian(request.POST['date'])
 
     weekly_plan = get_doctor_weekly_plan(get_doctor_from_req(request), start_day)
-    weekly_plan_serializer = WeeklyPlanSerializer(weekly_plan, many=True)
+    weekly_plan_serializer = DateAppointmentSerializer(weekly_plan, many=True)
     return Response(weekly_plan_serializer.data)
 
 
