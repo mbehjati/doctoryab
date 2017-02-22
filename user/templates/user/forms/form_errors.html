@@ -1,0 +1,13 @@
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            console.log('{{ error }}');
+            $('#{{ field.id_for_label }}').prop('required', true);
+            $('#{{ field.id_for_label }}').removeClass('validate');
+            $('#{{ field.id_for_label }}').addClass('invalid');
+            var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
+            $label.attr('data-error', '{{ error }}');
+
+        {% endfor %}
+    {% endfor %}
+{% endif %}

@@ -1,6 +1,6 @@
 ._search-box {
   padding: 50px;
-  min-height: 20vw;
+  min-height: 55vh;
   background-image: url("/static/images/encontre.png");
   background-size: cover;
 
@@ -12,7 +12,7 @@ $card-width: 15vw;
   overflow: auto;
   padding: 3vw 5vw;
   margin-bottom: 0;
-  ._kachal {
+  ._results {
     float: right;
     width: $card-width;
     margin: 1.5vw;

@@ -2,32 +2,12 @@
 
 {% load staticfiles %}
 {% block title %}جست‌جو{% endblock %}
-{% block contents %}
+
+{% block stylesheet %}
     <link rel="stylesheet" type="text/css" href={% static 'appointment/scss/advanced-search.css' %}>
-    <script type="text/javascript">
+{% endblock %}
 
-        $(document).ready(function () {
-            $('select').material_select();
-
-
-            $(".datepicker").pDatepicker({
-                observer: true,
-                justSelectOnDate: true,
-                onSelect: function () {
-                    $('.datepicker').val($('.datepicker').val().split(" ")[0])
-                },
-                onShow: function () {
-                    $('.datepicker').val($('.datepicker').val().split(" ")[0])
-                }
-
-            });
-
-            $(".datepicker").val(' ');
-
-        });
-
-
-    </script>
+{% block contents %}
     <div class=" _search-box">
 
         <div class="row">
@@ -37,19 +17,15 @@
                 {% csrf_token %}
                 {% for field in form %}
                     {% if field.label == 'تاریخ' %}
-
                         <div class="input-field col s6 right">
                             <label for={{ field.id_for_label }}>{{ field.label }}</label>
                             <input type="text" class="datepicker" name="date"/>
                         </div>
-
                     {% else %}
-
                         <div class="input-field col s6 right">
                             {{ field }}
                             <label for={{ field.id_for_label }}>{{ field.label }}</label>
                         </div>
-
                     {% endif %}
 
                 {% endfor %}
@@ -64,7 +40,7 @@
         <div class="row _result-box">
 
             {% for res in result %}
-                <div class="_kachal">
+                <div class="_results">
                     <div class="card">
                         <div class="card-image">
                             {% if res.user.image %}
@@ -81,12 +57,12 @@
                                 {{ res.office_address }}
                             </p>
                         </div>
-                        <div class="card-action">
+                        <div class="card-action center">
                             <a href={% url 'appointment:detail' res.id %}>دریافت نوبت </a>
                         </div>
                     </div>
                 </div>
-            {% empty %}
+                {% empty %}
                 <p>موردی یافت نشد.</p>
 
             {% endfor %}
@@ -95,4 +71,22 @@
     {% endif %}
 
 
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('select').material_select();
+
+            $(".datepicker").pDatepicker({
+                observer: true,
+                justSelectOnDate: true,
+                format: "YYYY-MM-DD",
+            });
+
+            $(".datepicker").val(' ');
+        });
+
+    </script>
 {% endblock %}

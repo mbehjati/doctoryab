@@ -3,69 +3,13 @@
 {% block title %}
     ثبت نام
 {% endblock %}
+
+{% block stylesheet %}
+    <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
+{% endblock %}
+
 {% block contents %}
 
-    <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
-
-    <script type="text/javascript">
-        <!--
-        function showForm() {
-            var doctorForm = $("#doctor-form");
-            ($("#is-doctor:checked").length == 1) ? doctorForm.show() : doctorForm.hide();
-        }
-        //-->
-        $(document).ready(function () {
-
-            $(":input").addClass("validate");
-            $('select').material_select();
-
-            {% if my_user_form.errors %}
-                {% for field in my_user_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').prop('required', true);
-                        $('#{{ field.id_for_label }}').removeClass('validate');
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-
-                        $label.attr('data-error', '{{ error }}');
-
-                    {% endfor %}
-                {% endfor %}
-                {% for error in my_user_form.non_field_errors %}
-
-                {% endfor %}
-            {% endif %}
-            {% if user_form.errors %}
-                {% for field in user_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').removeClass('validate');
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-
-                        $label.attr('data-error', '{{ error }}');
-
-                    {% endfor %}
-                {% endfor %}
-                {% for error in user_form.non_field_errors %}
-
-                {% endfor %}
-            {% endif %}
-            {% if doctor_form.errors %}
-                {% for field in doctor_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-                        $label.attr('data-error', '{{ error }}');
-                        $label.addClass('active');
-
-                    {% endfor %}
-                {% endfor %}
-                {% for error in doctor_form.non_field_errors %}
-
-                {% endfor %}
-            {% endif %}
-        });
-    </script>
     <div class="row _register-form">
         {% if user_form.errors %}
             {% for error in user_form.non_field_errors %}
@@ -75,14 +19,14 @@
         <form enctype="multipart/form-data" class="col s12" action="" method="post">
             {% csrf_token %}
 
-            {% include "user/form.html" with form=user_form %}
-            {% include "user/form.html" with form=my_user_form %}
+            {% include "user/forms/form.html" with form=user_form %}
+            {% include "user/forms/form.html" with form=my_user_form %}
             <p>
                 <input id="is-doctor" type="checkbox" class="filled-in" name="c1" onclick="showForm()">
                 <label for="is-doctor">پزشک هستم</label>
             </p>
             <div id="doctor-form" style="display:none">
-                {% include "user/form.html" with form=doctor_form %}
+                {% include "user/forms/form.html" with form=doctor_form %}
             </div>
             <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
@@ -92,4 +36,21 @@
 
     </div>
 
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        function showForm() {
+            var doctorForm = $("#doctor-form");
+            ($("#is-doctor:checked").length == 1) ? doctorForm.show() : doctorForm.hide();
+        }
+        $(document).ready(function () {
+
+            $(":input").addClass("validate");
+            $('select').material_select();
+            {% include "user/forms/form_errors.html" with form=user_form %}
+            {% include "user/forms/form_errors.html" with form=my_user_form %}
+            {% include "user/forms/form_errors.html" with form=doctor_form %}
+        });
+    </script>
 {% endblock %}

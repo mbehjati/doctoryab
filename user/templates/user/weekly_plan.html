@@ -3,8 +3,10 @@
 {% block title %}
     برنامه‌ هفتگی
 {% endblock %}
-{% block contents %}
+{% block stylesheet %}
     <link rel="stylesheet" href={% static 'user/scss/weekly_plan.css' %}>
+{% endblock %}
+{% block contents %}
     <div class="row">
         <div class="_weekly-plan" ng-app="WeeklyPlan" ng-controller="WeeklyPlanController as ctrl">
             {% verbatim %}
@@ -13,9 +15,10 @@
                     <input type="text" class="date-picker" name="date" ng-model="ctrl.date"
                            ng-value="ctrl.schedule[0].date" ng-click="ctrl.clicked()"/>
                 </form>
-                <table class="centered">
+                {{ ctrl.min }}{{ ctrl.max }}
+                <table class="centered" ng-if="ctrl.min < ctrl.max">
                     <thead>
-                    <td></td>
+                    <th></th>
                     <th ng-repeat="day in ctrl.schedule">{{ day.date }}</th>
                     </thead>
                     <tbody id="schedule">
@@ -29,10 +32,13 @@
                     </tr>
                     </tbody>
                 </table>
+                <p ng-if="ctrl.min == ctrl.max">برنامه‌ای برای این هفته وارد نشده است.</p>
             {% endverbatim %}
 
         </div>
     </div>
+{% endblock %}
+{% block javascript %}
     <script type="text/javascript">
         (function () {
             angular.module('WeeklyPlan', [])
@@ -91,7 +97,7 @@
                         function submit() {
                             WeeklyPlanGetter.post({'date': vm.date}).then(function (data) {
                                 createSchedule(data)
-                            });;;
+                            });
                             {#                                                        datePicker.pDatepicker('hide');#}
                             datePicker.close();
                         }

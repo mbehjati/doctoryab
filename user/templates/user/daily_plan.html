@@ -3,48 +3,11 @@
 {% block title %}
     مشاهده برنامه
 {% endblock %}
-{% block contents %}
+{% block stylesheet %}
     <link href={% static "user/scss/doctor-plan.css" %} rel="stylesheet">
+{% endblock %}
 
-    <script type="text/javascript">
-
-        function showDialog(id) {
-
-            $('#appointment').val(id);
-            $('#mail-dialog').modal('open');
-
-
-        }
-
-        $(document).ready(function () {
-
-            $('#time_picker').timepicker({'step': 15});
-
-
-            function clean_date(str) {
-                $(str).val($(str).val().split(" ")[0])
-            }
-
-            $(".date-picker").pDatepicker({
-                observer: true,
-                justSelectOnDate: true,
-                onSelect: function () {
-                    clean_date(".date-picker")
-                    $("#plan-form").submit();
-                },
-                onShow: function () {
-                    clean_date(".date-picker")
-                }
-
-            });
-            $(".date-picker").val("{{ date }}")
-
-            $(".tooltiped").tooltip({delay: 50});
-
-
-        })
-
-    </script>
+{% block contents %}
 
     <div id="persian-body" class="_doctor-plan">
 
@@ -229,4 +192,31 @@
         </form>
     </div>
 
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+
+        function showDialog(id) {
+
+            $('#appointment').val(id);
+            $('#mail-dialog').modal('open');
+        }
+
+        $(document).ready(function () {
+
+            $('#time_picker').timepicker({'step': 15});
+
+            $(".date-picker").pDatepicker({
+                observer: true,
+                justSelectOnDate: true,
+                format: "YYYY-MM-DD",
+                onSelect: function () {
+                    $("#plan-form").submit();
+                },
+            });
+            $(".date-picker").val("{{ date }}");
+            $(".tooltiped").tooltip({delay: 50});
+        })
+
+    </script>
 {% endblock %}

@@ -1,20 +1,21 @@
-{% for f in form %}
+{% for field in form %}
     <div class="row">
-        {% if f.name == 'image' %}
+
+        {% if field.name == 'image' %}
             <div class="file-field input-field">
                 <div class="btn right grey">
                     <span>عکس</span>
-                    {{ f }}
+                    {{ field }}
                 </div>
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text" value={{ my_user.imagename|default_if_none:"" }}>
                 </div>
             </div>
-        {% elif f.name == 'contract' %}
+        {% elif field.name == 'contract' %}
             <div class="file-field input-field">
                 <div class="btn right grey">
                     <span>قرارداد</span>
-                    {{ f }}
+                    {{ field }}
                 </div>
                 <div class="file-path-wrapper">
                     <input class="file-path validate" type="text">
@@ -24,12 +25,12 @@
 
             <div class="input-field">
 
-                {{ f }}
-                <label for={{ f.id_for_label }}>
-                    {% if f.field.required %}
+                {{ field }}
+                <label for={{ field.id_for_label }}>
+                    {% if field.field.required %}
                         *
                     {% endif %}
-                    {{ f.label }}
+                    {{ field.label }}
                 </label>
             </div>
         {% endif %}

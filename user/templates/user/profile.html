@@ -3,59 +3,12 @@
 {% block title %}
     پروفایل
 {% endblock %}
-{% block contents %}
 
+{% block stylesheet %}
     <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
+{% endblock %}
 
-    <script type="text/javascript">
-        <!--
-        function showForm() {
-            var doctorForm = $("#doctor-form");
-            ($("#is-doctor:checked").length == 1) ? doctorForm.show() : doctorForm.hide();
-        }
-        //-->
-        $(document).ready(function () {
-
-            $(":input").addClass("validate");
-            $('select').material_select();
-            {% if user_form.errors %}
-                {% for field in user_form %}
-                    {% for error in field.errors %}
-                        console.log('{{ error }}');
-                        $('#{{ field.id_for_label }}').prop('required', true);
-                        $('#{{ field.id_for_label }}').removeClass('validate');
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-                        $label.attr('data-error', '{{ error }}');
-
-                    {% endfor %}
-                {% endfor %}
-            {% endif %}
-            {% if my_user_form.errors %}
-                {% for field in my_user_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').removeClass('validate');
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-                        $label.attr('data-error', '{{ error }}');
-
-                    {% endfor %}
-                {% endfor %}
-            {% endif %}
-            {% if doctor_form.errors %}
-                {% for field in doctor_form %}
-                    {% for error in field.errors %}
-                        $('#{{ field.id_for_label }}').addClass('invalid');
-                        var $label = $('label[for=' + '{{ field.id_for_label }}' + ']');
-                        $label.attr('data-error', '{{ error }}');
-                        $label.addClass('active');
-
-                    {% endfor %}
-                {% endfor %}
-            {% endif %}
-
-        });
-    </script>
+{% block contents %}
     <div class="row _register-form">
 
         <div class="input-field col s12">
@@ -64,12 +17,25 @@
         </div>
         <form enctype="multipart/form-data" class="col s12" action="" method="post">
             {% csrf_token %}
-            {% include "user/form.html" with form=user_form %}
-            {% include "user/form.html" with form=my_user_form %}
-            {% include "user/form.html" with form=doctor_form %}
+            {% include "user/forms/form.html" with form=user_form %}
+            {% include "user/forms/form.html" with form=my_user_form %}
+            {% include "user/forms/form.html" with form=doctor_form %}
             <button class=" btn-large waves-effect waves-light left _submit-btn" type="submit" name="action">ثبت تغییرات
             </button>
             <a href="/user/edit-password" class=" btn-large waves-effect waves-light _submit-btn"> تغییر رمز عبور </a>
         </form>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(":input").addClass("validate");
+            $('select').material_select();
+            {% include "user/forms/form_errors.html" with form=user_form %}
+            {% include "user/forms/form_errors.html" with form=my_user_form %}
+            {% include "user/forms/form_errors.html" with form=doctor_form %}
+        });
+    </script>
+
 {% endblock %}

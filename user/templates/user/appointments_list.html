@@ -3,8 +3,10 @@
 {% block title %}
     مشاهده نوبت‌ها
 {% endblock %}
-{% block contents %}
+{% block stylesheet %}
     <link rel="stylesheet" href={% static 'user/scss/appointments_list.css' %}>
+{% endblock %}
+{% block contents %}
     {% verbatim %}
 
         <div class="_appointments" ng-app="UserAppointments" ng-controller="UserAppointmentsController as ctrl">
@@ -31,7 +33,9 @@
             </p>
         </div>
     {% endverbatim %}
+{% endblock %}
 
+{% block javascript %}
     <script type="text/javascript">
         (function () {
             angular.module('UserAppointments', [])

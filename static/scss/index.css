@@ -6,7 +6,7 @@
 
 .search-container::after {
     content: "";
-    background: url("images/encontre.png");
+    background: url("../images/encontre.png");
     background-size: cover;
     opacity: 0.4;
     top: 0;
