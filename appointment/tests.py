@@ -5,7 +5,7 @@ from appointment.logic.appointment_time import sort_appointment_times_in_day, so
     cluster_appointment_times, add_time, is_time_before
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.logic.search import search_by_name, search_by_expertise, search_by_date, search_by_address, \
-    search_by_insurance, search_by_name_or_expertise
+    search_by_insurance
 from user.models import Expertise, Insurance
 from .views import *
 
@@ -181,16 +181,16 @@ class DoctorPlan(TestCase):
 
     def test_get_doctor_plan_all(self):
         self.add_objects()
-        exp_ans = [{'date': '1395-07-01', 'apps': [self.app1, self.app2, self.app3, self.app4, self.app8]},
-                   {'date': '1395-07-02', 'apps': [self.app6, self.app7]},
-                   {'date': '1395-07-03', 'apps': [self.app5]},
-                   {'date': '1395-07-04', 'apps': [self.app9]}]
+        exp_ans = [{'date': '1395-07-01', 'appointments': [self.app1, self.app2, self.app3, self.app4, self.app8]},
+                   {'date': '1395-07-02', 'appointments': [self.app6, self.app7]},
+                   {'date': '1395-07-03', 'appointments': [self.app5]},
+                   {'date': '1395-07-04', 'appointments': [self.app9]}]
         self.assertEqual(get_doctor_all_plan('1395-07-01', self.doc1), exp_ans)
 
     def test_cluster_appointment_times(self):
         self.add_objects()
-        exp_ans = [{'date': '1395-07-01', 'apps': [self.app1, self.app2, self.app3, self.app4, self.app8]},
-                   {'date': '1395-07-02', 'apps': [self.app6, self.app7]},
-                   {'date': '1395-07-03', 'apps': [self.app5]}]
+        exp_ans = [{'date': '1395-07-01', 'appointments': [self.app1, self.app2, self.app3, self.app4, self.app8]},
+                   {'date': '1395-07-02', 'appointments': [self.app6, self.app7]},
+                   {'date': '1395-07-03', 'appointments': [self.app5]}]
         self.assertEqual(cluster_appointment_times(
             [self.app1, self.app2, self.app3, self.app4, self.app8, self.app6, self.app7, self.app5]), exp_ans)

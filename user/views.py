@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from appointment.logic.appointment_time import sort_appointment_times
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.models import AppointmentTime
-from appointment.serializers import AppointmentSerializer
+from appointment.serializers import AppointmentSerializer, DateAppointmentSerializer
 from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, app_confirmation_action, \
     delete_free_app_action, send_presence_mail_action, cancel_app_action, set_presence_action, \
     app_not_confirmation_action, get_doctor_free_times_form_from_req, get_doctor_from_req, get_app_from_req, \
@@ -23,7 +23,7 @@ from user.doctor_plan import get_doctor_weekly_plan, convert_jalali_gregorian, a
 from user.forms import *
 from user.models import *
 from user.models import Doctor
-from user.serializers import DateAppointmentSerializer, DoctorSerializer
+from user.serializers import DoctorSerializer
 
 
 def upload_contract_file(request):

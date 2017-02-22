@@ -11,3 +11,8 @@ class AppointmentSerializer(ModelSerializer):
         model = AppointmentTime
         depth = 3
         fields = '__all__'
+
+
+class DateAppointmentSerializer(serializers.Serializer):
+    date = serializers.CharField(max_length=10)
+    appointments = AppointmentSerializer(many=True)

@@ -1,9 +1,7 @@
 # -*- coding: UTF-8 -*-
 
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from appointment.serializers import AppointmentSerializer
 from user.models import Doctor, MyUser, Insurance, Expertise
 
 
@@ -19,11 +17,6 @@ class MyUserSerializer(ModelSerializer):
         model = MyUser
         fields = '__all__'  # TODO: see what we need and we don't
         depth = 2
-
-
-class DateAppointmentSerializer(serializers.Serializer):
-    date = serializers.CharField(max_length=10)
-    appointments = AppointmentSerializer(many=True)
 
 
 class InsuranceSerializer(ModelSerializer):

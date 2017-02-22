@@ -14,8 +14,9 @@ from appointment.forms import AdvancedSearchForm
 from appointment.logic.doctor_plan import get_doctor_all_plan, send_app_reserve_mail
 from appointment.logic.search import do_advanced_search, search_by_name_or_expertise
 from appointment.models import AppointmentTime
+from appointment.serializers import DateAppointmentSerializer
 from user.models import MyUser, Doctor
-from user.serializers import DoctorSerializer, DateAppointmentSerializer
+from user.serializers import DoctorSerializer
 
 
 def home(request):
