@@ -7,16 +7,15 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 
 from appointment.forms import AdvancedSearchForm
 from appointment.logic.doctor_plan import get_doctor_all_plan, send_app_reserve_mail
 from appointment.logic.search import do_advanced_search, search_by_name_or_expertise
 from appointment.models import AppointmentTime
-from appointment.serializers import AppointmentSerializer
 from user.models import MyUser, Doctor
-from user.serializers import DoctorSerializer
+from user.serializers import DoctorSerializer, DateAppointmentSerializer
 
 
 def home(request):
@@ -31,39 +30,33 @@ def get_doctor_from_req(request):
 
 
 def doctor_detail(request, doctor_id):
-    if request.method == 'POST':
-        app_id = request.POST['appointment']
-        appointment = get_object_or_404(AppointmentTime, id=app_id)
-        appointment.patient = request.user.myuser
-        appointment.save()
-        messages.success(request, 'نوبت شما با موفقیت رزرو گردید')
-        send_app_reserve_mail(appointment)
-    doctor = get_object_or_404(Doctor, id=doctor_id)
-    now = datetime.now()
-    date = jdatetime.date.fromgregorian(date=now).strftime('%Y-%m-%d')
-    apps = get_doctor_all_plan(date, doctor)
-
-    return render(request, 'appointment/doctor_detail.html', {'doctor': doctor, 'apps': apps})
+    return render(request, 'appointment/doctor_detail.html')
 
 
 @api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def get_doctor(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    doctor_serializer = DoctorSerializer(doctor)
+    return Response(doctor_serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
 def get_appointments(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     now = datetime.now()
     date = jdatetime.date.fromgregorian(date=now).strftime('%Y-%m-%d')
     apps = get_doctor_all_plan(date, doctor)
-    res = {}
-    for i in range(len(apps)):
-        res[apps[i]['date']] = []
-        for j in range(len(apps[i]['apps'])):
-            # apps[i]['apps'][j] = serializers.serialize('json', [apps[i]['apps'][j], ])
-            res[apps[i]['date']].append(AppointmentSerializer(apps[i]['apps'][j]).data)
-            print(res)
-    return Response(res)
-    # return HttpResponse(json.dumps(apps))
+    date_appointment_serializer = DateAppointmentSerializer(apps, many=True)
+    return Response(date_appointment_serializer.data)
 
 
-def reserve_appointment(request, app_id):
+@api_view(['POST'])
+def reserve_appointment(request):
+    app_id = request.POST['appointment']
     appointment = get_object_or_404(AppointmentTime, id=app_id)
     appointment.patient = request.user.myuser
     appointment.save()
@@ -95,6 +88,8 @@ def simple_search(request):
 
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def search_keyword(request):
     keyword = request.POST['keyword']
     result = search_by_name_or_expertise(Doctor.objects.all(), keyword)

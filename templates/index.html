@@ -3,16 +3,20 @@
 {% block title %}
     دکتریاب
 {% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" type="text/css" href={% static "scss/index.css" %}>
+{% endblock %}
+
 {% block contents %}
-    <link rel="stylesheet" type="text/css" href={% static "index.css" %}>
     <div class="search-container">
         <div class="row">
             <form class="col s12" method="post" action={% url 'search' %}>
                 {% csrf_token %}
                 <div class="row">
                     <div class="input-field col s4 right">
-                        <input id="icon_prefix2" type="text" name="keyword">
-                        <label for="icon_prefix2">نام پزشک یا تخصص</label>
+                        <input id="search_keyword" type="text" name="keyword">
+                        <label for="search_keyword">نام پزشک یا تخصص</label>
                     </div>
 
                     <button class="btn-floating btn-large waves-effect waves-light" type="submit" name="action">

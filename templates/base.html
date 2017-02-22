@@ -6,12 +6,13 @@
     <meta charset="UTF-8">
     <title>{% block title %}دکتریاب{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
-    <link type="text/css" rel="stylesheet" href={% static "base.css" %}>
+    <link type="text/css" rel="stylesheet" href={% static "scss/base.css" %}>
     <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href={% static "images/doctor_checkup_logo.png" %}>
     <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet">
     <link href={% static "datepicker/persian-datepicker-0.4.5.min.css" %} rel="stylesheet">
+    {% block  stylesheet %}{% endblock %}
     <script type="text/javascript" src={% static "jQuery/jquery-2.1.1.min.js" %}></script>
     <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
     <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
@@ -151,6 +152,7 @@
     </div>
 </footer>
 </body>
+{% block javascript %}{% endblock %}
 <script type="text/javascript">
     $(document).ready(function () {
         $("#persian-body").persiaNumber();
