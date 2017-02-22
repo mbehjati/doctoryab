@@ -94,6 +94,8 @@ class DoctorForm(forms.ModelForm):
         super(DoctorForm, self).__init__(*args, **kwargs)
         if self.edit_form:
             del self.fields['contract']
+            del self.fields['lat_location']
+            del self.fields['lon_location']
 
     class Meta:
         model = Doctor
@@ -108,13 +110,17 @@ class DoctorForm(forms.ModelForm):
             'expertise': 'تخصص',
             'insurance': 'بیمه',
         }
+        widgets = {
+            'lat_location': forms.HiddenInput,
+            'lon_location': forms.HiddenInput
+        }
 
     def save(self, commit=True, *args, **kwargs):
         user = kwargs.get('user')
         doctor = super(DoctorForm, self).save(commit=False)
 
         if self.register_form:
-            doctor = self.register_doctor(user=user, doctor=doctor)
+            # doctor = self.register_doctor(user=user, doctor=doctor)
             doctor.user = user
             doctor.save()
             for ins in self.cleaned_data['insurance']:

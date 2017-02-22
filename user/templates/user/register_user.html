@@ -7,12 +7,50 @@
 
     <link type="text/css" rel="stylesheet" href={% static "user/scss/register.css" %}>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDMOMIy-wVw6u2Hqis6SRbj0JhXe5UsiA&sensor=false"></script>
     <script type="text/javascript">
         <!--
+
         function showForm() {
+            getLocation();
             var doctorForm = $("#doctor-form");
             ($("#is-doctor:checked").length == 1) ? doctorForm.show() : doctorForm.hide();
         }
+
+        var x = document.getElementById("demo");
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+            $('#id_doctor-lat_location').val(position.coords.latitude);
+            $('#id_doctor-lon_location').val(position.coords.longitude);
+            latlon = new google.maps.LatLng(lat, lon);
+
+            var mapOptions = {
+                center: latlon,
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeControl: true,
+                navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL}
+            };
+            var map = new google.maps.Map(document.getElementById("mapholder"),
+                    mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: latlon,
+                map: map,
+                title: "you are here now"
+            });
+        }
+
         //-->
         $(document).ready(function () {
 
@@ -85,6 +123,9 @@
             </p>
             <div id="doctor-form" style="display:none">
                 {% include "user/form.html" with form=doctor_form %}
+                <div id="mapholder"
+                     style="margin-left: auto; margin-top: auto; height: 300px; width: 600px;"></div>
+
             </div>
             <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
 
