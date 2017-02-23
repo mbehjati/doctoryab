@@ -27,7 +27,7 @@ def get_doctor_from_req(request):
     return Doctor.objects.get(user=my_user)
 
 
-def doctor_detail(request, doctor_id):
+def doctor_detail(request):
     return render(request, 'appointment/doctor_detail.html')
 
 

@@ -1,0 +1,23 @@
+._search-box {
+  padding: 50px;
+  min-height: 55vh;
+  background-image: url("/static/images/encontre.png");
+  background-size: cover; }
+
+._result-box {
+  background-color: #fafafa;
+  overflow: auto;
+  padding: 3vw 5vw;
+  margin-bottom: 0; }
+  ._result-box ._results {
+    float: right;
+    width: 15vw;
+    margin: 1.5vw; }
+    ._result-box ._results img {
+      width: 15vw;
+      height: 15vw;
+      object-fit: cover; }
+    ._result-box ._results ._title {
+      font-size: 18px; }
+
+/*# sourceMappingURL=advanced_search.css.map */
