@@ -8,5 +8,5 @@
         .run(function ($http, $window) {
             $http.defaults.headers.common.Authorization = 'Token ' + $window.localStorage.getItem('token');
         });
-    ;
+
 })();

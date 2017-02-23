@@ -22,11 +22,11 @@
         }
 
         function query() {
-            return $http.get('http://127.0.0.1:8000/user/api/doctor-weekly-plan').then(fetchData);
+            return $http.get('https://doctoryab.herokuapp.com/user/api/doctor-weekly-plan').then(fetchData);
         }
 
         function post(data) {
-            return $http.post('http://127.0.0.1:8000/user/api/doctor-weekly-plan', $httpParamSerializer(data), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(fetchData);
+            return $http.post('https://doctoryab.herokuapp.com/user/api/doctor-weekly-plan', $httpParamSerializer(data), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(fetchData);
         }
     }
 

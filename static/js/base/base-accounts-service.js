@@ -19,7 +19,7 @@
         ////////////////
 
         function login(data) {
-            return $.post('http://127.0.0.1:8000/get_auth_token/', data);
+            return $.post('https://doctoryab.herokuapp.com/get_auth_token/', data);
             // return $http.post('http://127.0.0.1:8000/get_auth_token/', data);
         }
 
@@ -33,7 +33,7 @@
         }
 
         function realLogin(data) {
-            $http.post('http://127.0.0.1:8000/user/login/', $httpParamSerializer(data), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
+            $http.post('https://doctoryab.herokuapp.com/user/login/', $httpParamSerializer(data), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
         }
     }
 })();

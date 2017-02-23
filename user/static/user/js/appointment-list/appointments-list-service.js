@@ -22,7 +22,7 @@
         }
 
         function query() {
-            return $http.get('http://127.0.0.1:8000/user/api/get-appointments').then(fetchData);
+            return $http.get('https://doctoryab.herokuapp.com/user/api/get-appointments').then(fetchData);
         }
     }
 })();
