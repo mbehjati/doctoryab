@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from django.test import TestCase
+from rest_framework.test import APIRequestFactory
 
 from appointment.logic.appointment_time import sort_appointment_times_in_day, sort_appointment_times, \
     cluster_appointment_times, add_time, is_time_before
@@ -29,7 +30,7 @@ class AppointmentTimeTest(TestCase):
         self.assertEqual(is_time_before('12:45am', '1:45am'), True)
 
 
-class SearchDoctor(TestCase):
+class SearchDoctorTest(TestCase):
     def add_objs_to_db(self):
         self.exp1 = Expertise.objects.create(name='exp1')
         self.exp2 = Expertise.objects.create(name='exp2')
@@ -194,3 +195,13 @@ class DoctorPlan(TestCase):
                    {'date': '1395-07-03', 'appointments': [self.app5]}]
         self.assertEqual(cluster_appointment_times(
             [self.app1, self.app2, self.app3, self.app4, self.app8, self.app6, self.app7, self.app5]), exp_ans)
+
+
+class APITest(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+    def test_search_keyword(self):
+        request = self.factory.post('/search-key/', {'keyword': 'ali'})
+        response = search_keyword(request)
+        self.assertEqual(response.status_code, 200)
