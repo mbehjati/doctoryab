@@ -9,7 +9,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.views.decorators.csrf import ensure_csrf_cookie
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 
 from appointment.logic.appointment_time import sort_appointment_times
@@ -170,21 +170,23 @@ def logout(request):
     return redirect('/')
 
 
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
 def login(request):
-    form = LoginForm(request.POST)
-    if form.is_valid():
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            finded_user = User.objects.get(pk=user.id)
-            if finded_user.is_active:
-                django_login(request, user)
-                messages.success(request, 'کاربر عزیز خوش آمدید.')
-        else:
-            messages.warning(request, 'نام کاربری یا گذرواژه شما اشتباه است.')
+    data = request.POST
+    username = data['username']
+    password = data['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        finded_user = User.objects.get(pk=user.id)
+        if finded_user.is_active:
+            django_login(request, user)
+            message = 'کاربر عزیز خوش آمدید.'
+    else:
+        message = 'نام کاربری یا گذرواژه شما اشتباه است.'
 
-    return redirect(request.META.get('HTTP_REFERER'))
+    return Response({'message': message})
 
 
 def doctor_plan(request):
@@ -307,3 +309,10 @@ def get_doctor_detail(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
     serializer = DoctorSerializer(doctor)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def get_all_doctors(request):
+    return Response(DoctorSerializer(Doctor.objects.all(), many=True).data)

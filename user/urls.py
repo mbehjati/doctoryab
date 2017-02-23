@@ -5,7 +5,7 @@ from user import views
 app_name = 'user'
 urlpatterns = [
     url(r'^register$', views.register, name='register'),
-    url(r'^login$', views.login, name='login'),
+    url(r'^login/$', views.login, name='login'),
     url(r'^logout$', views.logout, name='logout'),
     url(r'^edit-profile$', views.edit_profile, name='EditProfile'),
     url(r'^edit-password$', views.edit_password, name='EditPassword'),
@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^set_presence', views.set_presence, name='set_presence'),
     url(r'^doctor/(?P<doctor_id>[0-9]+)/$', views.get_doctor_detail, name='doctor_detail'),
     url(r'^save_free_time/$', views.save_doctor_free_times, name='save_free_time'),
-    url(r'api/doctor-weekly-plan', views.get_doctor_weekly)
+    url(r'api/doctor-weekly-plan', views.get_doctor_weekly),
+    url(r'api/get-all-doctors', views.get_all_doctors)
 ]

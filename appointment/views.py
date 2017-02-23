@@ -1,11 +1,8 @@
 # -*- coding: UTF-8 -*-
-import json
 from datetime import datetime
 
 import jdatetime
-from django.contrib import messages
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
@@ -61,10 +58,8 @@ def reserve_appointment(request):
     appointment = get_object_or_404(AppointmentTime, id=app_id)
     appointment.patient = request.user.myuser
     appointment.save()
-    messages.success(request, 'نوبت شما با موفقیت رزرو گردید')
     send_app_reserve_mail(appointment)
-    return HttpResponse(json.dumps('success'))
-    # TODO return what??
+    return Response({})
 
 
 def search(request):

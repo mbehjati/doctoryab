@@ -1,160 +1,118 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}مشخصات پزشک {% endblock %}
-{% block contents %}
-
+{% block stylesheet %}
     <link rel="stylesheet" href={% static 'appointment/scss/doctor_detail.css' %}>
     {#                TODO: do sth with static files :| #}
 
+{% endblock %}
+
+{% block contents %}{% endblock %}
+{% block angularjs %}
     {% verbatim %}
         <base href="/">
-
-        <div class="row _doctor-detail" ng-app="DoctorFreeTimes" ng-controller="DoctorController as ctrl">
-            <div class="col s3 right _image">
-                <img class="circle" ng-src="doctor.user.image.url" ng-if="ctrl.doctor.user.image">
-                <img class="circle" src="/static/images/doctor.png" ng-if="!ctrl.doctor.user.image">
-            </div>
-            <div class="_info">
-                <div class="col s9  _details">
-                    <h5>دکتر {{ ctrl.doctor.user.user.first_name }} {{ ctrl.doctor.user.user.last_name }}</h5>
-                    <p class="_expertise">{{ ctrl.doctor.title }} {{ ctrl.doctor.expertise.name }}</p>
-                    <div class="divider"></div>
-                    <p class="_title">
-                        <span>   آدرس مطب:</span>
-                        {{ ctrl.doctor.office_address }}
-                    </p>
-                    <p class="_title">شماره تلفن مطب:{{ ctrl.doctor.office_phone_number || '-'}}</p>
-                    <p class="_title">بیمه‌های طرف قرارداد: <span
-                            ng-repeat="ins in ctrl.doctor.insurance">{{ ins.name }}، </span><span
-                            ng-if="!ctrl.doctor.insurance">-</span></p>
-
+        <div ng-controller="DoctorController as ctrl">
+            <div class="row _doctor-detail">
+                <div class="col s3 right _image">
+                    <img class="circle" ng-src="doctor.user.image.url" ng-if="ctrl.doctor.user.image">
+                    <img class="circle" src="/static/images/doctor.png" ng-if="!ctrl.doctor.user.image">
                 </div>
-            </div>
-            <div class="_reserve-title white-text indigo center right">نوبت‌دهی آنلاین</div>
+                <div class="_info">
+                    <div class="col s9  _details">
+                        <h5>دکتر {{ ctrl.doctor.user.user.first_name }} {{ ctrl.doctor.user.user.last_name }}</h5>
+                        <p class="_expertise">{{ ctrl.doctor.title }} {{ ctrl.doctor.expertise.name }}</p>
+                        <div class="divider"></div>
+                        <p class="_title">
+                            <span>   آدرس مطب:</span>
+                            {{ ctrl.doctor.office_address }}
+                        </p>
+                        <p class="_title">شماره تلفن مطب:{{ ctrl.doctor.office_phone_number || '-'}}</p>
+                        <p class="_title">بیمه‌های طرف قرارداد: <span
+                                ng-repeat="ins in ctrl.doctor.insurance">{{ ins.name }}، </span><span
+                                ng-if="!ctrl.doctor.insurance">-</span></p>
 
-            <div class=" _reserve-time">
-                <div ng-repeat="dateApp in ctrl.dateAppointments">
-                    <span class="_date">{{ dateApp.date }}</span>
-                    <hr class="grey">
-                    <ul class="_plan-box">
-                        <li ng-repeat="app in dateApp.appointments"
-                            class="_date-box"
-                            ng-click="ctrl.showDialog( date.date ,app.start_time , app.id)"
-                            ng-class="app.patient == None ? 'z-depth-2': '' "
-                            ng-style="{'background-color': app.patient == null? '#e1f2ea' :  app.confirmation == '3' ? '#ffcf93' : '#fdf498',
+                    </div>
+                </div>
+                <div class="_reserve-title white-text indigo center right">نوبت‌دهی آنلاین</div>
+
+                <div class=" _reserve-time">
+                    <div ng-repeat="dateApp in ctrl.dateAppointments">
+                        <span class="_date">{{ dateApp.date }}</span>
+                        <hr class="grey">
+                        <ul class="_plan-box">
+                            <li ng-repeat="app in dateApp.appointments"
+                                class="_date-box"
+                                ng-click="ctrl.showDialog( date.date ,app.start_time , app.id)"
+                                ng-class="app.patient == None ? 'z-depth-2': '' "
+                                ng-style="{'background-color': app.patient == null? '#e1f2ea' :  app.confirmation == '3' ? '#ffcf93' : '#fdf498',
                                     'cursor':  app.patient == null ? 'pointer' : 'default'}">
-                            {{ app.start_time }}
-                            تا
-                            {{ app.end_time }}
-                            <br>
-                            <span ng-if="app.patient == null">خالی</span>
-                            <span ng-if="app.patient">
+                                {{ app.start_time }}
+                                تا
+                                {{ app.end_time }}
+                                <br>
+                                <span ng-if="app.patient == null">خالی</span>
+                                <span ng-if="app.patient">
                                 <span ng-if="app.confirmation != '3'">در انتظار تایید</span>
                                 <span ng-if="app.confirmation == '3'">رزرو شده</span>
                             </span>
 
-                        </li>
-                    </ul>
-                    <br>
+                            </li>
+                        </ul>
+                        <br>
+                    </div>
+                    <p ng-if="!ctrl.dateAppointments">زمانی برای نوبت‌دهی مشخص نشده است.</p>
                 </div>
-                <p ng-if="!ctrl.dateAppointments">زمانی برای نوبت‌دهی مشخص نشده است.</p>
+            </div>
+
+
+            <div id="confirm-dialog" class="modal">
+                <div class="modal-content">
+                    <h5 class="indigo-text">تایید نوبت</h5>
+                    <div class="divider"></div>
+                    <p>
+                        آیا مایل هستید از دکتر
+                        {{ ctrl.doctor.user.user.first_name }} {{ ctrl.doctor.user.user.last_name }}
+                        در تاریخ
+                        <span id="date"></span>
+                        ساعت
+                        <span id="hour"></span>
+                        وقت بگیرید؟
+
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <form method="post" ng-submit="ctrl.submit()">
+                        <input type="hidden" id="appointment" name="appointment">
+                        <button type="submit"
+                                class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">
+                            بله
+                        </button>
+
+                    </form>
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">خیر</a>
+
+                </div>
             </div>
         </div>
     {% endverbatim %}
 
-
-    <div id="confirm-dialog" class="modal">
-        <div class="modal-content">
-            <h5 class="indigo-text">تایید نوبت</h5>
-            <div class="divider"></div>
-            <p>
-                آیا مایل هستید از دکتر
-                {{ doctor.user.user.first_name }} {{ doctor.user.user.last_name }}
-                در تاریخ
-                <span id="date"></span>
-                ساعت
-                <span id="hour"></span>
-                وقت بگیرید؟
-
-            </p>
-        </div>
-        <div class="modal-footer">
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" id="appointment" name="appointment">
-                <button type="submit" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">
-                    بله
-                </button>
-
-            </form>
-            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat btn-large">خیر</a>
-
-        </div>
-    </div>
-
-
+{% endblock %}
+{% block javascript %}
     <script type="text/javascript">
+        $(document).ready(function () {
+            function showDialog(date, time, id) {
+                {%if not user.is_authenticated %}
+                    $('#login-modal').modal('open');
+                {% else %}
+                    $('#date').text(date);
+                    $('#hour').text(time);
+                    $('#appointment').val(id);
+                    $('#confirm-dialog').modal('open');
+                {% endif %}
+            }
 
-        (function () {
-            angular
-                .module('DoctorFreeTimes', [])
-                .factory('DoctorFreeTimesGetter', function ($http) {
-                    var service = {
-                        getAppointments: getAppointments,
-                        getDoctor: getDoctor
-                    };
-                    return service;
-
-                    function getAppointments(id) {
-                        return $http.get('http://127.0.0.1:8000/appointment/doctor_times/' + id + '/').then(fetchData);
-                    }
-
-                    function getDoctor(id) {
-                        return $http.get('http://127.0.0.1:8000/appointment/get-doctor/' + id + '/').then(fetchData);
-
-                    }
-
-                    function fetchData(response) {
-                        return response.data;
-                    }
-
-                })
-                .controller('DoctorController', function (DoctorFreeTimesGetter, $location) {
-                        var vm = this;
-
-                        activate();
-
-                        function activate() {
-                            var splittedURL = $location.path().split('/');
-                            var id = splittedURL[splittedURL.length - 2];
-                            DoctorFreeTimesGetter.getDoctor(id).then(function (data) {
-                                vm.doctor = data;
-                            });
-                            DoctorFreeTimesGetter.getAppointments(id).then(function (data) {
-                                vm.dateAppointments = data;
-                                console.log(data)
-                            });
-                        }
-
-                        vm.showDialog = function dialog(date, time, id) {
-                            {% if not user.is_authenticated %}
-                                {#                TODO: Dont forget this part#}
-                                $('#login-modal').modal('open');
-                            {% else %}
-                                $('#date').text(date);
-                                $('#hour').text(time);
-                                $('#appointment').val(id);
-                                $('#confirm-dialog').modal('open');
-                            {% endif %}
-                        }
-                    }
-                )
-                .config(['$locationProvider', function ($locationProvider) {
-                    $locationProvider.html5Mode(true);
-                }]);
-        })();
-
-
-    </script>
+        })</script>
+    <script src={% static "appointment/js/doctor_detail/doctor-detail-controller.js" %}></script>
+    <script src={% static "appointment/js/doctor_detail/doctor-detail-service.js" %}></script>
 
 {% endblock %}

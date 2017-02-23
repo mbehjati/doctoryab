@@ -8,7 +8,7 @@ from user.models import Doctor, MyUser, Insurance, Expertise
 class DoctorSerializer(ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ('user', 'diploma', 'office_address', 'office_phone_number', 'expertise', 'insurance', 'title')
+        fields = ('user', 'diploma', 'office_address', 'office_phone_number', 'expertise', 'insurance', 'title', 'id')
         depth = 3
 
 
