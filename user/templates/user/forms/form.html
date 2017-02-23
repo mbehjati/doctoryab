@@ -21,12 +21,11 @@
                     <input class="file-path validate" type="text">
                 </div>
             </div>
-        {% elif f.name == 'lat_location' %}
-            {{ f.as_hidden }}
-        {% elif f.name == 'lon_location' %}
-            {{ f.as_hidden }}
+        {% elif field.name == 'lat_location' %}
+            {{ field.as_hidden }}
+        {% elif field.name == 'lon_location' %}
+            {{ field.as_hidden }}
         {% else %}
-
             <div class="input-field">
 
                 {{ field }}
