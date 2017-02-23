@@ -29,4 +29,4 @@ def send_app_reserve_mail(app):
     body = ' با سلام \n بیمار' + str(app.patient.user.first_name) + ' ' + str(
         app.patient.user.last_name) + ' در تاریخ ' + str(app.date) + ' ساعت  ' + str(
         app.start_time) + 'از شما تقاضای نوبت کرده است. لطفا در صورت موافقت این نوبت را تایید فرمایید.'
-    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.doctor.user.user.email], fail_silently=False)
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.doctor.user.user.email], fail_silently=True)

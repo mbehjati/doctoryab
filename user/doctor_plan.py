@@ -71,14 +71,14 @@ def send_app_result_mail(app, confirm):
     body = ' با سلام \n نوبت شما از دکتر' + str(app.doctor.user.user.first_name) + ' ' + str(
         app.doctor.user.user.last_name) + ' در تاریخ ' + str(app.date) + ' ساعت  ' + str(
         app.start_time) + ' توسط پزشک ' + action + ' شد.'
-    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=True)
 
 
 def send_notif_mail(app, time):
     title = ' زمان حضور در مطب'
     body = ' با سلام \n لطفا برای نوبت خود از دکتر ' + str(app.doctor.user.user.first_name) + ' ' + str(
         app.doctor.user.user.last_name) + ' ساعت ' + time + ' در مطب حضور داشته باشید.'
-    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=True)
 
 
 def send_cancel_mail(app):
@@ -86,7 +86,7 @@ def send_cancel_mail(app):
     body = ' با سلام \n نوبت شما از دکتر' + str(app.doctor.user.user.first_name) + ' ' + str(
         app.doctor.user.user.last_name) + ' در تاریخ ' + str(app.date) + ' ساعت  ' + str(
         app.start_time) + ' توسط پزشک کنسل شد. '
-    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=False)
+    send_mail(title, body, 'onlinefoodforyou@gmail.com', [app.patient.user.email], fail_silently=True)
 
 
 def get_doctor_weekly_plan(doctor, date):
