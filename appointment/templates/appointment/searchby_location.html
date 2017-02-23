@@ -75,8 +75,8 @@
                 },
                 "diploma": "تخصص",
                 "office_address": "تهران- بلوار اندرزگو",
-                "lat_location": 'None',
-                "lon_location": 'None',
+                "lat_location": "35.6",
+                "lon_location": "51.4",
                 "office_phone_number": "02188888888",
                 "expertise": {
                     "name": "چشم"
@@ -94,13 +94,7 @@
             }
         ];
 
-        {#        for (d in data) {#}
-        {#            console.log(data[d]);#}
-        {#        }#}
-
         window.onload = getLocation();
-
-        {#        var data = document.getElementById('value').value;#}
 
         var x = document.getElementById("demo");
         function getLocation() {
@@ -137,7 +131,7 @@
             var infoWindowContent = [];
             data.forEach(function (d) {
                 if (d.lat_location != 'None' && d.lon_location != 'None') {
-                    markers.push(['دکتر ' + d.user.user.first_name + ' ' + d.user.user.last_name, d.lat_location, d.lon_location])
+                    markers.push(['دکتر ' + d.user.user.first_name + ' ' + d.user.user.last_name, d.lat_location, d.lon_location]);
                     infoWindowContent.push(
                             '<div>' +
                             '<span><b>نام دکتر :</b></span>' +
@@ -163,7 +157,6 @@
                     map: map,
                     title: markers[i][0]
                 });
-
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
                         infoWindow.setContent(infoWindowContent[i]);

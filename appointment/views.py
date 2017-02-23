@@ -39,6 +39,4 @@ def doctor_detail(request, doctor_id):
 
 def search_by_location(request):
     doctors = Doctor.objects.order_by('lat_location', 'lon_location')
-    for doc in doctors:
-        print(doc.user.user.username, doc.lat_location)
     return render(request, 'appointment/searchby_location.html', {'doctors': doctors})
