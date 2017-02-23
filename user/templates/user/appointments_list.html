@@ -3,12 +3,15 @@
 {% block title %}
     مشاهده نوبت‌ها
 {% endblock %}
-{% block contents %}
+{% block stylesheet %}
     <link rel="stylesheet" href={% static 'user/scss/appointments_list.css' %}>
+{% endblock %}
+{% block contents %}{% endblock %}
+{% block angularjs %}
+    {% verbatim %}
 
-    <div class="_appointments">
-        {% if appointments %}
-            <table class="striped _table">
+        <div class="_appointments" ng-controller="UserAppointmentsController as ctrl">
+            <table class="striped _table" ng-show="ctrl.appointments.length">
                 <thead>
                 <tr>
                     <th>ردیف</th>
@@ -18,20 +21,22 @@
                     <th>وضعیت</th>
                 </tr>
                 </thead>
-                {% for appointment in appointments reversed %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ appointment.date }}</td>
-                        <td>{{ appointment.start_time }}</td>
-                        <td>دکتر {{ appointment.doctor }}</td>
-                        <td>{{ appointment.get_status }}</td>
-                    </tr>
-                {% endfor %}
+                <tr ng-repeat="appointment in ctrl.appointments">
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.start_time }}</td>
+                    <td>
+                        دکتر {{ appointment.doctor.user.user.first_name }} {{ appointment.doctor.user.user.last_name }}</td>
+                    <td>{{ appointment.get_status }}</td>
+                </tr>
             </table>
-        {% else %}
-            <p>
-                نوبتی دریافت نگردیده‌است.
-            </p>
-        {% endif %}
-    </div>
+            <p ng-hide="ctrl.appointments.length">
+                شما تا به حال نوبتی دریافت نکرده‌اید. </p>
+        </div>
+    {% endverbatim %}
+{% endblock %}
+
+{% block javascript %}
+    <script src={% static "user/js/appointment-list/appointments-list-controller.js" %}></script>
+    <script src={% static "user/js/appointment-list/appointments-list-service.js" %}></script>
 {% endblock %}

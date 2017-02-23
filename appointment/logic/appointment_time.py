@@ -9,6 +9,10 @@ def is_time_before(first, second):
     """
     first = first if len(first) == 7 else '0' + first
     second = second if len(second) == 7 else '0' + second
+    if 'npm' in second and 'npm' not in first:
+        return True
+    if 'npm' in first and 'npm' not in second:
+        return False
     if 'pm' in first and 'am' in second:
         return False
     if 'am' in first and 'pm' in second:
@@ -55,10 +59,10 @@ def cluster_appointment_times(apps):
         if apps[i].date == date:
             app_date.append(apps[i])
         else:
-            ans.append({'date': date, 'apps': app_date})
+            ans.append({'date': date, 'appointments': app_date})
             date = apps[i].date
             app_date = [apps[i]]
-    ans.append({'date': date, 'apps': app_date})
+    ans.append({'date': date, 'appointments': app_date})
     return ans
 
 
@@ -72,8 +76,11 @@ def add_time(start_time, duration):
     minute += duration
     hour = (hour + 1) % 12 if minute >= 60 else hour
     minute %= 60
-    if hour == 0:
+    if hour == 0 and postfix == 'am':
         hour = 12
         postfix = 'pm'
+    elif hour == 0 and postfix == 'pm':
+        hour = 12
+        postfix = 'npm'
 
     return str(hour) + ':' + str(minute).zfill(2) + postfix

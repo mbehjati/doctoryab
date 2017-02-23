@@ -3,47 +3,14 @@
 {% block title %}
     ورود برنامه
 {% endblock %}
-{% block contents %}
+{% block stylesheet %}
     <link rel="stylesheet" href={% static 'user/scss/set_doctor_free_times.css' %}>
+{% endblock %}
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $('#start_time , #end_time').timepicker({'step': 15});
-
-            $('select').material_select();
-
-            function clean_date(str) {
-                $(str).val($(str).val().split(" ")[0])
-            }
-
-            function custom_date_picker(str) {
-                $(str).pDatepicker({
-                    observer: true,
-                    justSelectOnDate: true,
-                    onSelect: function () {
-                        clean_date(str)
-                    },
-                    onShow: function () {
-                        clean_date(str)
-                    }
-
-                });
-            }
-
-            custom_date_picker(".datepicker1")
-            custom_date_picker(".datepicker2")
-
-
-            $(".datepicker1").val(' ');
-            $(".datepicker2").val(' ');
-
-        })
-
-    </script>
+{% block contents %}
 
     <div class="row">
-        <form class="col s12" method="post">
+        <form class="col s12" id="form_data">
 
             {% csrf_token %}
 
@@ -55,13 +22,13 @@
                     <div class="row" dir="rtl">
                         <div class="col s6">
                             <label for="end_date"> تا </label>
-                            <input type="text" class="datepicker1" name="end_date"/>
+                            <input type="text" id="datepicker1" name="end_date"/>
 
                         </div>
 
                         <div class="col s6">
                             <label for="start_date">از </label>
-                            <input type="text" class="datepicker2" name="start_date"/>
+                            <input type="text" id="datepicker2" name="start_date"/>
                         </div>
                     </div>
 
@@ -91,10 +58,10 @@
                             <option value="60"> ۱ ساعت</option>
                         </select>
                     </div>
-                    <button class="btn waves-effect waves-light left" type="submit" name="action">ثبت
+                    <button class="btn waves-effect waves-light left"
+                            onclick="submit_form()">ثبت
                     </button>
-                    <span style="color: {% if response == True %} green {% else %} red {% endif %} ; display: block; margin:auto ;  ">
-                        {{ message }}
+                    <span style="color: {% if success == True %} green {% else %} red {% endif %} ; display: block; margin:auto ;  ">
                     </span>
 
                 </div>
@@ -105,4 +72,53 @@
 
         </form>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+
+        function getFormData($form) {
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function (n) {
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+
+        function submit_form() {
+            var $form = $("#form_data");
+            var data = getFormData($form);
+            console.log('in submit');
+            console.log(data);
+            $.post('http://127.0.0.1:8000/user/save_free_time/', data);
+            location.reload();
+        }
+
+        $(document).ready(function () {
+
+
+            $('#start_time , #end_time').timepicker({'step': 15});
+
+            $('select').material_select();
+
+            function custom_date_picker(str) {
+                $(str).pDatepicker({
+                    observer: true,
+                    justSelectOnDate: true,
+                    format: "YYYY-MM-DD"
+                });
+            }
+
+            custom_date_picker("#datepicker1");
+            custom_date_picker("#datepicker2");
+            $("#datepicker1").val(' ');
+            $("#datepicker2").val(' ');
+
+        })
+
+    </script>
+
 {% endblock %}

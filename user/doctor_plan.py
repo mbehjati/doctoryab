@@ -3,12 +3,15 @@
 from datetime import datetime, timedelta
 
 import jdatetime
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 
 from appointment.logic.appointment_time import is_time_before, add_time
 from appointment.logic.doctor_plan import get_doctor_day_plan
 from appointment.models import AppointmentTime
-from user.lib.jalali import Gregorian
+from user.forms.doctorplan import DoctorFreeTimes
+from user.models import MyUser, Doctor
 
 
 def save_doctor_free_times_in_db(doctor, form):
@@ -37,7 +40,6 @@ def calc_doctor_free_times(doctor, form):
 
 def has_appointment_conflict(appointment, all_apps):
     '''
-
     :param appointment: an appointment
     :param all_apps: a list of appointments
     :return: true if given appointment has time conflict with list of appointments
@@ -98,9 +100,9 @@ def get_doctor_weekly_plan(doctor, date):
     for i in range(7):
         delta = timedelta(i)
         week_day = date + delta
-        formatted_date = Gregorian(week_day.strftime('%Y-%m-%d')).persian_string()
+        formatted_date = jdatetime.date.fromgregorian(date=week_day).strftime('%Y-%m-%d')
         day_appointments = get_doctor_day_plan(doctor=doctor, date=formatted_date)
-        weekly_plan.append((formatted_date, day_appointments))
+        weekly_plan.append({'date': formatted_date, 'appointments': day_appointments})
 
     return weekly_plan
 
@@ -114,3 +116,63 @@ def convert_jalali_gregorian(jalali_date):
     year, month, day = jalali_date.split('-')
     start_day = jdatetime.date(day=int(day), year=int(year), month=int(month)).togregorian()
     return start_day
+
+
+def app_confirmation_action(app, request):
+    app.confirmation = '3'
+    app.save()
+    send_app_result_mail(app, True)
+
+
+def delete_free_app_action(app, request):
+    app.delete()
+
+
+def send_presence_mail_action(app, request):
+    presence_time = request.POST['presence_time']
+    send_notif_mail(app, presence_time)
+
+
+def cancel_app_action(app, request):
+    app.confirmation = '2'
+    app.save()
+    new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
+                              doctor=app.doctor, duration=app.duration)
+    new_app.save()
+    send_cancel_mail(app)
+
+
+def set_presence_action(app, request):
+    app.presence = True
+    app.save()
+
+
+def app_not_confirmation_action(app, request):
+    app.confirmation = '2'
+    app.save()
+    new_app = AppointmentTime(date=app.date, start_time=app.start_time, end_time=app.end_time,
+                              doctor=app.doctor, duration=app.duration)
+    new_app.save()
+    send_app_result_mail(app, False)
+
+
+def get_doctor_free_times_form_from_req(request):
+    form = DoctorFreeTimes()
+    form.start_date = request.POST['start_date']
+    form.end_date = request.POST['end_date']
+    form.start_time = request.POST['start_time']
+    form.end_time = request.POST['end_time']
+    form.visit_duration = request.POST['visit_duration']
+    return form
+
+
+def get_doctor_from_req(request):
+    user = request.user.id
+    user_obj = User.objects.get(pk=user)
+    my_user = MyUser.objects.get(user=user_obj)
+    return Doctor.objects.get(user=my_user)
+
+
+def get_app_from_req(request):
+    app = request.POST['appointment']
+    return get_object_or_404(AppointmentTime, id=app)

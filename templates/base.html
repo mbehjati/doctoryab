@@ -6,18 +6,24 @@
     <meta charset="UTF-8">
     <title>{% block title %}دکتریاب{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href={% static "fonts/yekan/weblogma_yekan.css" %}>
-    <link type="text/css" rel="stylesheet" href={% static "base.css" %}>
-    <link type="text/css" rel="stylesheet" href={% static "sass/materialize.css" %}/>
+    <link type="text/css" rel="stylesheet" href={% static "scss/base.css" %}>
+    <link type="text/css" rel="stylesheet" href={% static "Materialize/sass/materialize.css" %}/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="icon" href={% static "images/doctor_checkup_logo.png" %}>
     <link href={% static "time_picker/jquery.timepicker.css" %} rel="stylesheet">
     <link href={% static "datepicker/persian-datepicker-0.4.5.min.css" %} rel="stylesheet">
+    {% block  stylesheet %}{% endblock %}
     <script type="text/javascript" src={% static "jQuery/jquery-2.1.1.min.js" %}></script>
-    <script type="text/javascript" src={% static "js/bin/materialize.min.js" %}></script>
+    <script type="text/javascript" src={% static "Materialize/js/bin/materialize.min.js" %}></script>
     <script type="text/javascript" src={% static "time_picker/jquery.timepicker.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-date-0.1.8a.min.js" %}></script>
     <script type="text/javascript" src={% static "datepicker/persian-datepicker-0.4.5.min.js" %}></script>
     <script type="text/javascript" src={% static "persianNumber/persianumber.min.js" %}></script>
+    <script type="text/javascript" src={% static "angular/angular.js" %}></script>
+    <script type="text/javascript" src={% static "js/app-module.js" %}></script>
+    <script type="text/javascript" src={% static "js/app-config.js" %}></script>
+    <script type="text/javascript" src={% static "js/base/base-controller.js" %}></script>
+    <script type="text/javascript" src={% static "js/base/base-accounts-service.js" %}></script>
 
 </head>
 
@@ -75,49 +81,49 @@
     <li>
         <div class="divider"></div>
     </li>
-    <li><a class="waves-effect" href={% url 'user:logout' %}><i
+    <li><a class="waves-effect logout" href={% url 'user:logout' %}><i
             class="material-icons left">power_settings_new</i>خروج</a></li>
 </ul>
 
-<div id="login-modal" class="modal">
-    <div class="modal-content">
-        <h5 class="indigo-text"> ورود به حساب کاربری</h5>
-        <div class="divider indigo _divider"></div>
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == 'warning' %}
-                    <span class="red-text">{{ message }}</span>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        <div class="row">
-            <form class="col s12" method="post" action={% url 'user:login' %}>
-                {% csrf_token %}
-
+<div ng-app="Base">
+    {% block angularjs %}
+    {% endblock %}
+    {% verbatim %}
+        <div ng-controller="BaseController as ctrl" id="login-modal" class="modal">
+            <div class="modal-content">
+                <h5 class="indigo-text"> ورود به حساب کاربری</h5>
+                <div class="divider indigo _divider"></div>
+                <span class="red-text">{{ ctrl.message }}</span>
                 <div class="row">
-                    <div class="input-field col s10">
-                        {{ login_form.username }}
-                        <label for="id_username">نام ‌کاربری</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s10">
-                        {{ login_form.password }}
-                        <label for="id_password">گذرواژه</label>
-                    </div>
-                </div>
-                <button class=" btn-large waves-effect waves-light btn-flat left" type="submit" name="action">ورود
-                </button>
-                <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+                    <form class="col s12" method="post" ng-submit="ctrl.submitLogin()" id="login_form">
+                        <div class="row">
+                            <div class="input-field col s10">
+                                <input id="id_username" maxlength="20" name="username" type="text"
+                                       ng-model="ctrl.username">
+                                <label for="id_username">نام ‌کاربری</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s10">
+                                <input id="id_password" name="password" type="password" ng-model="ctrl.password">
+                                <label for="id_password">گذرواژه</label>
+                            </div>
+                        </div>
+                        <button class=" btn-large waves-effect waves-light btn-flat left" type="submit" name="action">
+                            ورود
+                        </button>
+                        <input type="hidden" name="next" value="/"/>
 
-                <a class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left"
-                   href={% url 'user:register' %}>
-                    ثبت نام
-                </a>
-            </form>
+                        <a class=" modal-action modal-close waves-effect waves-green btn-flat btn-large left"
+                           href="/user/register" }>
+                            ثبت نام
+                        </a>
+                    </form>
 
+                </div>
+            </div>
         </div>
-    </div>
+    {% endverbatim %}
 </div>
 
 {% block contents %}
@@ -151,8 +157,15 @@
     </div>
 </footer>
 </body>
+
+{% block javascript %}{% endblock %}
 <script type="text/javascript">
     $(document).ready(function () {
+        $('a.logout').on("click", function (e) {
+            e.preventDefault();
+            window.localStorage.setItem('token', '');
+            window.location = $(this).attr("href");
+        });
         $("#persian-body").persiaNumber();
         $('.modal').modal();
         {% if messages %}
@@ -166,5 +179,6 @@
         {% endif %}
         $(".button-collapse").sideNav();
     });
+
 </script>
 </html>

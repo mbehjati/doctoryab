@@ -1,6 +1,7 @@
 ._weekly-plan {
     width: 80vw;
     margin: 3vw auto;
+    min-height: 40vh;
 }
 
 ._weekly-plan ._table th, ._weekly-plan ._table td {

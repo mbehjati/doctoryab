@@ -19,9 +19,10 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from rest_framework.authtoken import views as rest_framework_views
 
 from appointment import views
-from user.views import search
+from appointment.views import search
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
@@ -29,6 +30,8 @@ urlpatterns = [
     url(r'^appointment/', include('appointment.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^user/', include('user.urls')),
+    url(r'^get_auth_token/$', rest_framework_views.obtain_auth_token, name='get_auth_token'),
+
 ]
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

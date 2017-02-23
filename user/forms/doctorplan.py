@@ -22,3 +22,10 @@ class DoctorFreeTimes(forms.Form):
         if self.start_time >= self.end_time:
             return False
         return True
+
+        # def __init__(self , start_date , end_date , start_time , end_time , duration):
+        #     self.start_date = start_date
+        #     self.end_date = end_date
+        #     self.start_time = start_time
+        #     self.end_time = end_time
+        #     self.visit_duration = duration

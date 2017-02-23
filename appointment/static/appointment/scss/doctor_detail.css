@@ -1,37 +1,37 @@
 ._doctor-detail {
-    padding: 30px;
-    background-color: #fafafa;
-    margin-bottom: 0;
+  padding: 30px;
+  background-color: #fafafa;
+  margin-bottom: 0;
 }
 
-._doctor-detail ._alaki {
+._doctor-detail ._info {
     border: solid lightgray 1.5px;
     border-radius: 10px;
     margin-right: 5vw;
     margin-left: 5vw;
     margin-top: 5vw;
     min-height: 20vw;
-    background-color: white;
+  background-color: white;
 }
 
 ._doctor-detail ._image img {
     height: 20vw;
     width: 20vw;
-    object-fit: cover;
+  object-fit: cover;
 }
 
 ._doctor-detail ._details {
     padding-right: 0;
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 ._doctor-detail ._details ._expertise {
-    font-size: large;
-    font-weight: bold;
+  font-size: large;
+  font-weight: bold;
 }
 
 ._doctor-detail ._details ._title {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 ._doctor-detail ._reserve-title {
@@ -40,7 +40,7 @@
     font-size: 1.6rem;
     padding: 10px;
     margin-top: 4vw;
-    margin-right: 0.75rem;
+  margin-right: 0.75rem;
 }
 
 ._doctor-detail ._reserve-time {
@@ -49,36 +49,36 @@
     margin-top: 5vw;
     border: solid lightgray 1.5px;
     border-radius: 10px;
-    padding: 5vw 20px 20px;
+  padding: 5vw 20px 20px;
 }
 
 ._doctor-detail ._reserve-time ._date {
-    font-size: large;
+  font-size: large;
 }
 
 ._doctor-detail ._reserve-time ._plan-box {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-start;
 }
 
 ._doctor-detail ._reserve-time ._plan-box ._date-box {
-    padding: 10px;
-    margin: 10px;
-    border-radius: 10px;
-    text-align: center;
-    cursor: cell;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: cell;
 }
 
 #confirm-dialog {
-    width: 50vw;
+  width: 50vw;
 }
 
 /*# sourceMappingURL=doctor_detail.css.map */
