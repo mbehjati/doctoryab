@@ -56,20 +56,6 @@ def edit_password(request):
 
 
 @login_required()
-def json_password(request):
-    user = request.user
-    json_object = {'username': user.username, 'first_name': user.first_name}
-    return JsonResponse(json_object)
-
-
-# def json_password(request):
-#     json_serializer = serializers.get_serializer("json")()
-#     json_dict = {'name': 'soli'}
-#     response = json_serializer.serialize(json_dict, ensure_ascii=False, indent=2, use_natural_keys=True)
-#     return HttpResponse(response, mimetype="json")
-
-
-@login_required()
 def edit_profile(request):
     """ user can see his/her profile information and change them if wants
 

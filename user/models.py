@@ -78,8 +78,8 @@ class Doctor(models.Model):
     expertise = models.ForeignKey(Expertise)
     contract = models.FileField(upload_to='contracts')
 
-    lat_location = models.FloatField(blank=True, null=True, default=None)
-    lon_location = models.FloatField(blank=True, null=True, default=None)
+    lat_location = models.FloatField(blank=True, null=True, default=1.0)
+    lon_location = models.FloatField(blank=True, null=True, default=1.0)
 
     def __str__(self):
         return str(self.user.user.username)

@@ -94,5 +94,4 @@ def search_keyword(request):
 
 
 def search_by_location(request):
-    doctors = Doctor.objects.order_by('lat_location', 'lon_location')
-    return render(request, 'appointment/searchby_location.html', {'doctors': doctors})
+    return render(request, 'appointment/searchby_location.html')

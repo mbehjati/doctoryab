@@ -10,94 +10,11 @@
 
     <script>
 
-        var data = [
-            {
-                "user": {
-                    "id": 2,
-                    "phone_number": "09196855227",
-                    "national_code": "0440482022",
-                    "image": null,
-                    "is_doctor": true,
-                    "user": {
-                        "id": 3,
-                        "password": "pbkdf2_sha256$24000$VkqsUA7T9TdE$1HlY27ENDRctcuXLudwPzSYXXH3FTItk9JU7qcrxEKQ=",
-                        "last_login": "2017-02-22T13:59:24.600709Z",
-                        "is_superuser": false,
-                        "username": "doci",
-                        "first_name": "علی",
-                        "last_name": "بهجتی",
-                        "email": "bahjatia@gmail.com",
-                        "is_staff": false,
-                        "is_active": true,
-                        "date_joined": "2017-02-16T08:02:59.026157Z",
-                        "groups": [],
-                        "user_permissions": []
-                    }
-                },
-                "diploma": "تخصص",
-                "office_address": "قیطریه- خ روشنایی",
-                "office_phone_number": "02122670861",
-                "lat_location": "35.6",
-                "lon_location": "51.3",
-                "expertise": {
-                    "name": "چشم"
-                },
-                "insurance": [
-                    {
-                        "name": "البرز"
-                    }
-                ],
-                "title": "متخصص",
-                "id": 1
-            },
-            {
-                "user": {
-                    "id": 3,
-                    "phone_number": "09888888888",
-                    "national_code": "0440482021",
-                    "image": null,
-                    "is_doctor": true,
-                    "user": {
-                        "id": 4,
-                        "password": "pbkdf2_sha256$24000$QrQnJSC6U8lK$A+c8SEAx//79fKbnpQAKpGZahVOY9UeUpX54GBnkfKo=",
-                        "last_login": "2017-02-22T22:36:30.804124Z",
-                        "is_superuser": false,
-                        "username": "doctor",
-                        "first_name": "مونا",
-                        "last_name": "ایزدی",
-                        "email": "melikabehjati@gmail.com",
-                        "is_staff": false,
-                        "is_active": true,
-                        "date_joined": "2017-02-20T21:17:14.866544Z",
-                        "groups": [],
-                        "user_permissions": []
-                    }
-                },
-                "diploma": "تخصص",
-                "office_address": "تهران- بلوار اندرزگو",
-                "lat_location": "35.6",
-                "lon_location": "51.4",
-                "office_phone_number": "02188888888",
-                "expertise": {
-                    "name": "چشم"
-                },
-                "insurance": [
-                    {
-                        "name": "البرز"
-                    },
-                    {
-                        "name": "ایران"
-                    }
-                ],
-                "title": "متخصص",
-                "id": 2
-            }
-        ];
-
         window.onload = getLocation();
 
         var x = document.getElementById("demo");
         function getLocation() {
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
             } else {
@@ -129,44 +46,51 @@
 
             var markers = [];
             var infoWindowContent = [];
-            data.forEach(function (d) {
-                if (d.lat_location != 'None' && d.lon_location != 'None') {
-                    markers.push(['دکتر ' + d.user.user.first_name + ' ' + d.user.user.last_name, d.lat_location, d.lon_location]);
-                    infoWindowContent.push(
-                            '<div>' +
-                            '<span><b>نام دکتر :</b></span>' +
-                            '<a href="http://127.0.0.1:8000/appointment/doctor/' + d.id + '/">' + d.user.user.first_name + ' ' + d.user.user.last_name + '</a>' +
-                            '<br>' +
-                            '<span><b>تخصص: </b></span>' +
-                            '<span>' + d.expertise.name + '</span>' +
-                            '<br>' +
-                            '<span><b>شماره تلفن: </b></span>' +
-                            '<span>' + d.user.phone_number + '</span>' +
-                            '</div>'
-                    )
-                }
-            });
+            var doctors_data;
+            $.get('http://127.0.0.1:8000/user/api/get-all-doctors', function (response) {
+                doctors_data = response;
 
-            var infoWindow = new google.maps.InfoWindow(), i;
-            var bounds = new google.maps.LatLngBounds();
-            bounds.extend(latlon);
-            for (i = 0; i < markers.length; i++) {
-                position = new google.maps.LatLng(markers[i][1], markers[i][2]);
-                marker = new google.maps.Marker({
-                    position: position,
-                    map: map,
-                    title: markers[i][0]
-                });
-                google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                    return function () {
-                        infoWindow.setContent(infoWindowContent[i]);
-                        infoWindow.open(map, marker);
+                doctors_data.forEach(function (d) {
+                    if (d.lat_location != 1 && d.lon_location != 1) {
+                        markers.push(['دکتر ' + d.user.user.first_name + ' ' + d.user.user.last_name, d.lat_location, d.lon_location]);
+                        infoWindowContent.push(
+                                '<div>' +
+                                '<span><b>نام دکتر :</b></span>' +
+                                '<a href="http://127.0.0.1:8000/appointment/doctor/' + d.id + '/">' + d.user.user.first_name + ' ' + d.user.user.last_name + '</a>' +
+                                '<br>' +
+                                '<span><b>تخصص: </b></span>' +
+                                '<span>' + d.expertise.name + '</span>' +
+                                '<br>' +
+                                '<span><b>شماره تلفن: </b></span>' +
+                                '<span>' + d.user.phone_number + '</span>' +
+                                '</div>'
+                        )
                     }
-                })(marker, i));
-                bounds.extend(position);
-            }
+                });
 
-            map.fitBounds(bounds);
+
+                var infoWindow = new google.maps.InfoWindow(), i;
+                var bounds = new google.maps.LatLngBounds();
+                bounds.extend(latlon);
+                for (i = 0; i < markers.length; i++) {
+                    position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+                    marker = new google.maps.Marker({
+                        position: position,
+                        map: map,
+                        title: markers[i][0]
+                    });
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infoWindow.setContent(infoWindowContent[i]);
+                            infoWindow.open(map, marker);
+                        }
+                    })(marker, i));
+                    bounds.extend(position);
+                }
+
+                map.fitBounds(bounds);
+
+            });
 
 
         }
