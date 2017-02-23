@@ -91,3 +91,8 @@ def search_keyword(request):
     result = search_by_name_or_expertise(Doctor.objects.all(), keyword)
     result_serializer = DoctorSerializer(result, many=True)
     return Response(result_serializer.data)
+
+
+def search_by_location(request):
+    doctors = Doctor.objects.order_by('lat_location', 'lon_location')
+    return render(request, 'appointment/searchby_location.html', {'doctors': doctors})
