@@ -6,16 +6,15 @@
 {% block stylesheet %}
     <link rel="stylesheet" href={% static 'user/scss/weekly_plan.css' %}>
 {% endblock %}
-{% block contents %}
+{% block angularjs %}
     <div class="row">
-        <div class="_weekly-plan" ng-app="WeeklyPlan" ng-controller="WeeklyPlanController as ctrl">
+        <div class="_weekly-plan" ng-controller="WeeklyPlanController as ctrl">
             {% verbatim %}
                 <form class=" _date-picker" id="plan-form">
                     <label for="date"> تاریخ مورد نظر برای شروع هفته را انتخاب نمایید. </label>
                     <input type="text" class="date-picker" name="date" ng-model="ctrl.date"
                            ng-value="ctrl.schedule[0].date" ng-click="ctrl.clicked()"/>
                 </form>
-                {{ ctrl.min }}{{ ctrl.max }}
                 <table class="centered" ng-if="ctrl.min < ctrl.max">
                     <thead>
                     <th></th>
@@ -32,141 +31,13 @@
                     </tr>
                     </tbody>
                 </table>
-                <p ng-if="ctrl.min == ctrl.max">برنامه‌ای برای این هفته وارد نشده است.</p>
+                <p ng-if="ctrl.max == 0">برنامه‌ای برای این هفته وارد نشده است.</p>
             {% endverbatim %}
 
         </div>
     </div>
 {% endblock %}
 {% block javascript %}
-    <script type="text/javascript">
-        (function () {
-            angular.module('WeeklyPlan', [])
-                .factory('WeeklyPlanGetter', function ($http, $httpParamSerializer) {
-                    var service = {
-                        query: query,
-                        post: post
-                    };
-                    return service;
-
-                    function fetchData(response) {
-                        return response.data;
-                    }
-
-                    function query() {
-                        return $http.get('http://127.0.0.1:8000/user/api/doctor-weekly-plan').then(fetchData);
-                    }
-
-                    function post(data) {
-                        return $http.post('http://127.0.0.1:8000/user/api/doctor-weekly-plan', $httpParamSerializer(data), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(fetchData);
-                    }
-                })
-                .controller('WeeklyPlanController', function (WeeklyPlanGetter) {
-                        var vm = this;
-                        vm.submit = submit;
-                        vm.clicked = clicked;
-                        activate();
-
-                        function activate() {
-                            WeeklyPlanGetter.query().then(function (data) {
-                                createSchedule(data)
-                            });
-                        }
-
-                        function clicked() {
-                            {#                                                                                    datePicker.pDatepicker('show');#}
-                        }
-
-                        var datePicker = angular.element('.date-picker');
-
-                        datePicker.pDatepicker({
-                            observer: true,
-                            justSelectOnDate: true,
-                            autoClose: true,
-                            format: "YYYY-MM-DD",
-                            onSelect: function () {
-                                submit();
-                            }
-                        })
-                        ;
-                        function createSchedule(data) {
-                            vm.schedule = data;
-                            createTimeTable();
-                        }
-
-                        function submit() {
-                            WeeklyPlanGetter.post({'date': vm.date}).then(function (data) {
-                                createSchedule(data)
-                            });
-                            {#                                                        datePicker.pDatepicker('hide');#}
-                            datePicker.close();
-                        }
-
-                        function createTimeSlots() {
-                            var times = [];
-                            var min = ['00', '15', '30', '45'];
-                            var i;
-                            for (i = 0; i < 24; i++) {
-                                var str;
-                                if (i == 0)
-                                    str = '12:';
-                                else if (i > 12)
-                                    str = (i - 12) + ':';
-                                else
-                                    str = i + ':';
-                                for (var j = 0; j < 4; j++) {
-                                    var time_str;
-                                    time_str = str + min[j];
-                                    if (i >= 12)
-                                        time_str += 'pm';
-                                    else
-                                        time_str += 'am';
-                                    times.push(time_str);
-                                }
-
-                            }
-                            return times;
-                        }
-
-
-                        function createTimeTable() {
-                            var timeSlots = createTimeSlots();
-                            var min = timeSlots.length;
-                            var max = 0;
-                            var table = new Array(timeSlots.length);
-                            for (i = 0; i < timeSlots.length; i++) {
-                                table[i] = new Array(8).fill(0);
-                            }
-                            for (var i = 0; i < timeSlots.length; i++) {
-                                table[i][0] = timeSlots[i];
-                                for (var j = 1; j < 8; j++) {
-                                    angular.forEach(vm.schedule[j - 1].appointments, function (appointment) {
-                                        var startTime = appointment.start_time;
-                                        var patient = appointment.patient;
-                                        if (startTime == timeSlots[i]) {
-                                            if (i < min) min = i;
-                                            var value = (patient == null) ? 1 : 2;
-                                            var duration = appointment.duration / 15;
-                                            for (var d = 0; d < duration; d++) {
-                                                table[i + d][j] = value
-                                            }
-                                            if (i > max) max = i + duration;
-                                        }
-                                    });
-                                }
-                            }
-                            vm.table = table;
-                            vm.min = min;
-                            vm.max = max;
-                        }
-
-                    }
-                )
-                .config(['$httpProvider', function ($httpProvider) {
-                    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-                    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-                }]);
-        })();
-
-    </script>
+    <script src={% static "user/js/weekly-plan/weekly-plan-controller.js" %}></script>
+    <script src={% static "user/js/weekly-plan/weekly-plan-service.js" %}></script>
 {% endblock %}

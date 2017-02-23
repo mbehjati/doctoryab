@@ -6,11 +6,12 @@
 {% block stylesheet %}
     <link rel="stylesheet" href={% static 'user/scss/appointments_list.css' %}>
 {% endblock %}
-{% block contents %}
+{% block contents %}{% endblock %}
+{% block angularjs %}
     {% verbatim %}
 
-        <div class="_appointments" ng-app="UserAppointments" ng-controller="UserAppointmentsController as ctrl">
-            <table class="striped _table" ng-if="ctrl.appointments">
+        <div class="_appointments" ng-controller="UserAppointmentsController as ctrl">
+            <table class="striped _table" ng-show="ctrl.appointments.length">
                 <thead>
                 <tr>
                     <th>ردیف</th>
@@ -24,42 +25,18 @@
                     <td>{{ $index + 1 }}</td>
                     <td>{{ appointment.date }}</td>
                     <td>{{ appointment.start_time }}</td>
-                    <td>دکتر {{ appointment.doctor.user.user.username }}</td>
+                    <td>
+                        دکتر {{ appointment.doctor.user.user.first_name }} {{ appointment.doctor.user.user.last_name }}</td>
                     <td>{{ appointment.get_status }}</td>
                 </tr>
             </table>
-            <p ng-hide="ctrl.appointments">
-                نوبتی دریافت نگردیده‌است.
-            </p>
+            <p ng-hide="ctrl.appointments.length">
+                شما تا به حال نوبتی دریافت نکرده‌اید. </p>
         </div>
     {% endverbatim %}
 {% endblock %}
 
 {% block javascript %}
-    <script type="text/javascript">
-        (function () {
-            angular.module('UserAppointments', [])
-                .factory('UserAppointmentsGetter', function ($http) {
-                    var service = {
-                        query: query
-                    };
-                    return service;
-
-                    function fetchData(response) {
-                        return response.data;
-                    }
-
-                    function query() {
-                        return $http.get('http://127.0.0.1:8000/user/api/get-appointments').then(fetchData);
-                    }
-                })
-                .controller('UserAppointmentsController', function (UserAppointmentsGetter) {
-                    var vm = this;
-                    UserAppointmentsGetter.query().then(function (data) {
-                        vm.appointments = data;
-                    })
-                });
-        })();
-
-    </script>
+    <script src={% static "user/js/appointment-list/appointments-list-controller.js" %}></script>
+    <script src={% static "user/js/appointment-list/appointments-list-service.js" %}></script>
 {% endblock %}
